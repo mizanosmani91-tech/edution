@@ -34,7 +34,7 @@
                 </div>
                 <div class="mt-2 flex items-center justify-between text-sm text-gray-600">
                     <span>শাখা: {{ $student->section?->name ?? '—' }}</span>
-                    <a href="{{ route('students.show', $student) }}"
+                    <a href="{{ route('api.students.show', $student) }}"
                        class="font-medium text-blue-600 active:text-blue-800">
                         বিস্তারিত →
                     </a>
@@ -65,7 +65,7 @@
                         <td class="px-4 py-3 text-gray-600">{{ $student->schoolClass?->full_label ?? '—' }}</td>
                         <td class="px-4 py-3 text-gray-600">{{ $student->section?->name ?? '—' }}</td>
                         <td class="px-4 py-3 text-right">
-                            <a href="{{ route('students.show', $student) }}"
+                            <a href="{{ route('api.students.show', $student) }}"
                                class="font-medium text-blue-600 hover:text-blue-800">বিস্তারিত</a>
                         </td>
                     </tr>
