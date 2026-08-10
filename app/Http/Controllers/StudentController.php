@@ -37,7 +37,7 @@ class StudentController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'student_id_no' => ['required', 'string', 'max:50'],
-            'class_id' => ['required', 'integer'],
+            'class_id' => ['required', 'uuid'],
             'section_id' => ['nullable', 'integer'],
             'guardian_phone' => ['nullable', 'string', 'max:20'],
             'date_of_birth' => ['nullable', 'date'],
@@ -55,7 +55,7 @@ class StudentController extends Controller
     {
         $validated = $request->validate([
             'name' => ['sometimes', 'string', 'max:255'],
-            'class_id' => ['sometimes', 'integer'],
+            'class_id' => ['sometimes', 'uuid'],
             'section_id' => ['nullable', 'integer'],
             'guardian_phone' => ['nullable', 'string', 'max:20'],
         ]);

@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use RuntimeException;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * TenantIsolationTest
@@ -35,6 +36,8 @@ class TenantIsolationTest extends TestCase
     {
         parent::setUp();
 
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+
         $this->institutionA = Institution::factory()->create();
         $this->institutionB = Institution::factory()->create();
 
@@ -42,7 +45,7 @@ class TenantIsolationTest extends TestCase
         $this->userB = User::factory()->create(['institution_id' => $this->institutionB->id]);
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_read_another_institutions_students_via_query(): void
     {
         Student::factory()->count(3)->create(['institution_id' => $this->institutionA->id]);
@@ -60,7 +63,7 @@ class TenantIsolationTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_read_another_institutions_student_via_api_endpoint(): void
     {
         $foreignStudent = Student::factory()->create(['institution_id' => $this->institutionB->id]);
@@ -69,7 +72,7 @@ class TenantIsolationTest extends TestCase
             ->getJson("/api/students/{$foreignStudent->id}");
 
         // 403 বা 404 — কখনোই 200 না। ডেটা লিক হলে এই assertion ফেল করবে।
-        $response->assertStatus(fn ($status) => in_array($status, [403, 404]));
+        $this->assertContains($response->getStatusCode(), [403, 404]);
         $this->assertStringNotContainsString(
             $foreignStudent->name ?? '',
             $response->getContent(),
@@ -77,7 +80,7 @@ class TenantIsolationTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_create_record_under_another_institution_id(): void
     {
         $this->actingAs($this->userA);
@@ -86,10 +89,12 @@ class TenantIsolationTest extends TestCase
         // ইচ্ছাকৃতভাবে অন্য institution এর ID পাঠানোর চেষ্টা (spoofing attempt)
         $response = $this->postJson('/api/students', [
             'name' => 'Test Student',
+            'student_id_no' => 'SPOOF-001',
+            'class_id' => \App\Models\SchoolClass::factory()->create(['institution_id' => $this->institutionA->id])->id,
             'institution_id' => $this->institutionB->id, // 👈 spoof করার চেষ্টা
         ]);
 
-        $created = Student::allTenants()->latest('id')->first();
+        $created = Student::allTenants()->latest('created_at')->first();
 
         $this->assertNotNull($created);
         $this->assertEquals(
@@ -100,7 +105,7 @@ class TenantIsolationTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function query_without_tenant_context_throws_instead_of_returning_all_rows(): void
     {
         Student::factory()->count(5)->create(['institution_id' => $this->institutionA->id]);
@@ -111,7 +116,7 @@ class TenantIsolationTest extends TestCase
         Student::all(); // fail-closed behavior — সব ডেটা দেখানো উচিত না
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_read_another_institutions_teachers(): void
     {
         \App\Models\Teacher::factory()->count(2)->create(['institution_id' => $this->institutionA->id]);
@@ -123,7 +128,7 @@ class TenantIsolationTest extends TestCase
         $this->assertCount(2, \App\Models\Teacher::all());
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_create_fee_collection_for_another_institutions_student(): void
     {
         $foreignStudent = Student::factory()->create(['institution_id' => $this->institutionB->id]);
@@ -143,11 +148,10 @@ class TenantIsolationTest extends TestCase
             'payment_method' => 'bkash',
             'due_month' => '2026-08',
         ]);
-
-        $response->assertStatus(422); // validation error, student খুঁজেই পায়নি
+        $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_bulk_mark_attendance_for_another_institutions_student(): void
     {
         $classA = \App\Models\SchoolClass::factory()->create(['institution_id' => $this->institutionA->id]);
@@ -164,10 +168,10 @@ class TenantIsolationTest extends TestCase
             ],
         ]);
 
-        $response->assertStatus(422); // Rule::exists->where(institution_id) এখানে আটকাবে
+        $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function admin_role_required_to_create_exam_weighting(): void
     {
         $examA1 = \App\Models\Exam::factory()->create(['institution_id' => $this->institutionA->id]);
@@ -190,7 +194,7 @@ class TenantIsolationTest extends TestCase
         $response->assertStatus(403); // app-level check + RLS দুটোই এটা আটকানোর কথা
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_read_messages_of_a_conversation_they_are_not_part_of(): void
     {
         // Institution A এর দুইজন ইউজার (userA আর userC) একটা conversation
@@ -219,7 +223,7 @@ class TenantIsolationTest extends TestCase
         $response->assertStatus(403); // একই institution হলেও participant না হওয়ায় আটকাবে
     }
 
-    /** @test */
+    #[Test]
     public function guardian_cannot_access_another_guardians_child_data(): void
     {
         $myChild = Student::factory()->create(['institution_id' => $this->institutionA->id]);
