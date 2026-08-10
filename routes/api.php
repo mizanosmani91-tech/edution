@@ -9,21 +9,19 @@ use Illuminate\Support\Facades\Route;
  * এই ফাইলটা routes/web.php এর সমান্তরাল — একই Controller গুলো ব্যবহার করে,
  * শুধু middleware ভিন্ন: session-এর বদলে 'auth:sanctum' (token)।
  *
- * ভবিষ্যতে React Native/Flutter অ্যাপ এই একই endpoint গুলোই কল করবে।
- * নতুন কোনো ওয়েব মডিউল বানালে (routes/web.php এ) মনে করে এখানেও যোগ করবেন,
- * নাহলে মোবাইল অ্যাপ সেই ফিচার পাবে না — এটা ভুলে যাওয়ার মতো একটা common gotcha।
+ * ⚠️ route নাম 'mobile.' prefix দিয়ে আলাদা রাখা হয়েছে যেন web.php এর
+ * Livewire পেজ route নামের (students.index ইত্যাদি) সাথে conflict না হয় —
+ * এই bug টা একবার প্রোডাকশনে ধরা পড়েছিল, তাই এই নোট রাখা হলো।
  */
 
-// ─── Public ───
 Route::post('/login', [ApiLoginController::class, 'store']);
 
-// ─── Token-protected + tenant-scoped ───
 Route::middleware(['auth:sanctum', 'tenant.context'])->group(function () {
     Route::post('/logout', [ApiLoginController::class, 'destroy']);
 
-    Route::apiResource('students', StudentController::class);
-    Route::apiResource('teachers', TeacherController::class);
+    Route::apiResource('students', StudentController::class)->names('mobile.students');
+    Route::apiResource('teachers', TeacherController::class)->names('mobile.teachers');
 
-    // বাকি সব মডিউল web.php এর একই pattern এ এখানেও যোগ করুন:
+    // বাকি সব মডিউল web.php এর একই pattern এ এখানেও যোগ করুন (নাম prefix সহ):
     // fee-collections, attendance, exam-weightings, chat, settings, routine
 });
