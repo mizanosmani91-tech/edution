@@ -1,9 +1,42 @@
 @import 'tailwindcss';
-
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+/* ==========================================================
+   বিদ্যাপঞ্জি ডিজাইন সিস্টেম — মেরুন+সোনালি "রেজিস্টার খাতা" থিম
+   ========================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Hind Siliguri', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'Tiro Bangla', serif;
+
+    --color-maroon: #5C1A2B;
+    --color-maroon-deep: #3E1120;
+    --color-maroon-light: #6E2136;
+    --color-gold: #C9A227;
+    --color-gold-light: #E7C767;
+    --color-paper: #F7F2E5;
+    --color-paper-deep: #EFE7D3;
+    --color-ink: #2A2320;
+    --color-ink-muted: #7A7061;
+    --color-ink-soft: #AFA593;
+    --color-line: rgba(42,35,32,.09);
+
+    --color-role-admin: #C9A227;
+    --color-role-guardian: #2F6E52;
+    --color-role-teacher: #35528F;
+    --color-role-student: #A65A2E;
+    --color-good: #2F6E52;
+    --color-bad: #A6412E;
+}
+
+body {
+    font-family: theme('fontFamily.sans');
+    background: var(--color-paper);
+    color: var(--color-ink);
+}
+
+.font-serif-bn {
+    font-family: 'Tiro Bangla', serif;
 }
