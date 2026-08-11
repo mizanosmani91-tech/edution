@@ -25,6 +25,7 @@ class Institution extends Model
         'phone',
         'address',
         'logo_path',
+        'registration_email',
     ];
 
     protected $casts = [
@@ -81,7 +82,7 @@ class Institution extends Model
     {
         $slug = explode('.', $host)[0] ?? null;
 
-        if (!$slug || in_array($slug, ['www', 'superadmin', 'app'])) {
+        if (!$slug || in_array($slug, ['www', 'superadmin', 'app', 'panel'])) {
             return null;
         }
 

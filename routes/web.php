@@ -4,6 +4,10 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', fn () => view('landing'))->name('landing');
+Route::get('/register', [\App\Http\Controllers\Auth\RegistrationController::class, 'create'])->name('register');
+Route::post('/register', [\App\Http\Controllers\Auth\RegistrationController::class, 'store'])->name('register.store');
+
 Route::get('/login', function () {
     $institution = \App\Models\Institution::resolveFromSubdomain(request()->getHost());
     return view('auth.login', ['institution' => $institution]);
