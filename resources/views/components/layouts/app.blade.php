@@ -73,7 +73,7 @@
             </div>
 
             {{-- শিক্ষার্থী --}}
-            <div class="nav-module {{ $activeIf('students.*') }}" x-data="{ open: {{ request()->routeIs('students.*') ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('students.*','id-cards.*') }}" x-data="{ open: {{ request()->routeIs(['students.*','id-cards.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4.5 5-6.5 8-6.5s6.5 2 8 6.5"/></svg></span>
                     <span class="lbl">শিক্ষার্থী</span>
@@ -81,7 +81,7 @@
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('students.index') }}" class="sub-item {{ request()->routeIs('students.*') ? 'active' : '' }}">শিক্ষার্থী তালিকা</a>
-                    <a href="{{ $stub('আইডি কার্ড') }}" class="sub-item">আইডি কার্ড জেনারেশন</a>
+                    <a href="{{ route('id-cards.index') }}" class="sub-item {{ request()->routeIs('id-cards.*') ? 'active' : '' }}">আইডি কার্ড জেনারেশন</a>
                     <a href="{{ $stub('প্রমোশন') }}" class="sub-item">প্রমোশন</a>
                     <a href="{{ $stub('Transfer Certificate') }}" class="sub-item">Transfer Certificate</a>
                     <a href="{{ $stub('Character Certificate') }}" class="sub-item">Character Certificate</a>

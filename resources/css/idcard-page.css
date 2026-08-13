@@ -1,0 +1,90 @@
+/* ==========================================================
+   .idcard-page — আইডি কার্ড জেনারেশন (edu-id-card-generation.html)
+   scoped, .card/.row মতো জেনেরিক নাম বাকি অ্যাপ থেকে আলাদা রাখতে
+   ========================================================== */
+.idcard-page{ --theme:#5C1A2B; --theme-deep:#3E1120; }
+
+.idcard-page .idc-grid{display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start;}
+@media (max-width:1080px){.idcard-page .idc-grid{grid-template-columns:1fr;}.idcard-page .picker-card{position:static;}}
+
+.idcard-page .picker-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;position:sticky;top:16px;}
+.idcard-page .picker-filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.idcard-page .picker-filters select{border:1.4px solid var(--line);border-radius:9px;padding:8px 9px;font-size:12.5px;font-family:inherit;background:#fff;color:var(--ink);outline:0;}
+.idcard-page .picker-search{display:flex;align-items:center;gap:8px;border:1.4px solid var(--line);border-radius:9px;padding:8px 10px;margin-bottom:10px;}
+.idcard-page .picker-search svg{width:14px;height:14px;color:var(--ink-soft);flex-shrink:0;}
+.idcard-page .picker-search input{border:0;outline:0;font-size:12.5px;width:100%;font-family:inherit;}
+
+.idcard-page .stud-list{max-height:520px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
+.idcard-page .stud-row{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:10px;cursor:pointer;}
+.idcard-page .stud-row:hover{background:var(--paper-deep);}
+.idcard-page .stud-row.selected-preview{background:rgba(201,162,39,.12);}
+.idcard-page .stud-row .ini{width:32px;height:32px;border-radius:50%;background:color-mix(in srgb, var(--student) 16%, white);color:var(--student);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.idcard-page .stud-row .info{flex:1;min-width:0;}
+.idcard-page .stud-row .nm{font-size:12.8px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.idcard-page .stud-row .ds{font-size:10.8px;color:var(--ink-soft);}
+
+.idcard-page .template-strip{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.idcard-page .tpl-opt{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:8px 16px;font-size:12.5px;font-weight:700;color:var(--ink-muted);cursor:pointer;}
+.idcard-page .tpl-opt.active{border-color:var(--gold);background:rgba(201,162,39,.1);color:var(--ink);}
+
+.idcard-page .preview-wrap{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start;margin-bottom:22px;}
+.idcard-page .id-card{width:300px;height:475px;border-radius:16px;position:relative;overflow:hidden;box-shadow:0 16px 40px -14px rgba(42,35,32,.35);font-family:'Hind Siliguri',sans-serif;background:#fff;flex-shrink:0;}
+@media (max-width:860px){.idcard-page .id-card{width:260px;height:412px;}}
+
+.idcard-page .idc-top{background:linear-gradient(135deg,var(--theme) 0%, var(--theme-deep) 100%);padding:16px 16px 46px;color:#fff;position:relative;}
+.idcard-page .idc-top::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:26px;background:#fff;border-radius:50% 50% 0 0 / 100% 100% 0 0;transform:scale(1.5);}
+.idcard-page .idc-school{display:flex;align-items:center;gap:9px;position:relative;z-index:1;}
+.idcard-page .idc-school-ic{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.idcard-page .idc-school-ic svg{width:15px;height:15px;}
+.idcard-page .idc-school .nm{font-family:'Tiro Bangla',serif;font-size:14px;line-height:1.2;}
+.idcard-page .idc-school .tag{font-size:8.5px;letter-spacing:.08em;color:rgba(255,255,255,.7);}
+
+.idcard-page .idc-photo-wrap{display:flex;justify-content:center;margin-top:-38px;position:relative;z-index:2;}
+.idcard-page .idc-photo{width:92px;height:92px;border-radius:50%;border:4px solid #fff;background:linear-gradient(135deg,var(--gold-light),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Tiro Bangla',serif;font-size:30px;color:var(--theme-deep);box-shadow:0 4px 10px rgba(0,0,0,.15);overflow:hidden;}
+.idcard-page .idc-photo img{width:100%;height:100%;object-fit:cover;}
+
+.idcard-page .idc-body{text-align:center;padding:6px 18px 0;}
+.idcard-page .idc-name{font-family:'Tiro Bangla',serif;font-size:18px;color:var(--ink);margin:2px 0 1px;}
+.idcard-page .idc-name-en{font-size:10.5px;color:var(--ink-soft);margin-bottom:8px;}
+.idcard-page .idc-role-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 12px;border-radius:20px;background:color-mix(in srgb, var(--theme) 12%, white);color:var(--theme);margin-bottom:12px;}
+
+.idcard-page .idc-info{text-align:right;padding:0 20px;display:flex;flex-direction:column;gap:6px;margin-bottom:10px;}
+.idcard-page .idc-info .row{display:flex;justify-content:space-between;font-size:11px;border-bottom:1px dotted var(--line);padding-bottom:5px;}
+.idcard-page .idc-info .row .k{color:var(--ink-soft);}
+.idcard-page .idc-info .row .v{color:var(--ink);font-weight:700;}
+
+.idcard-page .idc-footer{position:absolute;bottom:0;left:0;right:0;background:var(--theme);color:#fff;padding:9px 18px;display:flex;align-items:center;justify-content:space-between;}
+.idcard-page .idc-footer .validity{font-size:9px;color:rgba(255,255,255,.75);}
+.idcard-page .idc-footer .id-code{font-family:'Tiro Bangla',serif;font-size:12px;letter-spacing:.03em;color:var(--gold-light);}
+
+.idcard-page .idc-back-inner{padding:20px 18px;height:100%;display:flex;flex-direction:column;}
+.idcard-page .idc-back-title{font-family:'Tiro Bangla',serif;font-size:14px;color:var(--theme);text-align:center;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--theme);}
+.idcard-page .idc-back-rows{display:flex;flex-direction:column;gap:9px;margin-bottom:16px;}
+.idcard-page .idc-back-rows .row{display:flex;justify-content:space-between;font-size:11px;border-bottom:1px dotted var(--line);padding-bottom:6px;}
+.idcard-page .idc-back-rows .k{color:var(--ink-soft);flex-shrink:0;}
+.idcard-page .idc-back-rows .v{color:var(--ink);font-weight:600;text-align:left;}
+.idcard-page .idc-qr{display:flex;justify-content:center;margin:6px 0 14px;}
+.idcard-page .idc-qr svg{width:76px;height:76px;}
+.idcard-page .idc-back-note{font-size:9px;color:var(--ink-soft);text-align:center;line-height:1.6;margin-top:auto;}
+.idcard-page .idc-sign{text-align:center;margin-top:10px;}
+.idcard-page .idc-sign .line{width:110px;border-top:1px solid var(--ink-soft);margin:0 auto 4px;}
+.idcard-page .idc-sign .lbl{font-size:9px;color:var(--ink-soft);}
+
+.idcard-page .customize-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:16px;}
+.idcard-page .customize-card h3{font-family:'Tiro Bangla',serif;font-size:16px;margin:0 0 14px;}
+.idcard-page .cust-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;}
+.idcard-page .cust-item{display:flex;align-items:center;justify-content:space-between;background:var(--paper-deep);border-radius:10px;padding:10px 12px;}
+.idcard-page .cust-item .lbl{font-size:12.5px;font-weight:600;}
+
+.idcard-page .color-row{display:flex;gap:10px;margin-top:14px;align-items:center;}
+.idcard-page .color-row .lbl{font-size:12.5px;font-weight:700;color:var(--ink-muted);margin-left:6px;}
+.idcard-page .color-dot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;}
+.idcard-page .color-dot.active{border-color:var(--ink);}
+
+.idcard-page .action-row{display:flex;gap:10px;flex-wrap:wrap;}
+
+@media print{
+  body *{ visibility:hidden; }
+  .idcard-page .preview-wrap, .idcard-page .preview-wrap *{ visibility:visible; }
+  .idcard-page .preview-wrap{ position:fixed; top:20px; left:20px; }
+}
