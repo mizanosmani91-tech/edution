@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FeeCollection;
+use App\Support\BengaliNumber;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -68,6 +69,30 @@ class FeeCollectionController extends Controller
     public function show(FeeCollection $feeCollection)
     {
         return $feeCollection->load('student');
+    }
+
+    /**
+     * রশিদ নম্বর: <institution slug prefix>-RCPT-<তারিখ>-<sequence>
+     * প্রিন্টযোগ্য blade view (Livewire না, কারণ নতুন ট্যাবে/উইন্ডোতে খোলা ও প্রিন্ট করা দরকার)
+     */
+    public function receipt(FeeCollection $feeCollection)
+    {
+        $feeCollection->load(['student.schoolClass', 'student.section', 'student.guardians', 'institution']);
+
+        $collector = $feeCollection->collected_by
+            ? \App\Models\User::find($feeCollection->collected_by)
+            : null;
+
+        $receiptNo = strtoupper(\Illuminate\Support\Str::substr($feeCollection->institution->slug ?? 'EDU', 0, 3))
+            .'-RCPT-'.($feeCollection->paid_at?->format('Ymd') ?? now()->format('Ymd'))
+            .'-'.strtoupper(\Illuminate\Support\Str::substr($feeCollection->id, 0, 4));
+
+        return view('receipts.fee-receipt', [
+            'fee' => $feeCollection,
+            'receiptNo' => $receiptNo,
+            'collector' => $collector,
+            'amountInWords' => BengaliNumber::inWords($feeCollection->amount_paid),
+        ]);
     }
 
     public function update(Request $request, FeeCollection $feeCollection)

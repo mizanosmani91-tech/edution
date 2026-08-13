@@ -1,111 +1,106 @@
-<div class="p-4 md:p-6">
-    {{-- স্ট্যাটাস ফিল্টার — মোবাইলে scroll করা চিপ, ডেস্কটপে সাধারণ বাটন --}}
-    <div class="mb-4 flex gap-2 overflow-x-auto pb-1">
-        @foreach (['due' => 'বকেয়া', 'partial' => 'আংশিক', 'paid' => 'পরিশোধিত', 'overdue' => 'ওভারডিউ', '' => 'সব'] as $value => $label)
-            <button
-                wire:click="$set('statusFilter', '{{ $value }}')"
-                class="whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium
-                    {{ $statusFilter === $value ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700' }}"
-            >{{ $label }}</button>
-        @endforeach
+<div>
+    <div class="page-head">
+        <div>
+            <div style="font-size:12px;color:var(--ink-soft);margin-bottom:2px;">অর্থ ব্যবস্থাপনা / ফি সংগ্রহ</div>
+            <h2 style="margin:0;">ফি সংগ্রহ ও লেজার</h2>
+        </div>
     </div>
 
-    <div class="mb-4">
-        <input type="month" wire:model.live="monthFilter"
-               class="rounded-lg border border-gray-300 px-3 py-2 text-sm">
+    <div class="filter-card">
+        <div class="f-field">
+            <label>স্ট্যাটাস</label>
+            <select wire:model.live="statusFilter">
+                <option value="">সব</option>
+                <option value="due">বকেয়া</option>
+                <option value="partial">আংশিক</option>
+                <option value="paid">পরিশোধিত</option>
+                <option value="overdue">ওভারডিউ</option>
+            </select>
+        </div>
+        <div class="f-field">
+            <label>মাস</label>
+            <input type="month" wire:model.live="monthFilter">
+        </div>
+        <button class="f-reset" wire:click="$set('monthFilter','')">রিসেট</button>
     </div>
 
-    {{-- মোবাইল: কার্ড, প্রতিটাতে "পেমেন্ট নিন" বাটন সরাসরি --}}
-    <div class="space-y-3 md:hidden">
-        @forelse ($fees as $fee)
-            <div wire:key="mobile-{{ $fee->id }}"
-                 class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                <div class="flex items-start justify-between">
-                    <div>
-                        <p class="font-medium text-gray-900">{{ $fee->student->name }}</p>
-                        <p class="text-sm text-gray-500">{{ $fee->due_month }} · {{ $fee->fee_type }}</p>
-                    </div>
-                    <span class="rounded-full px-2.5 py-1 text-xs font-medium
-                        {{ $fee->status === 'paid' ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700' }}">
-                        {{ $fee->status }}
-                    </span>
-                </div>
-                <div class="mt-2 flex items-center justify-between">
-                    <p class="text-sm text-gray-600">
-                        বাকি: <span class="font-semibold text-gray-900">৳{{ number_format($fee->due_amount, 2) }}</span>
-                    </p>
-                    @if ($fee->status !== 'paid')
-                        <button
-                            wire:click="openPayModal('{{ $fee->id }}')"
-                            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white active:bg-blue-700"
-                        >পেমেন্ট নিন</button>
-                    @endif
-                </div>
-            </div>
-        @empty
-            <p class="py-8 text-center text-gray-500">কোনো রেকর্ড পাওয়া যায়নি।</p>
-        @endforelse
-    </div>
-
-    {{-- ডেস্কটপ: টেবিল --}}
-    <div class="hidden overflow-x-auto rounded-lg border border-gray-200 md:block">
-        <table class="min-w-full divide-y divide-gray-200 bg-white">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">ছাত্র</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">মাস</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">বাকি</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">স্ট্যাটাস</th>
-                    <th class="px-4 py-3"></th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
+    <div class="table-card">
+        <table>
+            <thead><tr>
+                <th>শিক্ষার্থী</th><th>মাস/ধরন</th><th>বাকি</th><th>স্ট্যাটাস</th><th>কার্যক্রম</th>
+            </tr></thead>
+            <tbody>
                 @forelse ($fees as $fee)
-                    <tr wire:key="desktop-{{ $fee->id }}" class="hover:bg-gray-50">
-                        <td class="px-4 py-3 font-medium text-gray-900">{{ $fee->student->name }}</td>
-                        <td class="px-4 py-3 text-gray-600">{{ $fee->due_month }}</td>
-                        <td class="px-4 py-3 text-gray-600">৳{{ number_format($fee->due_amount, 2) }}</td>
-                        <td class="px-4 py-3 text-gray-600">{{ $fee->status }}</td>
-                        <td class="px-4 py-3 text-right">
-                            @if ($fee->status !== 'paid')
-                                <button wire:click="openPayModal('{{ $fee->id }}')"
-                                        class="font-medium text-blue-600 hover:text-blue-800">পেমেন্ট নিন</button>
-                            @endif
+                    <tr wire:key="fee-{{ $fee->id }}">
+                        <td>
+                            <div class="stud">
+                                <div class="ini">{{ mb_substr($fee->student->name, 0, 1) }}</div>
+                                <div>
+                                    <div class="name">{{ $fee->student->name }}</div>
+                                    <div class="id">{{ $fee->student->student_id_no }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ $fee->due_month }} — {{ $fee->fee_type }}</td>
+                        <td>৳{{ number_format($fee->due_amount, 2) }}</td>
+                        <td>
+                            <span class="pill {{ $fee->status === 'paid' ? 'active' : ($fee->status === 'partial' ? 'day' : 'due') }}">
+                                {{ match($fee->status) { 'paid' => 'পরিশোধিত', 'partial' => 'আংশিক', 'overdue' => 'ওভারডিউ', default => 'বকেয়া' } }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="row-actions">
+                                @if ($fee->status !== 'paid')
+                                    <button wire:click="openPayModal('{{ $fee->id }}')" class="btn-primary" style="padding:6px 12px;font-size:12.5px;">পেমেন্ট নিন</button>
+                                @else
+                                    <a href="{{ route('fee-collections.receipt', $fee) }}" target="_blank" title="রশিদ দেখুন">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l3 3v17H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+                                    </a>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="px-4 py-8 text-center text-gray-500">কোনো রেকর্ড পাওয়া যায়নি।</td></tr>
+                    <tr><td colspan="5" style="text-align:center;color:var(--ink-soft);padding:30px 0;">কোনো রেকর্ড পাওয়া যায়নি</td></tr>
                 @endforelse
             </tbody>
         </table>
+        <div class="table-foot">
+            <div>মোট {{ $fees->total() }} টি রেকর্ডের মধ্যে {{ $fees->firstItem() ?? 0 }}–{{ $fees->lastItem() ?? 0 }} টি দেখানো হচ্ছে</div>
+            <div class="pager">{{ $fees->links() }}</div>
+        </div>
     </div>
 
-    <div class="mt-4">{{ $fees->links() }}</div>
-
-    {{-- পেমেন্ট মোডাল — মোবাইল-ফ্রেন্ডলি (bottom-sheet স্টাইল ছোট স্ক্রিনে) --}}
+    {{-- পেমেন্ট এন্ট্রি মোডাল --}}
     @if ($payingId)
-        <div class="fixed inset-0 z-50 flex items-end bg-black/40 md:items-center md:justify-center">
-            <div class="w-full rounded-t-2xl bg-white p-5 md:w-96 md:rounded-2xl">
-                <h3 class="mb-4 text-lg font-semibold text-gray-900">পেমেন্ট এন্ট্রি</h3>
+        <div class="modal-overlay" wire:click.self="$set('payingId', null)">
+            <div class="modal-box">
+                <div class="modal-head">
+                    <h3>পেমেন্ট এন্ট্রি</h3>
+                    <button class="modal-close" wire:click="$set('payingId', null)" type="button">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
 
-                <label class="mb-1 block text-sm font-medium text-gray-700">পরিমাণ</label>
-                <input type="number" step="0.01" wire:model="payAmount"
-                       class="mb-3 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base">
-                @error('payAmount') <p class="mb-2 text-sm text-red-600">{{ $message }}</p> @enderror
+                <div class="field">
+                    <label>পরিমাণ <span class="req">*</span></label>
+                    <input type="number" step="0.01" wire:model="payAmount" placeholder="৳">
+                    @error('payAmount') <p class="hint" style="color:var(--bad)">{{ $message }}</p> @enderror
+                </div>
 
-                <label class="mb-1 block text-sm font-medium text-gray-700">পদ্ধতি</label>
-                <select wire:model="payMethod" class="mb-4 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base">
-                    <option value="cash">নগদ</option>
-                    <option value="bkash">bKash</option>
-                    <option value="nagad">Nagad</option>
-                    <option value="bank_transfer">ব্যাংক ট্রান্সফার</option>
-                </select>
+                <div class="field">
+                    <label>পেমেন্ট মাধ্যম</label>
+                    <select wire:model="payMethod">
+                        <option value="cash">নগদ</option>
+                        <option value="bkash">বিকাশ</option>
+                        <option value="nagad">নগদ (মোবাইল ব্যাংকিং)</option>
+                        <option value="bank_transfer">ব্যাংক ট্রান্সফার</option>
+                    </select>
+                </div>
 
-                <div class="flex gap-3">
-                    <button wire:click="$set('payingId', null)"
-                            class="flex-1 rounded-lg border border-gray-300 py-2.5 font-medium text-gray-700">বাতিল</button>
-                    <button wire:click="recordPayment"
-                            class="flex-1 rounded-lg bg-blue-600 py-2.5 font-medium text-white">সেভ করুন</button>
+                <div class="modal-foot">
+                    <button class="btn-ghost" wire:click="$set('payingId', null)" type="button">বাতিল</button>
+                    <button class="btn-primary" wire:click="recordPayment" type="button">সেভ করুন</button>
                 </div>
             </div>
         </div>

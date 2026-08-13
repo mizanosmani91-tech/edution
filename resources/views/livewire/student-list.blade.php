@@ -102,7 +102,7 @@
                         </td>
                         <td>
                             <div class="row-actions">
-                                <a href="{{ route('api.students.show', $student) }}" title="দেখুন">
+                                <a href="{{ route('students.profile', $student) }}" title="দেখুন">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
                                 </a>
                                 <a href="{{ route('stub', urlencode('শিক্ষার্থী সম্পাদনা')) }}" title="সম্পাদনা">

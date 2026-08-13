@@ -33,6 +33,7 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
         ->names('api.teachers');
 
     Route::get('fee-collections/due', [\App\Http\Controllers\FeeCollectionController::class, 'due']);
+    Route::get('fee-collections/{feeCollection}/receipt', [\App\Http\Controllers\FeeCollectionController::class, 'receipt'])->name('fee-collections.receipt');
     Route::resource('fee-collections', \App\Http\Controllers\FeeCollectionController::class)
         ->except(['create', 'edit', 'destroy'])
         ->names('api.fee-collections');
@@ -63,6 +64,7 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
 
     // ── Livewire পেজ রুট (bottom-nav/sidebar এর টার্গেট, নাম এখন ইউনিক) ──
     Route::get('/students-page', \App\Livewire\StudentList::class)->name('students.index');
+    Route::get('/students-page/{student}', \App\Livewire\StudentProfile::class)->name('students.profile');
     Route::get('/teachers-page', \App\Livewire\TeacherList::class)->name('teachers.index');
     Route::get('/teachers-page/{teacher}', \App\Livewire\TeacherProfile::class)->name('teachers.profile');
     Route::get('/fees-page', \App\Livewire\FeeCollectionList::class)->name('fees.index');
