@@ -181,8 +181,8 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
-                    <a href="{{ $stub('রুট ও গাড়ি') }}" class="sub-item">রুট ও গাড়ি</a>
-                    <a href="{{ $stub('পরিবহন সংযুক্তি') }}" class="sub-item">ছাত্র-পরিবহন সংযুক্তি</a>
+                    <a href="{{ route('transport.index') }}" class="sub-item {{ request()->routeIs('transport.*') ? 'active' : '' }}">রুট ও গাড়ি</a>
+                    <a href="{{ route('transport.index') }}" class="sub-item">ছাত্র-পরিবহন সংযুক্তি</a>
                 </div></div></div>
             </div>
 

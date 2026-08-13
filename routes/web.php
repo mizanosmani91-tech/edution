@@ -79,6 +79,7 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/income-expense-report-page', \App\Livewire\IncomeExpenseReport::class)->name('income-expense-report.index');
     Route::get('/books-page', \App\Livewire\BookManager::class)->name('books.index');
     Route::get('/book-issues-page', \App\Livewire\BookIssueManager::class)->name('book-issues.index');
+    Route::get('/transport-page', \App\Livewire\TransportManager::class)->name('transport.index');
     Route::get('/settings-page', \App\Livewire\InstitutionSettingsForm::class)->name('settings.index');
     Route::get('/routine-page', \App\Livewire\RoutineBoard::class)->name('routine.index');
 
