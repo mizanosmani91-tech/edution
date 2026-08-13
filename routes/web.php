@@ -74,6 +74,9 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/notice-board-page', \App\Livewire\NoticeBoard::class)->name('notice-board.index');
     Route::get('/id-cards-page', \App\Livewire\IdCardGenerator::class)->name('id-cards.index');
     Route::get('/attendance-report-page', \App\Livewire\AttendanceReport::class)->name('attendance-report.index');
+    Route::get('/fee-structures-page', \App\Livewire\FeeStructureManager::class)->name('fee-structures.index');
+    Route::get('/expenses-page', \App\Livewire\ExpenseTracker::class)->name('expenses.index');
+    Route::get('/income-expense-report-page', \App\Livewire\IncomeExpenseReport::class)->name('income-expense-report.index');
     Route::get('/settings-page', \App\Livewire\InstitutionSettingsForm::class)->name('settings.index');
     Route::get('/routine-page', \App\Livewire\RoutineBoard::class)->name('routine.index');
 

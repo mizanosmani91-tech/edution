@@ -142,20 +142,20 @@
             </div>
 
             {{-- ফি/অর্থ --}}
-            <div class="nav-module {{ $activeIf('fees.*') }}" x-data="{ open: {{ request()->routeIs('fees.*') ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('fees.*','fee-structures.*','expenses.*','income-expense-report.*') }}" x-data="{ open: {{ request()->routeIs(['fees.*','fee-structures.*','expenses.*','income-expense-report.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/><circle cx="16.5" cy="15" r="1.4"/></svg></span>
                     <span class="lbl">ফি/অর্থ</span>
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
-                    <a href="{{ $stub('ফি স্ট্রাকচার') }}" class="sub-item">ফি স্ট্রাকচার সেটআপ</a>
+                    <a href="{{ route('fee-structures.index') }}" class="sub-item {{ request()->routeIs('fee-structures.*') ? 'active' : '' }}">ফি স্ট্রাকচার সেটআপ</a>
                     <a href="{{ route('fees.index') }}" class="sub-item {{ request()->routeIs('fees.*') ? 'active' : '' }}">ফি সংগ্রহ</a>
                     <a href="{{ $stub('অনলাইন পেমেন্ট') }}" class="sub-item">অনলাইন পেমেন্ট গেটওয়ে</a>
-                    <a href="{{ $stub('বকেয়া তালিকা') }}" class="sub-item">বকেয়া তালিকা</a>
+                    <a href="{{ route('fees.index') }}" class="sub-item">বকেয়া তালিকা</a>
                     <a href="{{ $stub('বৃত্তি ও মওকুফ') }}" class="sub-item">বৃত্তি/মওকুফ</a>
-                    <a href="{{ $stub('খরচ ব্যয়') }}" class="sub-item">খরচ/ব্যয় ট্র্যাকিং</a>
-                    <a href="{{ $stub('আয় ব্যয় রিপোর্ট') }}" class="sub-item">আয়-ব্যয় রিপোর্ট</a>
+                    <a href="{{ route('expenses.index') }}" class="sub-item {{ request()->routeIs('expenses.*') ? 'active' : '' }}">খরচ/ব্যয় ট্র্যাকিং</a>
+                    <a href="{{ route('income-expense-report.index') }}" class="sub-item {{ request()->routeIs('income-expense-report.*') ? 'active' : '' }}">আয়-ব্যয় রিপোর্ট</a>
                 </div></div></div>
             </div>
 
