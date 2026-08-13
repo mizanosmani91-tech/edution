@@ -64,7 +64,7 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
-                    <a href="{{ $stub('অনলাইন ভর্তি ফর্ম') }}" class="sub-item">অনলাইন ভর্তি ফর্ম</a>
+                    <a href="{{ route('students.admission') }}" class="sub-item {{ request()->routeIs('students.admission') ? 'active' : '' }}">অনলাইন ভর্তি ফর্ম</a>
                     <a href="{{ $stub('ভর্তি আবেদন তালিকা') }}" class="sub-item">ভর্তি আবেদন তালিকা</a>
                     <a href="{{ $stub('আসন ব্যবস্থাপনা') }}" class="sub-item">আসন ব্যবস্থাপনা</a>
                     <a href="{{ $stub('ভর্তি পরীক্ষা') }}" class="sub-item">ভর্তি পরীক্ষা/ইন্টারভিউ</a>
@@ -100,7 +100,7 @@
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('teachers.index') }}" class="sub-item {{ request()->routeIs('teachers.*') ? 'active' : '' }}">শিক্ষক তালিকা</a>
-                    <a href="{{ $stub('নিয়োগ') }}" class="sub-item">নিয়োগ</a>
+                    <a href="{{ route('teachers.hire') }}" class="sub-item {{ request()->routeIs('teachers.hire') ? 'active' : '' }}">নিয়োগ</a>
                     <a href="{{ $stub('পে-রোল') }}" class="sub-item">পে-রোল/বেতন</a>
                     <a href="{{ route('leave-requests.index') }}" class="sub-item">ছুটি ব্যবস্থাপনা</a>
                     <a href="{{ $stub('Performance') }}" class="sub-item">Performance/মূল্যায়ন</a>
@@ -108,7 +108,7 @@
             </div>
 
             {{-- হাজিরা --}}
-            <div class="nav-module {{ $activeIf('attendance.*','staff-attendance.*') }}" x-data="{ open: {{ request()->routeIs(['attendance.*','staff-attendance.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('attendance.*','staff-attendance.*','attendance-report.*') }}" x-data="{ open: {{ request()->routeIs(['attendance.*','staff-attendance.*','attendance-report.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12 2.3 2.3L16 9.7"/></svg></span>
                     <span class="lbl">হাজিরা</span>
@@ -118,7 +118,7 @@
                     <a href="{{ route('attendance.index') }}" class="sub-item {{ request()->routeIs('attendance.*') ? 'active' : '' }}">শিক্ষার্থী হাজিরা</a>
                     <a href="{{ route('staff-attendance.index') }}" class="sub-item {{ request()->routeIs('staff-attendance.*') ? 'active' : '' }}">স্টাফ হাজিরা</a>
                     <a href="{{ route('leave-requests.index') }}" class="sub-item">ছুটির আবেদন</a>
-                    <a href="{{ $stub('হাজিরা রিপোর্ট') }}" class="sub-item">হাজিরা রিপোর্ট</a>
+                    <a href="{{ route('attendance-report.index') }}" class="sub-item {{ request()->routeIs('attendance-report.*') ? 'active' : '' }}">হাজিরা রিপোর্ট</a>
                 </div></div></div>
             </div>
 
