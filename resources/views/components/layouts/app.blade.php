@@ -167,9 +167,9 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
-                    <a href="{{ $stub('বই তালিকা') }}" class="sub-item">বই তালিকা</a>
-                    <a href="{{ $stub('ইস্যু রিটার্ন') }}" class="sub-item">ইস্যু/রিটার্ন</a>
-                    <a href="{{ $stub('লাইব্রেরি জরিমানা') }}" class="sub-item">জরিমানা</a>
+                    <a href="{{ route('books.index') }}" class="sub-item {{ request()->routeIs('books.*') ? 'active' : '' }}">বই তালিকা</a>
+                    <a href="{{ route('book-issues.index') }}" class="sub-item {{ request()->routeIs('book-issues.*') ? 'active' : '' }}">ইস্যু/রিটার্ন</a>
+                    <a href="{{ route('book-issues.index') }}" class="sub-item">জরিমানা</a>
                 </div></div></div>
             </div>
 
