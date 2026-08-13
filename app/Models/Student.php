@@ -54,4 +54,19 @@ class Student extends Model
         return $this->belongsToMany(User::class, 'guardian_student', 'student_id', 'guardian_id')
             ->withPivot('relationship');
     }
+
+    public function certificates()
+    {
+        return $this->hasMany(Certificate::class);
+    }
+
+    public function disciplineRecords()
+    {
+        return $this->hasMany(DisciplineRecord::class);
+    }
+
+    public function healthRecord()
+    {
+        return $this->hasOne(StudentHealthRecord::class);
+    }
 }

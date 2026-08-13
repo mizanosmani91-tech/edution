@@ -82,6 +82,12 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/transport-page', \App\Livewire\TransportManager::class)->name('transport.index');
     Route::get('/hostel-page', \App\Livewire\HostelManager::class)->name('hostel.index');
     Route::get('/complaints-page', \App\Livewire\ComplaintBox::class)->name('complaints.index');
+    Route::get('/student-promotion', \App\Livewire\StudentPromotion::class)->name('student-promotion.index');
+    Route::get('/certificate/transfer', \App\Livewire\CertificateGenerator::class)->name('certificates.transfer')->defaults('type', 'transfer');
+    Route::get('/certificate/character', \App\Livewire\CertificateGenerator::class)->name('certificates.character')->defaults('type', 'character');
+    Route::get('/discipline-records', \App\Livewire\DisciplineRecords::class)->name('discipline.index');
+    Route::get('/student-health', \App\Livewire\StudentHealth::class)->name('student-health.index');
+    Route::get('/alumni', \App\Livewire\AlumniDirectory::class)->name('alumni.index');
     Route::get('/settings-page', \App\Livewire\InstitutionSettingsForm::class)->name('settings.index');
     Route::get('/routine-page', \App\Livewire\RoutineBoard::class)->name('routine.index');
 

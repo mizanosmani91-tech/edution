@@ -73,7 +73,7 @@
             </div>
 
             {{-- শিক্ষার্থী --}}
-            <div class="nav-module {{ $activeIf('students.*','id-cards.*') }}" x-data="{ open: {{ request()->routeIs(['students.*','id-cards.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('students.*','id-cards.*','student-promotion.*','certificates.*','discipline.*','student-health.*','alumni.*') }}" x-data="{ open: {{ request()->routeIs(['students.*','id-cards.*','student-promotion.*','certificates.*','discipline.*','student-health.*','alumni.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4.5 5-6.5 8-6.5s6.5 2 8 6.5"/></svg></span>
                     <span class="lbl">শিক্ষার্থী</span>
@@ -82,12 +82,12 @@
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('students.index') }}" class="sub-item {{ request()->routeIs('students.*') ? 'active' : '' }}">শিক্ষার্থী তালিকা</a>
                     <a href="{{ route('id-cards.index') }}" class="sub-item {{ request()->routeIs('id-cards.*') ? 'active' : '' }}">আইডি কার্ড জেনারেশন</a>
-                    <a href="{{ $stub('প্রমোশন') }}" class="sub-item">প্রমোশন</a>
-                    <a href="{{ $stub('Transfer Certificate') }}" class="sub-item">Transfer Certificate</a>
-                    <a href="{{ $stub('Character Certificate') }}" class="sub-item">Character Certificate</a>
-                    <a href="{{ $stub('আচরণ রেকর্ড') }}" class="sub-item">Discipline/আচরণ রেকর্ড</a>
-                    <a href="{{ $stub('স্বাস্থ্য তথ্য') }}" class="sub-item">স্বাস্থ্য তথ্য</a>
-                    <a href="{{ $stub('Alumni') }}" class="sub-item">Alumni</a>
+                    <a href="{{ route('student-promotion.index') }}" class="sub-item {{ request()->routeIs('student-promotion.*') ? 'active' : '' }}">প্রমোশন</a>
+                    <a href="{{ route('certificates.transfer') }}" class="sub-item {{ request()->routeIs('certificates.transfer') ? 'active' : '' }}">Transfer Certificate</a>
+                    <a href="{{ route('certificates.character') }}" class="sub-item {{ request()->routeIs('certificates.character') ? 'active' : '' }}">Character Certificate</a>
+                    <a href="{{ route('discipline.index') }}" class="sub-item {{ request()->routeIs('discipline.*') ? 'active' : '' }}">Discipline/আচরণ রেকর্ড</a>
+                    <a href="{{ route('student-health.index') }}" class="sub-item {{ request()->routeIs('student-health.*') ? 'active' : '' }}">স্বাস্থ্য তথ্য</a>
+                    <a href="{{ route('alumni.index') }}" class="sub-item {{ request()->routeIs('alumni.*') ? 'active' : '' }}">Alumni</a>
                 </div></div></div>
             </div>
 

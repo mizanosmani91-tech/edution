@@ -492,3 +492,5 @@ tbody tr:last-child td{border-bottom:0;}
   .roll-row{padding:11px 12px;gap:10px;}
   .status-btn{width:32px;height:30px;}
 }
+
+.alert-note{background:#FBF3E7;border:1px solid var(--gold);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--ink);}
