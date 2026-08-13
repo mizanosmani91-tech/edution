@@ -200,7 +200,7 @@
             </div>
 
             {{-- যোগাযোগ --}}
-            <div class="nav-module {{ $activeIf('chat.*','notice-board.*') }}" x-data="{ open: {{ request()->routeIs(['chat.*','notice-board.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('chat.*','notice-board.*','complaints.*') }}" x-data="{ open: {{ request()->routeIs(['chat.*','notice-board.*','complaints.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16v11H8l-4 4V5Z"/></svg></span>
                     <span class="lbl">যোগাযোগ</span>
@@ -211,7 +211,7 @@
                     <a href="{{ route('chat.index') }}" class="sub-item {{ request()->routeIs('chat.*') ? 'active' : '' }}">মেসেজিং/চ্যাট</a>
                     <a href="{{ $stub('SMS Gateway') }}" class="sub-item">SMS Gateway</a>
                     <a href="{{ $stub('Email Notification') }}" class="sub-item">Email Notification</a>
-                    <a href="{{ $stub('অভিযোগ বাক্স') }}" class="sub-item">Complaint/Suggestion</a>
+                    <a href="{{ route('complaints.index') }}" class="sub-item {{ request()->routeIs('complaints.*') ? 'active' : '' }}">Complaint/Suggestion</a>
                 </div></div></div>
             </div>
 
