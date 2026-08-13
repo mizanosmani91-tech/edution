@@ -68,7 +68,7 @@
                     @endphp
                     <tr wire:key="teacher-{{ $teacher->id }}">
                         <td>
-                            <a href="{{ route('stub', urlencode('শিক্ষক প্রোফাইল')) }}" class="stud">
+                            <a href="{{ route('teachers.profile', $teacher) }}" class="stud">
                                 <div class="ini">{{ mb_substr($teacher->name, 0, 1) }}</div>
                                 <div>
                                     <div class="name">{{ $teacher->name }}</div>
