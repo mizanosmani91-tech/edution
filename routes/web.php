@@ -80,6 +80,7 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/books-page', \App\Livewire\BookManager::class)->name('books.index');
     Route::get('/book-issues-page', \App\Livewire\BookIssueManager::class)->name('book-issues.index');
     Route::get('/transport-page', \App\Livewire\TransportManager::class)->name('transport.index');
+    Route::get('/hostel-page', \App\Livewire\HostelManager::class)->name('hostel.index');
     Route::get('/settings-page', \App\Livewire\InstitutionSettingsForm::class)->name('settings.index');
     Route::get('/routine-page', \App\Livewire\RoutineBoard::class)->name('routine.index');
 

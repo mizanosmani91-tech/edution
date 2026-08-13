@@ -194,8 +194,8 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
-                    <a href="{{ $stub('রুম বরাদ্দ') }}" class="sub-item">রুম/সিট বরাদ্দ</a>
-                    <a href="{{ $stub('হোস্টেল ফি') }}" class="sub-item">হোস্টেল ফি</a>
+                    <a href="{{ route('hostel.index') }}" class="sub-item {{ request()->routeIs('hostel.*') ? 'active' : '' }}">রুম/সিট বরাদ্দ</a>
+                    <a href="{{ route('hostel.index') }}" class="sub-item">হোস্টেল ফি</a>
                 </div></div></div>
             </div>
 
