@@ -1,5 +1,51 @@
 <div class="p-4 md:p-6">
-    {{-- পেন্ডিং পেমেন্ট — সবচেয়ে জরুরি, উপরে --}}
+    {{-- পেন্ডিং প্রতিষ্ঠান রেজিস্ট্রেশন — সবচেয়ে জরুরি --}}
+    @if ($pendingInstitutions->isNotEmpty())
+        <h2 class="mb-3 font-medium text-gray-900">নতুন প্রতিষ্ঠান রেজিস্ট্রেশন — অনুমোদন বাকি</h2>
+        <div class="mb-6 space-y-2">
+            @foreach ($pendingInstitutions as $inst)
+                <div wire:key="pending-{{ $inst->id }}"
+                     class="flex flex-col gap-2 rounded-lg border border-amber-200 bg-amber-50 p-4 md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <p class="font-medium text-gray-900">{{ $inst->name }}</p>
+                        <p class="text-sm text-gray-600">
+                            {{ $inst->registration_email }} · {{ $inst->phone }}
+                        </p>
+                        @if ($inst->address)
+                            <p class="text-xs text-gray-500">{{ $inst->address }}</p>
+                        @endif
+                    </div>
+                    <div class="flex gap-2">
+                        <button wire:click="approvePendingInstitution('{{ $inst->id }}')"
+                                class="flex-1 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white md:flex-none">
+                            অনুমোদন
+                        </button>
+                        <button wire:click="rejectPendingInstitution('{{ $inst->id }}')"
+                                wire:confirm="এই আবেদন বাতিল করবেন?"
+                                class="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 md:flex-none">
+                            বাতিল
+                        </button>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @endif
+
+    {{-- Approve হওয়ার পর temp password দেখানো (একবারই দেখাবে) --}}
+    @if ($justApprovedSlug)
+        <div class="mb-6 rounded-lg border-2 border-green-300 bg-green-50 p-4">
+            <p class="mb-2 font-medium text-green-800">✅ প্রতিষ্ঠান অনুমোদিত হয়েছে!</p>
+            <p class="text-sm text-gray-700">
+                Subdomain: <strong>{{ $justApprovedSlug }}.edution.xyz</strong><br>
+                সাময়িক পাসওয়ার্ড: <code class="rounded bg-white px-2 py-1 font-mono text-base font-bold">{{ $justApprovedPassword }}</code>
+            </p>
+            <p class="mt-2 text-xs text-amber-700">
+                ⚠️ এই পাসওয়ার্ডটা এখনই কপি করে ফোন/হোয়াটসঅ্যাপে প্রতিষ্ঠানকে জানান — পেজ রিলোড হলে এটা আর দেখা যাবে না।
+            </p>
+        </div>
+    @endif
+
+    {{-- পেন্ডিং পেমেন্ট --}}
     @if ($pendingPayments->isNotEmpty())
         <h2 class="mb-3 font-medium text-gray-900">পেন্ডিং পেমেন্ট অনুমোদন</h2>
         <div class="mb-6 space-y-2">
@@ -30,7 +76,6 @@
 
     <h2 class="mb-3 font-medium text-gray-900">সব প্রতিষ্ঠান</h2>
 
-    {{-- মোবাইল: কার্ড --}}
     <div class="space-y-3 md:hidden">
         @foreach ($institutions as $institution)
             <div wire:key="mobile-inst-{{ $institution->id }}"
@@ -44,6 +89,7 @@
                         {{ match($institution->status) {
                             'active' => 'bg-green-50 text-green-700',
                             'suspended' => 'bg-red-50 text-red-700',
+                            'rejected' => 'bg-gray-100 text-gray-500',
                             default => 'bg-amber-50 text-amber-700',
                         } }}">
                         {{ $institution->status }}
@@ -54,7 +100,6 @@
         @endforeach
     </div>
 
-    {{-- ডেস্কটপ: টেবিল --}}
     <div class="hidden overflow-x-auto rounded-lg border border-gray-200 md:block">
         <table class="min-w-full divide-y divide-gray-200 bg-white">
             <thead class="bg-gray-50">
@@ -63,7 +108,6 @@
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">Subdomain</th>
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">ছাত্র</th>
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">স্ট্যাটাস</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">ট্রায়াল শেষ</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
@@ -73,7 +117,6 @@
                         <td class="px-4 py-3 text-gray-600">{{ $institution->slug }}</td>
                         <td class="px-4 py-3 text-gray-600">{{ $institution->students_count }}</td>
                         <td class="px-4 py-3 text-gray-600">{{ $institution->status }}</td>
-                        <td class="px-4 py-3 text-gray-600">{{ $institution->trial_ends_at?->format('d M, Y') ?? '—' }}</td>
                     </tr>
                 @endforeach
             </tbody>

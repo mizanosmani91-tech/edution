@@ -14,12 +14,38 @@ class Teacher extends Model
     protected $fillable = [
         'institution_id',
         'name',
+        'name_en',
+        'gender',
+        'nid',
+        'address',
+        'emergency_contact',
+        'education',
+        'passing_institution',
         'teacher_id_no',
         'phone',
         'email',
         'designation',
+        'employee_type',
+        'experience_years',
+        'previous_workplace',
         'joining_date',
+        'status',
         'photo_path',
+        'base_salary',
+        'house_rent',
+        'medical_allowance',
+        'bank_name',
+        'bank_branch',
+        'bank_account',
+        'mobile_banking',
+        'subjects_taught',
+        'assigned_classes',
+    ];
+
+    protected $casts = [
+        'subjects_taught' => 'array',
+        'assigned_classes' => 'array',
+        'joining_date' => 'date',
     ];
 
     public function institution()

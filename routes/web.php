@@ -13,16 +13,21 @@ Route::get('/login', function () {
     return view('auth.login', ['institution' => $institution]);
 })->name('login');
 Route::post('/login', [LoginController::class, 'store']);
-Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth');
+Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
 
 Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
 
     // ── API-style JSON রুট — নাম আলাদা রাখা হলো 'api.' prefix দিয়ে, যেন
+    Route::get('/students/admission', \App\Livewire\StudentAdmissionWizard::class)->name('students.admission');
+    Route::get('/academic/classes', \App\Livewire\ClassSectionManager::class)->name('academic.classes');
+    Route::get('/academic/departments', \App\Livewire\DepartmentManager::class)->name('academic.departments');
+    Route::get('/academic/subjects', \App\Livewire\SubjectManager::class)->name('academic.subjects');
     // Livewire পেজ রুটের নামের সাথে conflict না হয় ──
     Route::resource('students', StudentController::class)
         ->except(['create', 'edit'])
         ->names('api.students');
+    Route::get('/teachers/hire', \App\Livewire\TeacherAdmissionWizard::class)->name('teachers.hire');
     Route::resource('teachers', \App\Http\Controllers\TeacherController::class)
         ->except(['create', 'edit'])
         ->names('api.teachers');
@@ -84,8 +89,14 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::post('/exams/{exam}/publish', [\App\Http\Controllers\ExamController::class, 'publish'])->name('exams.publish');
 
     Route::get('/leave-requests', \App\Livewire\LeaveRequestsList::class)->name('leave-requests.index');
+    Route::get('/coming-soon/{title}', [\App\Http\Controllers\ComingSoonController::class, 'show'])->name('stub');
 });
 
-Route::middleware(['auth', 'superadmin'])->prefix('superadmin')->group(function () {
-    Route::get('/institutions', \App\Livewire\SuperadminInstitutionsList::class)->name('superadmin.institutions');
+Route::domain('panel.edution.xyz')->group(function () {
+    Route::get('/login', [\App\Http\Controllers\Auth\SuperadminLoginController::class, 'create'])->name('superadmin.login');
+    Route::post('/login', [\App\Http\Controllers\Auth\SuperadminLoginController::class, 'store'])->name('superadmin.login.store');
+});
+
+Route::middleware(['auth', 'superadmin'])->domain('panel.edution.xyz')->group(function () {
+    Route::get('/', \App\Livewire\SuperadminInstitutionsList::class)->name('superadmin.institutions');
 });

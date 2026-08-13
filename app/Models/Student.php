@@ -23,6 +23,14 @@ class Student extends Model
         'section_id',
         'guardian_phone',
         'photo_path',
+        'name_en',
+        'gender',
+        'birth_reg_no',
+        'blood_group',
+        'religion',
+        'nationality',
+        'admission_type',
+        'previous_school',
         'date_of_birth',
     ];
 

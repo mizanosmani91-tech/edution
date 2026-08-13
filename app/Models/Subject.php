@@ -15,5 +15,6 @@ class Subject extends Model
         'institution_id',
         'name',
         'code',
+        'syllabus_note',
     ];
 }

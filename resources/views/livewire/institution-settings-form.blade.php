@@ -1,43 +1,86 @@
-<div class="mx-auto max-w-lg p-4 md:p-6">
-    <h2 class="mb-6 text-lg font-semibold text-gray-900">প্রতিষ্ঠান সেটিংস</h2>
-
-    <div class="space-y-4">
-        {{-- টগল সুইচ — মোবাইলে বড় tap area (পুরো row-ই ক্লিকযোগ্য) --}}
-        <label class="flex items-center justify-between rounded-lg border border-gray-200 p-4">
-            <div>
-                <p class="font-medium text-gray-900">বিভাগ (Department) সিস্টেম</p>
-                <p class="text-sm text-gray-500">চালু করলে ক্লাসের সাথে বিভাগ যোগ করা যাবে (বিজ্ঞান/মানবিক ইত্যাদি)</p>
-            </div>
-            <input type="checkbox" wire:model="hasDepartments"
-                   class="h-6 w-11 shrink-0 rounded-full accent-blue-600">
-        </label>
-
-        <label class="flex items-center justify-between rounded-lg border border-gray-200 p-4">
-            <div>
-                <p class="font-medium text-gray-900">পরপর পিরিয়ড ব্লকিং</p>
-                <p class="text-sm text-gray-500">চালু থাকলে একজন শিক্ষকের রুটিনে পরপর দুই পিরিয়ড দেওয়া যাবে না</p>
-            </div>
-            <input type="checkbox" wire:model="consecutivePeriodBlocking"
-                   class="h-6 w-11 shrink-0 rounded-full accent-blue-600">
-        </label>
+<div>
+    <div class="page-head">
+        <div>
+            <h2>প্রতিষ্ঠান সেটিংস</h2>
+            <p>আপনার প্রতিষ্ঠানের তথ্য, ফিচার ও ব্র্যান্ডিং কনফিগার করুন</p>
+        </div>
     </div>
 
-    <div class="mt-6 rounded-lg border border-gray-200 p-4">
-        <p class="mb-3 font-medium text-gray-900">ব্র্যান্ড কালার (White-labeling)</p>
-        <div class="flex gap-4">
-            <div>
-                <label class="mb-1 block text-sm text-gray-700">প্রাইমারি</label>
-                <input type="color" wire:model="themePrimaryColor" class="h-11 w-16 rounded border border-gray-300">
+    @if ($saved)
+        <div class="info-box" style="background:rgba(47,110,82,.1);border-color:rgba(47,110,82,.3);color:var(--good);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20 6 9 17l-5-5"/></svg>
+            সেটিংস সফলভাবে সংরক্ষণ করা হয়েছে।
+        </div>
+    @endif
+
+    {{-- প্রতিষ্ঠান প্রোফাইল --}}
+    <div class="settings-section">
+        <h3>প্রতিষ্ঠান প্রোফাইল</h3>
+        <p class="sub">এই তথ্য পোর্টাল ও প্রিন্টেবল ডকুমেন্টে দেখানো হবে</p>
+
+        <div class="grid2">
+            <div class="field">
+                <label>প্রতিষ্ঠানের নাম <span class="req">*</span></label>
+                <input type="text" wire:model="institutionName">
+                @error('institutionName') <p class="hint" style="color:var(--bad)">{{ $message }}</p> @enderror
             </div>
-            <div>
-                <label class="mb-1 block text-sm text-gray-700">অ্যাকসেন্ট</label>
-                <input type="color" wire:model="themeAccentColor" class="h-11 w-16 rounded border border-gray-300">
+            <div class="field">
+                <label>ফোন নম্বর</label>
+                <input type="text" wire:model="institutionPhone">
+            </div>
+        </div>
+        <div class="field full">
+            <label>ঠিকানা</label>
+            <textarea wire:model="institutionAddress"></textarea>
+        </div>
+    </div>
+
+    {{-- ফিচার টগল --}}
+    <div class="settings-section">
+        <h3>ফিচার সেটিংস</h3>
+        <p class="sub">প্রতিষ্ঠানের প্রয়োজন অনুযায়ী চালু/বন্ধ করুন</p>
+
+        <div class="switch-row">
+            <div class="switch-label">
+                <div class="t1">বিভাগ (Department) সিস্টেম</div>
+                <div class="t2">চালু করলে ক্লাসের সাথে বিভাগ যোগ করা যাবে (বিজ্ঞান/মানবিক ইত্যাদি)</div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" wire:model="hasDepartments">
+                <span class="switch-track"></span>
+            </label>
+        </div>
+
+        <div class="switch-row">
+            <div class="switch-label">
+                <div class="t1">পরপর পিরিয়ড ব্লকিং</div>
+                <div class="t2">চালু থাকলে একজন শিক্ষকের রুটিনে পরপর দুই পিরিয়ড দেওয়া যাবে না</div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" wire:model="consecutivePeriodBlocking">
+                <span class="switch-track"></span>
+            </label>
+        </div>
+    </div>
+
+    {{-- ব্র্যান্ডিং --}}
+    <div class="settings-section">
+        <h3>ব্র্যান্ড কালার</h3>
+        <p class="sub">আপনার প্রতিষ্ঠানের নিজস্ব রং সেট করুন (ভবিষ্যতে white-labeling-এ ব্যবহৃত হবে)</p>
+
+        <div class="color-row">
+            <div class="color-field">
+                <label>প্রাইমারি রং</label>
+                <input type="color" wire:model="themePrimaryColor">
+            </div>
+            <div class="color-field">
+                <label>অ্যাকসেন্ট রং</label>
+                <input type="color" wire:model="themeAccentColor">
             </div>
         </div>
     </div>
 
-    <button wire:click="save"
-            class="mt-6 w-full rounded-lg bg-blue-600 py-3 text-base font-medium text-white active:bg-blue-700 md:w-auto md:px-8">
-        {{ $saved ? '✓ সেভ হয়েছে' : 'সেভ করুন' }}
-    </button>
+    <div class="save-bar">
+        <button class="btn-primary" wire:click="save" type="button">সংরক্ষণ করুন</button>
+    </div>
 </div>
