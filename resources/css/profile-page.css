@@ -1,0 +1,129 @@
+/* ==========================================================
+   .profile-page — শিক্ষক/স্টাফ ও শিক্ষার্থী প্রোফাইলের দুই-কলাম লেআউট।
+   রেফারেন্স HTML (edu-teacher-profile.html / edu-staff-profile.html /
+   edu-student-profile.html) থেকে হুবহু আনা, কিন্তু বাকি অ্যাপ ভাঙা এড়াতে
+   .profile-page prefix দিয়ে scope করা হয়েছে (dashboard-theme.css এর
+   .card/.tab-btn/.pill ইত্যাদির সাথে collision এড়াতে)।
+   ========================================================== */
+
+.profile-page .page-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:20px;flex-wrap:wrap;}
+.profile-page .page-top h2{font-family:'Tiro Bangla',serif;font-size:23px;margin:0 0 4px;}
+.profile-page .page-top p{margin:0;font-size:13px;color:var(--ink-muted);}
+.profile-page .head-actions{display:flex;gap:10px;flex-wrap:wrap;}
+
+.profile-page .profile-grid{display:grid;grid-template-columns:296px 1fr;gap:22px;align-items:start;}
+@media (max-width:980px){.profile-page .profile-grid{grid-template-columns:1fr;}.profile-page .short-card{position:static;}}
+
+.profile-page .short-card{position:sticky;top:16px;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;}
+.profile-page .short-banner{height:64px;background:linear-gradient(120deg,#2C4270,var(--accent,var(--teacher)));position:relative;}
+.profile-page .short-photo-wrap{display:flex;justify-content:center;margin-top:-40px;position:relative;z-index:1;}
+.profile-page .short-photo{width:84px;height:84px;border-radius:18px;border:4px solid #fff;background:linear-gradient(135deg,#5678B5,var(--accent,var(--teacher)));display:flex;align-items:center;justify-content:center;font-family:'Tiro Bangla',serif;font-size:26px;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.12);overflow:hidden;}
+.profile-page .short-photo img{width:100%;height:100%;object-fit:cover;}
+.profile-page .short-body{padding:12px 20px 18px;text-align:center;}
+.profile-page .short-body .nm{font-family:'Tiro Bangla',serif;font-size:18px;margin:2px 0 2px;}
+.profile-page .short-body .nm-en{font-size:12px;color:var(--ink-soft);margin-bottom:8px;}
+.profile-page .short-pills{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
+.profile-page .short-pills .pill.blue{background:color-mix(in srgb, var(--teacher) 14%, white);color:var(--teacher);}
+.profile-page .short-pills .pill.gold{background:color-mix(in srgb, var(--gold) 20%, white);color:#8a6c17;}
+
+.profile-page .short-id{background:var(--paper-deep);border-radius:11px;padding:9px 12px;font-size:12px;color:var(--ink-muted);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:6px;}
+.profile-page .short-id b{font-family:'Tiro Bangla',serif;font-size:13px;color:var(--ink);letter-spacing:.02em;}
+
+.profile-page .short-list{text-align:right;display:flex;flex-direction:column;gap:9px;margin-bottom:16px;}
+.profile-page .short-list .row{display:flex;align-items:center;justify-content:space-between;font-size:12px;}
+.profile-page .short-list .row .k{color:var(--ink-soft);display:flex;align-items:center;gap:6px;}
+.profile-page .short-list .row .k svg{width:13px;height:13px;}
+.profile-page .short-list .row .v{color:var(--ink);font-weight:600;}
+
+.profile-page .short-attendance{background:var(--paper-deep);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;}
+.profile-page .ring{width:46px;height:46px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.profile-page .ring-inner{width:34px;height:34px;border-radius:50%;background:var(--paper-deep);display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:var(--ink);}
+.profile-page .short-attendance .t1{font-size:12px;font-weight:700;}
+.profile-page .short-attendance .t2{font-size:10.5px;color:var(--ink-muted);}
+
+.profile-page .short-contact{border:1px dashed var(--line);border-radius:12px;padding:11px 13px;margin-bottom:14px;text-align:right;}
+.profile-page .short-contact .lbl{font-size:10.5px;color:var(--ink-soft);margin-bottom:3px;}
+.profile-page .short-contact .nm{font-size:12.5px;font-weight:700;margin-bottom:6px;}
+.profile-page .short-contact .contact-row{display:flex;gap:6px;justify-content:flex-end;}
+.profile-page .mini-btn{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-muted);}
+.profile-page .mini-btn:hover{border-color:var(--gold);color:var(--ink);}
+.profile-page .mini-btn svg{width:13px;height:13px;}
+.profile-page a.mini-btn{text-decoration:none;}
+
+.profile-page .short-actions{display:flex;flex-direction:column;gap:8px;}
+.profile-page .short-actions button, .profile-page .short-actions a{width:100%;border-radius:10px;padding:9px 10px;font-size:12.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;border:0;}
+.profile-page .sa-primary{background:linear-gradient(180deg,var(--gold-light),var(--gold));color:#3E1120;}
+.profile-page .sa-ghost{background:#fff;border:1.4px solid var(--line) !important;color:var(--ink-muted);}
+.profile-page .sa-ghost:hover{border-color:var(--ink-soft) !important;color:var(--ink);}
+.profile-page .short-actions svg{width:14px;height:14px;}
+
+.profile-page .tabs-col{min-width:0;}
+.profile-page .tab-bar{position:sticky;top:0;z-index:4;display:flex;gap:5px;overflow-x:auto;background:rgba(247,242,229,.92);backdrop-filter:blur(4px);padding:6px;border-radius:13px;border:1px solid var(--line);margin-bottom:18px;}
+.profile-page .tab-bar .tab-btn{flex-shrink:0;padding:9px 15px;border-radius:9px;border:0;background:none;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-muted);white-space:nowrap;}
+.profile-page .tab-bar .tab-btn:hover{color:var(--ink);background:#fff;}
+.profile-page .tab-bar .tab-btn.active{background:var(--accent,var(--teacher));color:#fff;}
+
+.profile-page .card h3{font-family:'Tiro Bangla',serif;font-size:16.5px;margin:0 0 4px;}
+.profile-page .card .sub{font-size:12.5px;color:var(--ink-muted);margin:0 0 14px;}
+.profile-page .card{margin-bottom:16px;}
+.profile-page .card-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+
+.profile-page .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px 20px;}
+.profile-page .info-item .k{font-size:11.5px;color:var(--ink-soft);margin-bottom:4px;}
+.profile-page .info-item .v{font-size:13.8px;font-weight:600;color:var(--ink);}
+
+.profile-page thead th{background:var(--paper-deep);padding:10px 10px;}
+.profile-page tbody td{padding:10px 10px;}
+.profile-page .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;}
+.profile-page .tag.good{background:color-mix(in srgb, var(--good) 14%, white);color:var(--good);}
+.profile-page .tag.bad{background:color-mix(in srgb, var(--bad) 14%, white);color:var(--bad);}
+.profile-page .tag.gold{background:color-mix(in srgb, var(--gold) 18%, white);color:#8a6c17;}
+.profile-page .tag.blue{background:color-mix(in srgb, var(--teacher) 14%, white);color:var(--teacher);}
+
+.profile-page .chip-row{display:flex;gap:8px;flex-wrap:wrap;}
+.profile-page .chip{background:var(--paper-deep);border-radius:9px;padding:7px 13px;font-size:12.5px;font-weight:600;color:var(--ink);}
+
+.profile-page .badge-row{display:flex;gap:10px;flex-wrap:wrap;}
+.profile-page .badge{display:flex;align-items:center;gap:8px;background:var(--paper-deep);border-radius:12px;padding:10px 14px;font-size:12.5px;font-weight:600;}
+.profile-page .badge .bic{width:26px;height:26px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--gold);flex-shrink:0;}
+.profile-page .badge .bic svg{width:14px;height:14px;}
+
+.profile-page .timeline{display:flex;flex-direction:column;}
+.profile-page .t-row{display:flex;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line);}
+.profile-page .t-row:last-child{border-bottom:0;padding-bottom:0;}
+.profile-page .t-dot{width:10px;height:10px;border-radius:50%;background:var(--accent,var(--teacher));margin-top:5px;flex-shrink:0;}
+.profile-page .t-body .tt{font-size:13.3px;font-weight:600;}
+.profile-page .t-body .td{font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
+
+.profile-page .doc-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);}
+.profile-page .doc-row:last-child{border-bottom:0;}
+.profile-page .doc-ic{width:38px;height:38px;border-radius:10px;background:var(--paper-deep);display:flex;align-items:center;justify-content:center;color:var(--cover-maroon);flex-shrink:0;}
+.profile-page .doc-ic svg{width:18px;height:18px;}
+.profile-page .doc-info{flex:1;min-width:0;}
+.profile-page .doc-info .dn{font-size:13.3px;font-weight:600;}
+.profile-page .doc-info .dm{font-size:11.3px;color:var(--ink-soft);margin-top:2px;}
+.profile-page .doc-actions{display:flex;gap:6px;}
+
+.profile-page .salary-box{background:var(--paper-deep);border-radius:14px;padding:16px 18px;margin-bottom:16px;}
+.profile-page .salary-box .line{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px dashed var(--line);color:var(--ink-muted);}
+.profile-page .salary-box .line:last-child{border-bottom:0;}
+.profile-page .salary-box .line span:last-child{color:var(--ink);font-weight:600;}
+.profile-page .salary-box .line.total{padding-top:10px;font-weight:700;}
+.profile-page .salary-box .line.total span{color:var(--teacher) !important;font-size:15px;}
+
+.profile-page .cred-card{border:1.5px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px;background:var(--card);}
+.profile-page .cred-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.profile-page .cred-ic{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.profile-page .cred-ic svg{width:17px;height:17px;}
+.profile-page .cred-head .t1{font-size:14px;font-weight:700;}
+.profile-page .cred-head .t2{font-size:11.5px;color:var(--ink-soft);}
+.profile-page .cred-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.profile-page .cred-field{flex:1;min-width:180px;}
+.profile-page .cred-field label{font-size:11px;font-weight:700;color:var(--ink-muted);display:block;margin-bottom:5px;}
+.profile-page .cred-input-shell{display:flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:9px;padding:8px 10px;background:var(--paper-deep);}
+.profile-page .cred-input-shell input{border:0;background:none;outline:0;font-family:'Hind Siliguri',monospace;font-size:13.5px;letter-spacing:.03em;width:100%;color:var(--ink);font-weight:600;}
+
+.profile-page .empty-note{text-align:center;padding:26px 10px;color:var(--ink-soft);}
+.profile-page .empty-note svg{width:30px;height:30px;margin-bottom:8px;opacity:.6;}
+.profile-page .empty-note .en-title{font-size:13.5px;font-weight:700;color:var(--ink-muted);margin-bottom:4px;}
+.profile-page .empty-note .en-sub{font-size:12px;}

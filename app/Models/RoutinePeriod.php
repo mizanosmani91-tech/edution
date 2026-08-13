@@ -43,4 +43,9 @@ class RoutinePeriod extends Model
     {
         return $this->belongsTo(SchoolClass::class, 'class_id');
     }
+
+    public function section()
+    {
+        return $this->belongsTo(Section::class, 'section_id');
+    }
 }
