@@ -69,7 +69,9 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/teachers-page/{teacher}', \App\Livewire\TeacherProfile::class)->name('teachers.profile');
     Route::get('/fees-page', \App\Livewire\FeeCollectionList::class)->name('fees.index');
     Route::get('/attendance-page', \App\Livewire\AttendanceTaker::class)->name('attendance.index');
+    Route::get('/staff-attendance-page', \App\Livewire\StaffAttendanceTaker::class)->name('staff-attendance.index');
     Route::get('/chat-page', \App\Livewire\ChatWindow::class)->name('chat.index');
+    Route::get('/notice-board-page', \App\Livewire\NoticeBoard::class)->name('notice-board.index');
     Route::get('/settings-page', \App\Livewire\InstitutionSettingsForm::class)->name('settings.index');
     Route::get('/routine-page', \App\Livewire\RoutineBoard::class)->name('routine.index');
 

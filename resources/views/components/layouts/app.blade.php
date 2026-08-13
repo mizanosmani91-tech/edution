@@ -108,7 +108,7 @@
             </div>
 
             {{-- হাজিরা --}}
-            <div class="nav-module {{ $activeIf('attendance.*') }}" x-data="{ open: {{ request()->routeIs('attendance.*') ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('attendance.*','staff-attendance.*') }}" x-data="{ open: {{ request()->routeIs(['attendance.*','staff-attendance.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12 2.3 2.3L16 9.7"/></svg></span>
                     <span class="lbl">হাজিরা</span>
@@ -116,7 +116,7 @@
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('attendance.index') }}" class="sub-item {{ request()->routeIs('attendance.*') ? 'active' : '' }}">শিক্ষার্থী হাজিরা</a>
-                    <a href="{{ $stub('স্টাফ হাজিরা') }}" class="sub-item">স্টাফ হাজিরা</a>
+                    <a href="{{ route('staff-attendance.index') }}" class="sub-item {{ request()->routeIs('staff-attendance.*') ? 'active' : '' }}">স্টাফ হাজিরা</a>
                     <a href="{{ route('leave-requests.index') }}" class="sub-item">ছুটির আবেদন</a>
                     <a href="{{ $stub('হাজিরা রিপোর্ট') }}" class="sub-item">হাজিরা রিপোর্ট</a>
                 </div></div></div>
@@ -200,14 +200,14 @@
             </div>
 
             {{-- যোগাযোগ --}}
-            <div class="nav-module {{ $activeIf('chat.*') }}" x-data="{ open: {{ request()->routeIs('chat.*') ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('chat.*','notice-board.*') }}" x-data="{ open: {{ request()->routeIs(['chat.*','notice-board.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16v11H8l-4 4V5Z"/></svg></span>
                     <span class="lbl">যোগাযোগ</span>
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
-                    <a href="{{ $stub('নোটিশ বোর্ড') }}" class="sub-item">নোটিশ বোর্ড</a>
+                    <a href="{{ route('notice-board.index') }}" class="sub-item {{ request()->routeIs('notice-board.*') ? 'active' : '' }}">নোটিশ বোর্ড</a>
                     <a href="{{ route('chat.index') }}" class="sub-item {{ request()->routeIs('chat.*') ? 'active' : '' }}">মেসেজিং/চ্যাট</a>
                     <a href="{{ $stub('SMS Gateway') }}" class="sub-item">SMS Gateway</a>
                     <a href="{{ $stub('Email Notification') }}" class="sub-item">Email Notification</a>

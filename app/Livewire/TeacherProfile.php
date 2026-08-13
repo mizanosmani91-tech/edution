@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\LeaveRequest;
 use App\Models\RoutinePeriod;
+use App\Models\StaffAttendance;
 use App\Models\Teacher;
 use Livewire\Component;
 
@@ -46,12 +48,23 @@ class TeacherProfile extends Component
             + (float) ($this->teacher->house_rent ?? 0)
             + (float) ($this->teacher->medical_allowance ?? 0);
 
+        $recentAttendance = StaffAttendance::where('teacher_id', $this->teacher->id)->latest('date')->limit(15)->get();
+        $thisMonthAttendance = StaffAttendance::where('teacher_id', $this->teacher->id)
+            ->whereBetween('date', [now()->startOfMonth(), now()->endOfMonth()])
+            ->get();
+        $presentDays = $thisMonthAttendance->whereIn('status', ['present', 'late'])->count();
+        $leaveHistory = LeaveRequest::where('teacher_id', $this->teacher->id)->latest('date_from')->limit(10)->get();
+
         return view('livewire.teacher-profile', [
             'classChips' => $classChips,
             'subjectCount' => $subjectCount,
             'classCount' => $classCount,
             'periodCount' => $periods->count(),
             'grossSalary' => $grossSalary,
+            'recentAttendance' => $recentAttendance,
+            'presentDays' => $presentDays,
+            'markedDays' => $thisMonthAttendance->count(),
+            'leaveHistory' => $leaveHistory,
         ])->layout('components.layouts.app', ['title' => 'শিক্ষক প্রোফাইল']);
     }
 }

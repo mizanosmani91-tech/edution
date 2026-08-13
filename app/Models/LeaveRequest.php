@@ -13,11 +13,15 @@ class LeaveRequest extends Model
 
     protected $fillable = [
         'institution_id',
+        'applicant_type', // student / teacher
         'student_id',
+        'teacher_id',
+        'leave_type',     // casual / sick / personal / maternity_paternity / family / other
         'requested_by',
         'date_from',
         'date_to',
         'reason',
+        'attachment_path',
         'status',
         'reviewed_by',
         'reviewed_at',
@@ -34,8 +38,25 @@ class LeaveRequest extends Model
         return $this->belongsTo(Student::class);
     }
 
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
+    }
+
     public function requestedBy()
     {
         return $this->belongsTo(User::class, 'requested_by');
+    }
+
+    public function getApplicantNameAttribute(): string
+    {
+        return $this->applicant_type === 'teacher'
+            ? ($this->teacher->name ?? '—')
+            : ($this->student->name ?? '—');
+    }
+
+    public function getTotalDaysAttribute(): int
+    {
+        return $this->date_from->diffInDays($this->date_to) + 1;
     }
 }

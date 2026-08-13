@@ -183,14 +183,56 @@
         </div>
     @endif
 
-    {{-- TAB: ATTENDANCE & LEAVE (module pending) --}}
+    {{-- TAB: ATTENDANCE & LEAVE --}}
     @if ($activeTab === 'attendance')
+        <div class="card" style="margin-bottom:16px;">
+            <div class="card-head"><div><h3>সাম্প্রতিক হাজিরা</h3><p>এ মাসে {{ $presentDays }}/{{ $markedDays }} দিন উপস্থিত</p></div></div>
+            @if ($recentAttendance->isNotEmpty())
+                <table class="info-table">
+                    <tr><td style="font-weight:600;">তারিখ</td><td style="font-weight:600;">চেক ইন</td><td style="font-weight:600;">চেক আউট</td><td style="font-weight:600;">স্ট্যাটাস</td></tr>
+                    @foreach ($recentAttendance as $att)
+                        <tr>
+                            <td>{{ $att->date->format('d M, Y') }}</td>
+                            <td>{{ $att->check_in?->format('h:i A') ?? '—' }}</td>
+                            <td>{{ $att->check_out?->format('h:i A') ?? '—' }}</td>
+                            <td>
+                                <span class="pill {{ $att->status === 'present' ? 'active' : ($att->status === 'leave' ? 'day' : 'due') }}">
+                                    {{ match($att->status) { 'present' => 'উপস্থিত', 'late' => 'দেরিতে', 'leave' => 'ছুটি', default => 'অনুপস্থিত' } }}
+                                </span>
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
+            @else
+                <div class="empty-note">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="3"/></svg>
+                    <div class="en-title">এখনো কোনো হাজিরা রেকর্ড নেই</div>
+                </div>
+            @endif
+        </div>
         <div class="card">
-            <div class="empty-note">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12 2.3 2.3L16 9.7"/></svg>
-                <div class="en-title">স্টাফ উপস্থিতি ও ছুটি মডিউল শীঘ্রই আসছে</div>
-                <div class="en-sub">এই ফিচারটি চালু হলে এখানে দৈনিক উপস্থিতি, ইন/আউট লগ এবং ছুটির হিসাব দেখা যাবে।</div>
-            </div>
+            <div class="card-head"><div><h3>ছুটির হিস্ট্রি</h3></div></div>
+            @if ($leaveHistory->isNotEmpty())
+                <table class="info-table">
+                    <tr><td style="font-weight:600;">তারিখ</td><td style="font-weight:600;">কারণ</td><td style="font-weight:600;">স্ট্যাটাস</td></tr>
+                    @foreach ($leaveHistory as $leave)
+                        <tr>
+                            <td>{{ $leave->date_from->format('d M') }} – {{ $leave->date_to->format('d M, Y') }}</td>
+                            <td>{{ $leave->reason }}</td>
+                            <td>
+                                <span class="pill {{ $leave->status === 'approved' ? 'active' : ($leave->status === 'rejected' ? 'due' : 'day') }}">
+                                    {{ match($leave->status) { 'approved' => 'অনুমোদিত', 'rejected' => 'বাতিল', default => 'অপেক্ষমান' } }}
+                                </span>
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
+            @else
+                <div class="empty-note">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="5" width="16" height="16" rx="2"/></svg>
+                    <div class="en-title">এখনো কোনো ছুটির আবেদন নেই</div>
+                </div>
+            @endif
         </div>
     @endif
 
