@@ -92,7 +92,7 @@
             </div>
 
             {{-- শিক্ষক ও স্টাফ --}}
-            <div class="nav-module {{ $activeIf('teachers.*') }}" x-data="{ open: {{ request()->routeIs('teachers.*') ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('teachers.*','payroll.*','performance.*','leave-requests.*') }}" x-data="{ open: {{ request()->routeIs(['teachers.*','payroll.*','performance.*','leave-requests.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8"/></svg></span>
                     <span class="lbl">শিক্ষক ও স্টাফ</span>
@@ -101,9 +101,9 @@
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('teachers.index') }}" class="sub-item {{ request()->routeIs('teachers.*') ? 'active' : '' }}">শিক্ষক তালিকা</a>
                     <a href="{{ route('teachers.hire') }}" class="sub-item {{ request()->routeIs('teachers.hire') ? 'active' : '' }}">নিয়োগ</a>
-                    <a href="{{ $stub('পে-রোল') }}" class="sub-item">পে-রোল/বেতন</a>
-                    <a href="{{ route('leave-requests.index') }}" class="sub-item">ছুটি ব্যবস্থাপনা</a>
-                    <a href="{{ $stub('Performance') }}" class="sub-item">Performance/মূল্যায়ন</a>
+                    <a href="{{ route('payroll.index') }}" class="sub-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">পে-রোল/বেতন</a>
+                    <a href="{{ route('leave-requests.index') }}" class="sub-item {{ request()->routeIs('leave-requests.*') ? 'active' : '' }}">ছুটি ব্যবস্থাপনা</a>
+                    <a href="{{ route('performance.index') }}" class="sub-item {{ request()->routeIs('performance.*') ? 'active' : '' }}">Performance/মূল্যায়ন</a>
                 </div></div></div>
             </div>
 

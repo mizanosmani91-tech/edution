@@ -88,6 +88,8 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/discipline-records', \App\Livewire\DisciplineRecords::class)->name('discipline.index');
     Route::get('/student-health', \App\Livewire\StudentHealth::class)->name('student-health.index');
     Route::get('/alumni', \App\Livewire\AlumniDirectory::class)->name('alumni.index');
+    Route::get('/payroll', \App\Livewire\PayrollManager::class)->name('payroll.index');
+    Route::get('/performance-review', \App\Livewire\PerformanceReviewManager::class)->name('performance.index');
     Route::get('/settings-page', \App\Livewire\InstitutionSettingsForm::class)->name('settings.index');
     Route::get('/routine-page', \App\Livewire\RoutineBoard::class)->name('routine.index');
 
