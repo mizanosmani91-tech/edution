@@ -58,7 +58,7 @@
     {{-- ধাপ ১: ইমেইল --}}
     @if ($step === 'email')
         <h1 class="text-center text-[21px] font-bold text-[var(--color-ink)]">পাসওয়ার্ড ভুলে গেছেন?</h1>
-        <p class="mt-1.5 text-center text-[13.5px] text-[var(--color-ink-muted)]">আপনার লগইন ইমেইল দিন — যুক্ত থাকা ফোন নম্বরে একটি যাচাই কোড পাঠানো হবে।</p>
+        <p class="mt-1.5 text-center text-[13.5px] text-[var(--color-ink-muted)]">আপনার লগইন ইমেইল দিন — সেই ঠিকানায় একটি যাচাই কোড পাঠানো হবে।</p>
 
         <form wire:submit="sendCode" class="mt-6 space-y-4">
             <div>
@@ -76,8 +76,14 @@
     @if ($step === 'otp')
         <h1 class="text-center text-[21px] font-bold text-[var(--color-ink)]">কোড ও নতুন পাসওয়ার্ড দিন</h1>
         <p class="mt-1.5 text-center text-[13.5px] text-[var(--color-ink-muted)]">
-            {{ $maskedPhone }} নম্বরে একটি ৬ সংখ্যার কোড পাঠানো হয়েছে।
+            {{ $resolvedEmail }} ঠিকানায় একটি ৬ সংখ্যার কোড পাঠানো হয়েছে।
         </p>
+
+        @if ($infoMessage)
+            <div class="mt-3 rounded-lg border border-[rgba(47,110,82,.3)] bg-[rgba(47,110,82,.08)] px-3.5 py-2.5 text-center text-[12.5px] text-[var(--color-good)]">
+                {{ $infoMessage }}
+            </div>
+        @endif
 
         <form wire:submit="resetPassword" class="mt-6 space-y-4">
             <div>
@@ -98,9 +104,14 @@
             <button type="submit" class="w-full rounded-lg py-3 text-[14.5px] font-bold text-[var(--color-ink)]" style="background:linear-gradient(90deg, var(--color-gold-light), var(--color-gold));">
                 পাসওয়ার্ড রিসেট করুন
             </button>
-            <button type="button" wire:click="resend" class="w-full text-center text-[12.5px] font-semibold text-[var(--color-ink-muted)] hover:text-[var(--color-maroon)]">
-                কোড আবার পাঠান
+            <button type="button" wire:click="sendCode" class="w-full text-center text-[12.5px] font-semibold text-[var(--color-ink-muted)] hover:text-[var(--color-maroon)]">
+                ইমেইলে কোড আবার পাঠান
             </button>
+            @if ($smsAvailable && ! $smsSent)
+                <button type="button" wire:click="sendSmsBackup" class="w-full text-center text-[12.5px] font-semibold text-[var(--color-maroon)] hover:underline">
+                    ইমেইলে না পেলে ফোনে SMS পাঠান
+                </button>
+            @endif
         </form>
     @endif
 

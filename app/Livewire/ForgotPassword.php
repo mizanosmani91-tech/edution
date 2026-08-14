@@ -8,21 +8,24 @@ use App\Models\User;
 use App\Services\SmsOtpService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
 /**
  * ForgotPassword
  *
- * নিজে থেকে পাসওয়ার্ড রিসেট করার সেলফ-সার্ভিস ফ্লো — ইমেইলের বদলে SMS
- * ব্যবহার হয়েছে কারণ প্ল্যাটফর্মে এখনো নির্ভরযোগ্য ইমেইল গেটওয়ে সেট করা
- * নেই (MAIL_MAILER=log), কিন্তু SMS গেটওয়ে (Onecodesoft) ইতিমধ্যে কাজ করছে
- * (রেজিস্ট্রেশন OTP, সাময়িক পাসওয়ার্ড পাঠানোর জন্য ব্যবহৃত হচ্ছে)।
+ * নিজে থেকে পাসওয়ার্ড রিসেট করার সেলফ-সার্ভিস ফ্লো।
  *
- * ফোন নম্বর role অনুযায়ী ভিন্ন জায়গা থেকে আসে:
- *   - admin   → প্রতিষ্ঠানের রেজিস্টার করা ফোন নম্বর (Institution::phone)
- *   - teacher → নিজের প্রোফাইলের ফোন নম্বর (Teacher::phone)
- *   - guardian/student → এখনো আলাদা ফোন নম্বর ইউজারের সাথে যুক্ত নেই, তাই
- *     সেলফ-সার্ভিস রিসেট সম্ভব না — এডমিনের সাথে যোগাযোগ করতে বলা হয়।
+ * ⚠️ চ্যানেল অগ্রাধিকার: ইমেইল প্রধান (ফ্রি, প্রতিটা ইউজারের ইমেইল
+ * এমনিতেই লগইনের জন্য বাধ্যতামূলক), SMS শুধু ব্যাকআপ হিসেবে — কারণ প্রতিটা
+ * SMS-এ খরচ হয় (Onecodesoft), আর সবাই যদি SMS দিয়েই রিসেট করে তাহলে খরচ
+ * অনিয়ন্ত্রিতভাবে বাড়বে। তাই কোড আগে ইমেইলে যায়, SMS অপশন তখনই দেখানো হয়
+ * যখন role-এর সাথে ফোন নম্বর যুক্ত আছে (admin → institution phone,
+ * teacher → নিজের phone) এবং ইউজার নিজে থেকে "SMS-এ পাঠান" বাটনে ক্লিক করে।
+ *
+ * কোড ইউজার-আইডি দিয়ে cache-এ রাখা হয় (channel নির্বিশেষে একই কোড কাজ করে),
+ * যাতে ইমেইলে না পেলে SMS ব্যাকআপেও একই কোড দিয়ে ভেরিফাই করা যায়।
  */
 class ForgotPassword extends Component
 {
@@ -32,17 +35,23 @@ class ForgotPassword extends Component
     public string $password = '';
     public string $password_confirmation = '';
 
-    public ?string $maskedPhone = null;
     public ?string $resolvedUserId = null;
+    public ?string $resolvedEmail = null;
     public ?string $resolvedPhone = null;
+    public bool $smsAvailable = false;
+    public bool $smsSent = false;
     public string $formError = '';
+    public string $infoMessage = '';
+
+    protected const TTL_MINUTES = 5;
+    protected const COOLDOWN_SECONDS = 60;
 
     protected function resolveInstitution(): ?Institution
     {
         return Institution::resolveFromSubdomain(request()->getHost());
     }
 
-    public function sendCode(SmsOtpService $sms): void
+    public function sendCode(): void
     {
         $this->formError = '';
         $this->validate(['email' => ['required', 'email']]);
@@ -63,48 +72,64 @@ class ForgotPassword extends Component
             return;
         }
 
+        if (! $this->canResend($user->id)) {
+            $this->formError = 'একটু আগেই কোড পাঠানো হয়েছে, ১ মিনিট পর আবার চেষ্টা করুন।';
+            return;
+        }
+
         $phone = match ($user->role) {
             'admin' => $institution->phone,
             'teacher' => Teacher::find($user->teacher_id)?->phone,
             default => null,
         };
 
-        if (! $phone) {
-            $this->formError = 'এই অ্যাকাউন্টের সাথে কোনো ফোন নম্বর যুক্ত নেই — দয়া করে প্রতিষ্ঠানের এডমিনের সাথে যোগাযোগ করে পাসওয়ার্ড রিসেট করিয়ে নিন।';
-            return;
-        }
-
-        if (! $sms->canResendReset($phone)) {
-            $this->formError = 'একটু আগেই কোড পাঠানো হয়েছে, ১ মিনিট পর আবার চেষ্টা করুন।';
-            return;
-        }
-
-        $sms->sendResetCode($phone);
+        $code = $this->issueCode($user->id);
+        $this->sendEmailCode($user->email, $code);
 
         $this->resolvedUserId = $user->id;
+        $this->resolvedEmail = $this->maskEmail($user->email);
         $this->resolvedPhone = $phone;
-        $this->maskedPhone = $this->mask($phone);
+        $this->smsAvailable = (bool) $phone;
+        $this->smsSent = false;
         $this->step = 'otp';
     }
 
-    public function resend(SmsOtpService $sms): void
+    public function sendSmsBackup(SmsOtpService $sms): void
     {
         $this->formError = '';
 
-        if (! $this->resolvedPhone) {
+        if (! $this->resolvedUserId) {
             $this->step = 'email';
             return;
         }
 
-        if (! $sms->canResendReset($this->resolvedPhone)) {
+        if (! $this->resolvedPhone) {
+            $this->formError = 'এই অ্যাকাউন্টের সাথে কোনো ফোন নম্বর যুক্ত নেই।';
+            return;
+        }
+
+        if (! $this->canResend($this->resolvedUserId)) {
             $this->formError = 'একটু আগেই কোড পাঠানো হয়েছে, ১ মিনিট পর আবার চেষ্টা করুন।';
             return;
         }
 
-        $sms->sendResetCode($this->resolvedPhone);
+        // ⚠️ নতুন কোড না বানিয়ে আগেরটাই আবার পাঠানো হচ্ছে (একই cache key) —
+        // যাতে ইমেইলে আসা কোড আর SMS-এর কোড আলাদা হয়ে ইউজার বিভ্রান্ত না হয়।
+        $code = Cache::get($this->codeKey($this->resolvedUserId));
+
+        if (! $code) {
+            $code = $this->issueCode($this->resolvedUserId);
+        } else {
+            Cache::put($this->cooldownKey($this->resolvedUserId), true, now()->addSeconds(self::COOLDOWN_SECONDS));
+        }
+
+        $sms->sendMessage($this->resolvedPhone, "EDUTION পাসওয়ার্ড রিসেট কোড: {$code}, মেয়াদ " . self::TTL_MINUTES . " মিনিট। শেয়ার করবেন না।");
+
+        $this->smsSent = true;
+        $this->infoMessage = 'ফোনে SMS পাঠানো হয়েছে।';
     }
 
-    public function resetPassword(SmsOtpService $sms): void
+    public function resetPassword(): void
     {
         $this->formError = '';
         $this->validate([
@@ -112,7 +137,7 @@ class ForgotPassword extends Component
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        if (! $this->resolvedPhone || ! $this->resolvedUserId) {
+        if (! $this->resolvedUserId) {
             $this->formError = 'সেশনের মেয়াদ শেষ হয়ে গেছে, আবার শুরু থেকে চেষ্টা করুন।';
             $this->step = 'email';
             return;
@@ -127,12 +152,15 @@ class ForgotPassword extends Component
             return;
         }
 
-        if (! $sms->verifyResetCode($this->resolvedPhone, $this->code)) {
+        $stored = Cache::get($this->codeKey($this->resolvedUserId));
+
+        if ($stored === null || ! hash_equals((string) $stored, $this->code)) {
             Cache::put($attemptsKey, $attempts + 1, now()->addMinutes(10));
             $this->formError = 'কোডটি সঠিক না অথবা মেয়াদ শেষ হয়ে গেছে।';
             return;
         }
 
+        Cache::forget($this->codeKey($this->resolvedUserId));
         Cache::forget($attemptsKey);
 
         $user = User::find($this->resolvedUserId);
@@ -151,9 +179,56 @@ class ForgotPassword extends Component
         $this->step = 'done';
     }
 
-    protected function mask(string $phone): string
+    protected function issueCode(string $userId): string
     {
-        return substr($phone, 0, 5) . str_repeat('*', max(strlen($phone) - 8, 0)) . substr($phone, -3);
+        $code = (string) random_int(100000, 999999);
+        Cache::put($this->codeKey($userId), $code, now()->addMinutes(self::TTL_MINUTES));
+        Cache::put($this->cooldownKey($userId), true, now()->addSeconds(self::COOLDOWN_SECONDS));
+
+        return $code;
+    }
+
+    protected function canResend(string $userId): bool
+    {
+        return ! Cache::has($this->cooldownKey($userId));
+    }
+
+    protected function codeKey(string $userId): string
+    {
+        return 'pwreset_otp:user:' . $userId;
+    }
+
+    protected function cooldownKey(string $userId): string
+    {
+        return 'pwreset_cooldown:user:' . $userId;
+    }
+
+    protected function sendEmailCode(string $email, string $code): void
+    {
+        $message = "আপনার EDUTION পাসওয়ার্ড রিসেট কোড: {$code}\n\nএই কোডের মেয়াদ " . self::TTL_MINUTES . " মিনিট। কোডটি কারো সাথে শেয়ার করবেন না।\n\nআপনি যদি এই অনুরোধ না করে থাকেন, এই ইমেইল উপেক্ষা করুন।";
+
+        try {
+            Mail::raw($message, function ($mail) use ($email) {
+                $mail->to($email)->subject('EDUTION পাসওয়ার্ড রিসেট কোড');
+            });
+        } catch (\Throwable $e) {
+            // ⚠️ ইমেইল গেটওয়ে না থাকলেও/ব্যর্থ হলেও ফ্লো ভেঙে না পড়ে —
+            // ইউজার তখন "SMS-এ পাঠান" ব্যাকআপ বাটন ব্যবহার করতে পারবে।
+            Log::warning('পাসওয়ার্ড রিসেট ইমেইল পাঠাতে ব্যর্থ: ' . $e->getMessage());
+        }
+    }
+
+    protected function maskEmail(string $email): string
+    {
+        [$name, $domain] = explode('@', $email) + [null, null];
+
+        if (! $name || ! $domain) {
+            return $email;
+        }
+
+        $visible = min(2, strlen($name));
+
+        return substr($name, 0, $visible) . str_repeat('*', max(strlen($name) - $visible, 1)) . '@' . $domain;
     }
 
     public function render()
