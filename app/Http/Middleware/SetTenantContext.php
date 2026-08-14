@@ -18,6 +18,18 @@ class SetTenantContext
             abort(401, 'Unauthenticated — tenant context resolve করা যায়নি।');
         }
 
+        // ⚠️ Livewire::setUpdateRoute (AppServiceProvider) সব Livewire action-এর
+        // জন্য এই একই '/livewire/update' route ব্যবহার করে — তাই superadmin
+        // প্যানেলের Livewire component (SuperadminInstitutionsList ইত্যাদি)
+        // থেকে আসা wire:click কলও এখানে দিয়েই আসে। superadmin ইচ্ছাকৃতভাবেই
+        // কোনো institution-এর সাথে যুক্ত না, তাই তাকে 403 দিয়ে আটকানো ভুল —
+        // শুধু RLS is_superadmin ফ্ল্যাগ সেট করে দিয়ে পাস করিয়ে দেওয়া হচ্ছে।
+        if ($user->isSuperAdmin()) {
+            DB::statement("SELECT set_config(?, ?, false)", ['app.is_superadmin', 'true']);
+
+            return $next($request);
+        }
+
         $institutionId = $user->institution_id ?? null;
 
         if ($institutionId === null) {
