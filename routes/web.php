@@ -14,6 +14,10 @@ Route::domain('panel.edution.xyz')->group(function () {
 });
 
 Route::middleware(['auth', 'superadmin'])->domain('panel.edution.xyz')->group(function () {
+    Route::get('/password/change', \App\Livewire\ForcePasswordChange::class)->name('superadmin.password.force-change');
+});
+
+Route::middleware(['auth', 'superadmin', 'password.change'])->domain('panel.edution.xyz')->group(function () {
     Route::get('/', \App\Livewire\SuperadminDashboard::class)->name('superadmin.institutions');
 });
 
@@ -46,7 +50,15 @@ Route::get('/login', function () {
 Route::post('/login', [LoginController::class, 'store']);
 Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
 
+// ⚠️ SMS OTP ভিত্তিক সেলফ-সার্ভিস পাসওয়ার্ড রিসেট — throttle দিয়ে abuse ঠেকানো হলো
+Route::get('/forgot-password', \App\Livewire\ForgotPassword::class)
+    ->middleware('throttle:10,1')->name('password.forgot');
+
 Route::middleware(['auth', 'tenant.context'])->group(function () {
+    Route::get('/password/change', \App\Livewire\ForcePasswordChange::class)->name('password.force-change');
+});
+
+Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function () {
     Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
 
     // ── API-style JSON রুট — নাম আলাদা রাখা হলো 'api.' prefix দিয়ে, যেন

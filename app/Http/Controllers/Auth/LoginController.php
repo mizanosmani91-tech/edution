@@ -80,6 +80,10 @@ class LoginController extends Controller
         RateLimiter::clear($throttleKey);
         $request->session()->regenerate();
 
+        if ($user->must_change_password) {
+            return redirect()->route('password.force-change');
+        }
+
         return redirect()->intended('/dashboard');
     }
 

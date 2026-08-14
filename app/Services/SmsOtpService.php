@@ -104,6 +104,42 @@ class SmsOtpService
         return false;
     }
 
+    /**
+     * ⚠️ পাসওয়ার্ড ভুলে গেলে (forgot-password) ব্যবহারের জন্য আলাদা cache
+     * namespace ('pwreset_otp:') — যাতে রেজিস্ট্রেশন OTP-র সাথে না মিশে যায়।
+     */
+    public function canResendReset(string $phone): bool
+    {
+        return ! Cache::has('pwreset_otp_cooldown:' . $this->normalizePhone($phone));
+    }
+
+    public function sendResetCode(string $phone): void
+    {
+        $normalized = $this->normalizePhone($phone);
+        $code = (string) random_int(100000, 999999);
+
+        Cache::put('pwreset_otp:' . $normalized, $code, now()->addMinutes(self::TTL_MINUTES));
+        Cache::put('pwreset_otp_cooldown:' . $normalized, true, now()->addSeconds(self::RESEND_COOLDOWN_SECONDS));
+
+        $message = "EDUTION পাসওয়ার্ড রিসেট কোড: {$code}, মেয়াদ " . self::TTL_MINUTES . " মিনিট। শেয়ার করবেন না।";
+
+        $this->sendMessage($normalized, $message);
+    }
+
+    public function verifyResetCode(string $phone, string $code): bool
+    {
+        $normalized = $this->normalizePhone($phone);
+        $stored = Cache::get('pwreset_otp:' . $normalized);
+
+        if ($stored !== null && hash_equals((string) $stored, $code)) {
+            Cache::forget('pwreset_otp:' . $normalized);
+
+            return true;
+        }
+
+        return false;
+    }
+
     public function isVerified(string $phone): bool
     {
         return (bool) Cache::get('reg_otp_verified:' . $this->normalizePhone($phone));

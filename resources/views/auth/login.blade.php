@@ -177,7 +177,7 @@
                     <label class="flex items-center gap-2 text-[var(--color-ink-muted)]">
                         <input type="checkbox" class="rounded border-[var(--color-line)]"> আমাকে মনে রাখুন
                     </label>
-                    <a href="#" class="text-[var(--color-maroon)] hover:underline">পাসওয়ার্ড ভুলে গেছেন?</a>
+                    <a href="{{ route('password.forgot') }}" class="text-[var(--color-maroon)] hover:underline">পাসওয়ার্ড ভুলে গেছেন?</a>
                 </div>
 
                 <button type="submit"

@@ -52,6 +52,10 @@ class SuperadminLoginController extends Controller
         RateLimiter::clear($throttleKey);
         $request->session()->regenerate();
 
+        if ($user->must_change_password) {
+            return redirect()->route('superadmin.password.force-change');
+        }
+
         return redirect()->route('superadmin.institutions');
     }
 }

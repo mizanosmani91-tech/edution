@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'tenant.context' => \App\Http\Middleware\SetTenantContext::class,
             'superadmin' => \App\Http\Middleware\EnsureSuperAdmin::class,
+            'password.change' => \App\Http\Middleware\EnsurePasswordChanged::class,
         ]);
 
         $middleware->priority([
