@@ -70,6 +70,10 @@ class DemoDataSeeder extends Seeder
             // এগিয়ে যাওয়া হচ্ছে। আসল প্রতিষ্ঠানের ডেটার সাথে এই সিডারের কোনো
             // সম্পর্ক নেই (শুধু demo institution), তাই fail-soft এখানে নিরাপদ।
             report($e);
+            // deploy.yml এর SSH আউটপুটে (GitHub Actions log) সরাসরি দেখা যাওয়ার
+            // জন্য STDERR এ ও লিখে রাখা হচ্ছে — storage/logs এ SSH করে ঢুকতে
+            // না হয়েও এখান থেকেই আসল এরর মেসেজ পড়া যাবে।
+            fwrite(STDERR, "\n=== DemoDataSeeder FAILED ===\n" . $e->getMessage() . "\n" . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString() . "\n=============================\n");
         }
     }
 
