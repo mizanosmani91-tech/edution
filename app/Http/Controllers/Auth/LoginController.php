@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Institution;
 use App\Models\User;
+use Database\Seeders\DemoSeeder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -43,11 +44,20 @@ class LoginController extends Controller
         $institution = Institution::resolveFromSubdomain($request->getHost());
 
         if (!$institution) {
-            RateLimiter::hit($throttleKey);
-            // subdomain অচেনা — কোন institution সেটা বলাও তথ্য-ফাঁস, তাই generic error
-            throw ValidationException::withMessages([
-                'email' => 'ইমেইল বা পাসওয়ার্ড সঠিক না।',
-            ]);
+            // মূল ডোমেইন (edution.xyz) থেকে কোনো institution subdomain রিজলভ হয়নি।
+            // এখানে শুধু পাবলিক ডেমো একাউন্টকে লগইন করতে দেওয়া হয় — বাকি সব
+            // প্রতিষ্ঠানের ইউজারকে অবশ্যই নিজস্ব "slug".edution.xyz থেকে লগইন করতে হবে।
+            if (strtolower($credentials['email']) === strtolower(DemoSeeder::EMAIL)) {
+                $institution = Institution::where('slug', DemoSeeder::SLUG)->first();
+            }
+
+            if (!$institution) {
+                RateLimiter::hit($throttleKey);
+                // subdomain অচেনা — কোন institution সেটা বলাও তথ্য-ফাঁস, তাই generic error
+                throw ValidationException::withMessages([
+                    'email' => 'ইমেইল বা পাসওয়ার্ড সঠিক না। (নিজের প্রতিষ্ঠানের subdomain থেকে লগইন করুন)',
+                ]);
+            }
         }
 
         // 👇 গুরুত্বপূর্ণ লাইন: institution_id দিয়ে ম্যানুয়াল ফিল্টার (User মডেলে

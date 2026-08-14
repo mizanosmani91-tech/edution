@@ -85,7 +85,7 @@ class Institution extends Model
     {
         $slug = explode('.', $host)[0] ?? null;
 
-        if (!$slug || in_array($slug, ['www', 'superadmin', 'app', 'panel'])) {
+        if (!$slug || in_array($slug, ['www', 'superadmin', 'app', 'panel', 'edution', 'localhost', '127'])) {
             return null;
         }
 
