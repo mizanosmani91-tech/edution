@@ -42,6 +42,8 @@ class SuperadminDashboard extends Component
     // ── Manage-institution modal ──
     public ?string $manageInstitutionId = null;
     public string $deleteConfirmText = '';
+    public ?string $purgeInstitutionId = null;
+    public string $purgeConfirmText = '';
     public bool $manageActive = true;
     public string $managePlan = 'basic';
     public ?int $manageLimit = null;
@@ -204,31 +206,74 @@ class SuperadminDashboard extends Component
     }
 
     /**
-     * ⚠️ Type-to-confirm ডিলিট — ভুলে ক্লিক করে অন্য প্রতিষ্ঠান ডিলিট হয়ে
-     * যাওয়া ঠেকাতে, প্রতিষ্ঠানের স্লাগ হুবুহু টাইপ না করলে বাটন কাজ করবে না।
-     * DB migration-এ সব চাইল্ড টেবিলে cascadeOnDelete() সেট করা আছে, তাই
-     * institution row ডিলিট হলেই ছাত্র/শিক্ষক/হাজিরা/ফি — সব সংশ্লিষ্ট ডেটা
-     * স্বয়ংক্রিয়ভাবে ডিলিট হয়ে যাবে (recoverable না, তাই এত সতর্কতা)।
+     * ⚠️ এটা soft-delete — প্রতিষ্ঠান সাথে সাথেই মুছে যায় না, রিসাইকেল
+     * বিনে চলে যায় (subdomain কাজ করা বন্ধ হয়ে যায়, কিন্তু সব ডেটা অক্ষত
+     * থাকে)। কেউ (একাধিক superadmin থাকলে দুর্ঘটনাক্রমে বা ইচ্ছাকৃতভাবে)
+     * ডিলিট করলেও রিসাইকেল বিন থেকে ফেরানো যাবে — স্থায়ী ডিলিট আলাদা,
+     * কডাকড়ি type-to-confirm সহ (permanentlyDeleteInstitution দেখুন)।
      */
-    public function deleteInstitution(): void
+    public function moveInstitutionToTrash(): void
     {
         if (!$this->manageInstitutionId) {
             return;
         }
 
         $institution = Institution::query()->findOrFail($this->manageInstitutionId);
+        $name = $institution->name;
 
-        if ($this->deleteConfirmText !== $institution->slug) {
+        $institution->update(['deleted_by' => auth()->id()]);
+        $institution->delete();
+
+        $this->manageInstitutionId = null;
+        $this->deleteConfirmText = '';
+        $this->dispatch('toast', message: "\"{$name}\" রিসাইকেল বিনে সরানো হয়েছে");
+    }
+
+    public function restoreInstitution(string $institutionId): void
+    {
+        $institution = Institution::onlyTrashed()->findOrFail($institutionId);
+        $institution->restore();
+        $institution->update(['deleted_by' => null]);
+
+        $this->dispatch('toast', message: "\"{$institution->name}\" পুনরুদ্ধার করা হয়েছে");
+    }
+
+    public function openPurgeModal(string $institutionId): void
+    {
+        $this->purgeInstitutionId = $institutionId;
+        $this->purgeConfirmText = '';
+    }
+
+    public function closePurgeModal(): void
+    {
+        $this->purgeInstitutionId = null;
+        $this->purgeConfirmText = '';
+    }
+
+    /**
+     * ⚠️ Type-to-confirm স্থায়ী ডিলিট — শুধু রিসাইকেল বিন থেকেই সম্ভব, প্রতিষ্ঠানের
+     * স্লাগ হুবহু টাইপ না করলে বাটন কাজ করবে না। forceDelete() হলেই
+     * cascadeOnDelete()-এর কারণে সকল সংশ্লিষ্ট ডেটাও স্থায়ীভাবে সাথে মুছে যাবে।
+     */
+    public function permanentlyDeleteInstitution(): void
+    {
+        if (!$this->purgeInstitutionId) {
+            return;
+        }
+
+        $institution = Institution::onlyTrashed()->findOrFail($this->purgeInstitutionId);
+
+        if ($this->purgeConfirmText !== $institution->slug) {
             $this->dispatch('toast', message: 'নিশ্চিতকরণের জন্য প্রতিষ্ঠানের স্লাগ হুবুহু টাইপ করুন');
             return;
         }
 
         $name = $institution->name;
-        $institution->delete();
+        $institution->forceDelete();
 
-        $this->manageInstitutionId = null;
-        $this->deleteConfirmText = '';
-        $this->dispatch('toast', message: ""{$name}" স্থায়ীভাবে ডিলিট করা হয়েছে");
+        $this->purgeInstitutionId = null;
+        $this->purgeConfirmText = '';
+        $this->dispatch('toast', message: "\"{$name}\" স্থায়ীভাবে ডিলিট করা হয়েছে");
     }
 
     public function suspendFromModal(): void
@@ -439,6 +484,10 @@ class SuperadminDashboard extends Component
             case 'settings':
                 $data['superadmins'] = User::query()->where('role', 'superadmin')->latest()->get();
                 break;
+
+            case 'trash':
+                $data['trashedInstitutions'] = Institution::onlyTrashed()->latest('deleted_at')->get();
+                break;
         }
 
         return view('livewire.superadmin-dashboard', $data)->layout('components.layouts.superadmin');
@@ -488,6 +537,7 @@ class SuperadminDashboard extends Component
             'urgentTickets' => $urgentTickets,
             'pendingPayments' => InstitutionPayment::where('status', 'pending')->count(),
             'pendingInstitutions' => Institution::query()->where('status', 'pending')->count(),
+            'trashedInstitutions' => Institution::onlyTrashed()->count(),
         ];
     }
 

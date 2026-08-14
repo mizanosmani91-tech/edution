@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Concerns\UuidPrimaryKey;
 
 /**
@@ -15,7 +16,7 @@ use App\Models\Concerns\UuidPrimaryKey;
  */
 class Institution extends Model
 {
-    use HasFactory, UuidPrimaryKey;
+    use HasFactory, UuidPrimaryKey, SoftDeletes;
 
     protected $fillable = [
         'name',

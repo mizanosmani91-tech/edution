@@ -12,6 +12,7 @@
       <div class="nav-item {{ $activeSection === 'billing' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('billing')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/></svg></span><span class="lbl">প্যাকেজ ও বিলিং</span></button></div>
       <div class="nav-item {{ $activeSection === 'notices' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('notices')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h13l3 4-3 4H4z"/><path d="M6 13v6"/></svg></span><span class="lbl">নোটিশ ও ঘোষণা</span></button></div>
       <div class="nav-item {{ $activeSection === 'support' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('support')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 15a5 5 0 0 0 5-5V8a5 5 0 0 0-10 0v2a5 5 0 0 0 5 5Z"/><path d="M8 21h8M12 15v6"/></svg></span><span class="lbl">সাপোর্ট টিকেট</span>@if($stats['openTickets'] > 0)<span class="cnt">{{ $stats['openTickets'] }}</span>@endif</button></div>
+      <div class="nav-item {{ $activeSection === 'trash' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('trash')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></span><span class="lbl">রিসাইকেল বিন</span>@if($stats['trashedInstitutions'] > 0)<span class="cnt">{{ $stats['trashedInstitutions'] }}</span>@endif</button></div>
       <div class="nav-item {{ $activeSection === 'settings' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('settings')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a7.7 7.7 0 0 0 0-3l1.9-1.4-2-3.4-2.2.8a7.6 7.6 0 0 0-2.6-1.5L14 2.5h-4l-.5 2.5a7.6 7.6 0 0 0-2.6 1.5l-2.2-.8-2 3.4L4.6 10.5a7.7 7.7 0 0 0 0 3L2.7 14.9l2 3.4 2.2-.8c.77.66 1.65 1.17 2.6 1.5l.5 2.5h4l.5-2.5a7.6 7.6 0 0 0 2.6-1.5l2.2.8 2-3.4-1.9-1.4Z"/></svg></span><span class="lbl">সেটিংস</span></button></div>
     </nav>
     <div class="sidebar-foot"><button class="collapse-btn" @click="collapsed = !collapsed" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 6l-6 6 6 6"/></svg><span>সাইডবার সংকুচিত করুন</span></button></div>
@@ -20,7 +21,7 @@
   <main class="main">
     <div class="topbar">
       <button class="menu-toggle" @click="mobileOpen = !mobileOpen" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-      <div class="breadcrumb"><div class="path">সুপার এডমিন</div><h1>{{ ['overview'=>'ওভারভিউ','applications'=>'নতুন আবেদন','institutions'=>'প্রতিষ্ঠানসমূহ','billing'=>'প্যাকেজ ও বিলিং','notices'=>'নোটিশ ও ঘোষণা','support'=>'সাপোর্ট টিকেট','settings'=>'সেটিংস'][$activeSection] ?? '' }}</h1></div>
+      <div class="breadcrumb"><div class="path">সুপার এডমিন</div><h1>{{ ['overview'=>'ওভারভিউ','applications'=>'নতুন আবেদন','institutions'=>'প্রতিষ্ঠানসমূহ','billing'=>'প্যাকেজ ও বিলিং','notices'=>'নোটিশ ও ঘোষণা','support'=>'সাপোর্ট টিকেট','trash'=>'রিসাইকেল বিন','settings'=>'সেটিংস'][$activeSection] ?? '' }}</h1></div>
       <div class="topbar-actions">
         <button class="icon-btn" wire:click="setSection('applications')" type="button" title="নতুন প্রতিষ্ঠান আবেদন">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 1 0-12 0c0 5-2 6-2 6h16s-2-1-2-6"/><path d="M9.5 20a2.5 2.5 0 0 0 5 0"/></svg>
@@ -376,6 +377,31 @@
       @endif
 
       {{-- ============ SETTINGS ============ --}}
+      @if ($activeSection === 'trash')
+        <div class="page-head"><div><h2>রিসাইকেল বিন</h2><p>সরানো প্রতিষ্ঠান এখান থেকে ফিরিয়ে আনুন অথবা স্থায়ীভাবে ডিলিট করুন</p></div></div>
+
+        <div class="card">
+          <table>
+            <thead><tr><th>প্রতিষ্ঠান</th><th>সরানো হয়েছে</th><th>কে সরিয়েছে</th><th>কার্যক্রম</th></tr></thead>
+            <tbody>
+              @forelse ($trashedInstitutions as $inst)
+                <tr>
+                  <td><b>{{ $inst->name }}</b><div class="sub" style="font-size:11.5px;">{{ $inst->slug }}.edution.xyz</div></td>
+                  <td>{{ $inst->deleted_at?->format('d M, Y h:i A') }}</td>
+                  <td>{{ \App\Models\User::find($inst->deleted_by)?->name ?? '—' }}</td>
+                  <td style="display:flex; gap:8px;">
+                    <button class="btn-ghost" wire:click="restoreInstitution('{{ $inst->id }}')" type="button">পুনরুদ্ধার করুন</button>
+                    <button class="btn-ghost" style="border-color:var(--bad);color:var(--bad);" wire:click="openPurgeModal('{{ $inst->id }}')" type="button">স্থায়ীভাবে ডিলিট</button>
+                  </td>
+                </tr>
+              @empty
+                <tr><td colspan="4" style="text-align:center;color:var(--ink-soft);padding:24px;">রিসাইকেল বিন খালি</td></tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
+      @endif
+
       @if ($activeSection === 'settings')
         <div class="page-head"><div><h2>প্ল্যাটফর্ম সেটিংস</h2><p>সুপার এডমিন টিম ও সাধারণ সিস্টেম সেটিংস পরিচালনা করুন</p></div></div>
 
@@ -481,18 +507,16 @@
             <div class="modal-sec" style="border:1.5px solid rgba(166,65,46,.3);border-radius:12px;padding:14px 16px;background:rgba(166,65,46,.04);">
               <h4 style="color:var(--bad);">⚠ বিপজ্জনক অঞ্চল</h4>
               <p style="font-size:12.5px;color:var(--ink-muted);margin:4px 0 10px;line-height:1.7;">
-                এই প্রতিষ্ঠান স্থায়ীভাবে ডিলিট হয়ে যাবে — এর সকল শিক্ষার্থী, শিক্ষক, হাজিরা, ফি, পরীক্ষা — সব ডেটাসহ। এটা ফেরানো যাবে না। ভুল করে অন্য প্রতিষ্ঠান ডিলিট এড়াতে নিচে স্লাগ (<b>{{ $manageInst->slug }}</b>) হুবুহু টাইপ করুন।
+                এই প্রতিষ্ঠান রিসাইকেল বিনে সরানো হবে — subdomain সাথে সাথে বন্ধ হয়ে যাবে, কিন্তু সব ডেটা (শিক্ষার্থী, শিক্ষক, হাজিরা, ফি) অক্ষত থাকবে। ভুল করে সরালেও রিসাইকেল বিন থেকে ফিরিয়ে আনা যাবে।
               </p>
-              <input type="text" wire:model="deleteConfirmText" placeholder="{{ $manageInst->slug }}" style="width:100%;margin-bottom:10px;">
               <button
                 class="btn-ghost"
                 style="border-color:var(--bad);color:var(--bad);"
-                wire:click="deleteInstitution"
-                wire:confirm="আপনি নিশ্চিত? "{{ $manageInst->name }}" এবং এর সকল ডেটা স্থায়ীভাবে মুছে যাবে।"
+                wire:click="moveInstitutionToTrash"
+                wire:confirm="&quot;{{ $manageInst->name }}&quot; রিসাইকেল বিনে সরাতে চান?"
                 type="button"
-                {{ $deleteConfirmText !== $manageInst->slug ? 'disabled' : '' }}
               >
-                স্থায়ীভাবে ডিলিট করুন
+                রিসাইকেল বিনে সরান
               </button>
             </div>
 
@@ -502,6 +526,47 @@
             <div style="display:flex; gap:10px;">
               <button class="btn-ghost" wire:click="closeManageModal" type="button">বাতিল</button>
               <button class="btn-primary" wire:click="saveManageModal" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg>পরিবর্তন সংরক্ষণ করুন</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    @endif
+  @endif
+
+  {{-- ============ স্থায়ী ডিলিট (PURGE) মোডাল ============ --}}
+  @if ($purgeInstitutionId)
+    @php($purgeInst = \App\Models\Institution::onlyTrashed()->find($purgeInstitutionId))
+    @if ($purgeInst)
+      <div class="modal-overlay open" wire:click.self="closePurgeModal">
+        <div class="modal">
+          <div class="modal-head">
+            <div class="modal-head-left">
+              <div class="modal-ini" style="background:var(--bad);">{{ mb_substr($purgeInst->name, 0, 1) }}</div>
+              <div><h3>স্থায়ীভাবে ডিলিট করুন</h3><div class="sub">{{ $purgeInst->name }} ({{ $purgeInst->slug }}.edution.xyz)</div></div>
+            </div>
+            <button class="modal-close" wire:click="closePurgeModal" type="button">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="modal-sec" style="border:1.5px solid rgba(166,65,46,.3);border-radius:12px;padding:14px 16px;background:rgba(166,65,46,.04);">
+              <p style="font-size:12.5px;color:var(--ink-muted);margin:0 0 10px;line-height:1.7;">
+                এই প্রতিষ্ঠান ও এর সকল ডেটা (শিক্ষার্থী, শিক্ষক, হাজিরা, ফি, পরীক্ষা — সবকিছু) <b>স্থায়ীভাবে</b> ডিলিট হয়ে যাবে। এটা আর ফেরানো যাবে না। নিশ্চিত করতে নিচে স্লাগ (<b>{{ $purgeInst->slug }}</b>) হুবুহু টাইপ করুন।
+              </p>
+              <input type="text" wire:model="purgeConfirmText" placeholder="{{ $purgeInst->slug }}" style="width:100%;">
+            </div>
+          </div>
+          <div class="modal-foot">
+            <div></div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn-ghost" wire:click="closePurgeModal" type="button">বাতিল</button>
+              <button
+                class="btn-primary"
+                style="background:var(--bad);"
+                wire:click="permanentlyDeleteInstitution"
+                type="button"
+                {{ $purgeConfirmText !== $purgeInst->slug ? 'disabled' : '' }}
+              >
+                স্থায়ীভাবে ডিলিট করুন
+              </button>
             </div>
           </div>
         </div>
