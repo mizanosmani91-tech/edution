@@ -52,6 +52,46 @@ class FeeCollectionList extends Component
         $this->payAmount = '';
     }
 
+    /**
+     * অভিভাবক পোর্টাল থেকে "আমি পেমেন্ট করেছি" দাবি জমা দিলে সেটা এখানে
+     * এডমিন যাচাই করে কনফার্ম/বাতিল করতে পারবে। কনফার্ম করলেই তখন আসল
+     * amount_paid/status আপডেট হয় — গার্ডিয়ান নিজে সরাসরি বদলাতে পারে না।
+     */
+    public function confirmGuardianClaim(string $feeId): void
+    {
+        $fee = FeeCollection::findOrFail($feeId);
+
+        if ($fee->guardian_claim_status !== 'pending') {
+            return;
+        }
+
+        DB::transaction(function () use ($fee) {
+            $newPaid = $fee->amount_paid + (float) $fee->guardian_claimed_amount;
+            $fee->update([
+                'amount_paid' => $newPaid,
+                'payment_method' => $fee->guardian_claimed_method,
+                'transaction_ref' => $fee->guardian_claimed_ref,
+                'paid_at' => now(),
+                'status' => $newPaid >= $fee->amount_due ? 'paid' : 'partial',
+                'collected_by' => auth()->id(),
+                'guardian_claim_status' => 'confirmed',
+            ]);
+        });
+
+        $this->dispatch('toast', message: 'অভিভাবকের পেমেন্ট দাবি নিশ্চিত করে হিসেবে যোগ করা হয়েছে।');
+    }
+
+    public function rejectGuardianClaim(string $feeId): void
+    {
+        $fee = FeeCollection::findOrFail($feeId);
+
+        $fee->update([
+            'guardian_claim_status' => 'rejected',
+        ]);
+
+        $this->dispatch('toast', message: 'দাবিটি প্রত্যাখ্যান করা হয়েছে।');
+    }
+
     public function render()
     {
         $fees = FeeCollection::with('student')
@@ -60,6 +100,8 @@ class FeeCollectionList extends Component
             ->latest('due_month')
             ->paginate(15);
 
-        return view('livewire.fee-collection-list', ['fees' => $fees])->layout('components.layouts.app');
+        $pendingClaimsCount = FeeCollection::where('guardian_claim_status', 'pending')->count();
+
+        return view('livewire.fee-collection-list', ['fees' => $fees, 'pendingClaimsCount' => $pendingClaimsCount])->layout('components.layouts.app');
     }
 }

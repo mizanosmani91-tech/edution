@@ -461,6 +461,7 @@ tbody tr:last-child td{border-bottom:0;}
 .tab-btn svg{width:15px;height:15px;}
 .tab-btn:hover{color:var(--ink);}
 .tab-btn.active{color:var(--cover-maroon);border-bottom-color:var(--gold);}
+.tab-btn .cnt{background:var(--bad);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;line-height:1.5;}
 .tab-pane{display:none;}
 .tab-pane.active{display:block;animation:fadein .2s ease;}
 @keyframes fadein{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}

@@ -30,6 +30,12 @@ class FeeCollection extends Model
         'paid_at',
         'collected_by',    // user id যিনি এন্ট্রি করেছেন
         'status',          // paid / partial / due / overdue
+        'guardian_claimed_amount',
+        'guardian_claimed_method',
+        'guardian_claimed_ref',
+        'guardian_claim_note',
+        'guardian_claimed_at',
+        'guardian_claim_status', // pending / confirmed / rejected
     ];
 
     protected $casts = [
@@ -37,6 +43,8 @@ class FeeCollection extends Model
         'fine_amount' => 'decimal:2',
         'amount_paid' => 'decimal:2',
         'paid_at' => 'datetime',
+        'guardian_claimed_amount' => 'decimal:2',
+        'guardian_claimed_at' => 'datetime',
     ];
 
     public function student()

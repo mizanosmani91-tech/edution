@@ -16,6 +16,7 @@ class Section extends Model
         'class_id',
         'name',
         'capacity',
+        'class_teacher_id',
     ];
 
     public function schoolClass()
@@ -26,5 +27,10 @@ class Section extends Model
     public function students()
     {
         return $this->hasMany(Student::class, 'section_id');
+    }
+
+    public function classTeacher()
+    {
+        return $this->belongsTo(Teacher::class, 'class_teacher_id');
     }
 }

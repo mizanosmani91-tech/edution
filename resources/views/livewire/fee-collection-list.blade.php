@@ -10,6 +10,13 @@
         </a>
     </div>
 
+    @if ($pendingClaimsCount > 0)
+        <div class="info-box" style="background:rgba(201,162,39,.1);border-color:rgba(201,162,39,.35);margin-bottom:16px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+            {{ $pendingClaimsCount }} টি অভিভাবক-জমাকৃত পেমেন্ট দাবি যাচাইয়ের অপেক্ষায় আছে — নিচের তালিকায় হলুদ ব্যাজ দেওয়া সারিগুলো দেখুন।
+        </div>
+    @endif
+
     <div class="filter-card">
         <div class="f-field">
             <label>স্ট্যাটাস</label>
@@ -51,10 +58,16 @@
                             <span class="pill {{ $fee->status === 'paid' ? 'active' : ($fee->status === 'partial' ? 'day' : 'due') }}">
                                 {{ match($fee->status) { 'paid' => 'পরিশোধিত', 'partial' => 'আংশিক', 'overdue' => 'ওভারডিউ', default => 'বকেয়া' } }}
                             </span>
+                            @if ($fee->guardian_claim_status === 'pending')
+                                <span class="pill day" title="অভিভাবক দাবি করেছেন: ৳{{ number_format($fee->guardian_claimed_amount, 2) }} ({{ $fee->guardian_claimed_method }}@if($fee->guardian_claimed_ref) — {{ $fee->guardian_claimed_ref }} @endif)">অভিভাবকের দাবি</span>
+                            @endif
                         </td>
                         <td>
                             <div class="row-actions">
-                                @if ($fee->status !== 'paid')
+                                @if ($fee->guardian_claim_status === 'pending')
+                                    <button wire:click="confirmGuardianClaim('{{ $fee->id }}')" wire:confirm="অভিভাবকের দাবি অনুযায়ী ৳{{ number_format($fee->guardian_claimed_amount, 2) }} পরিশোধিত হিসেবে যোগ করবেন?" class="btn-primary" style="padding:6px 12px;font-size:12.5px;">নিশ্চিত করুন</button>
+                                    <button wire:click="rejectGuardianClaim('{{ $fee->id }}')" wire:confirm="এই দাবি প্রত্যাখ্যান করবেন?" class="btn-ghost" style="padding:6px 12px;font-size:12.5px;">বাতিল</button>
+                                @elseif ($fee->status !== 'paid')
                                     <button wire:click="openPayModal('{{ $fee->id }}')" class="btn-primary" style="padding:6px 12px;font-size:12.5px;">পেমেন্ট নিন</button>
                                 @else
                                     <a href="{{ route('fee-collections.receipt', $fee) }}" target="_blank" title="রশিদ দেখুন">

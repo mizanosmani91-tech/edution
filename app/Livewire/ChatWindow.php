@@ -18,6 +18,17 @@ class ChatWindow extends Component
     public string $newMessage = '';
     public $attachment = null; // Livewire temp upload
 
+    public function mount(): void
+    {
+        // গার্ডিয়ান পোর্টাল থেকে "মেসেজ করুন" চাপলে /chat-page?open=<id> এ
+        // পাঠানো হয় — সেই কনভারসেশনটা সাথে সাথে খুলে দেওয়ার জন্য।
+        $conversationId = request()->query('open');
+
+        if ($conversationId && ConversationParticipant::where('conversation_id', $conversationId)->where('user_id', auth()->id())->exists()) {
+            $this->openConversation($conversationId);
+        }
+    }
+
     public function openConversation(string $conversationId): void
     {
         $this->activeConversationId = $conversationId;

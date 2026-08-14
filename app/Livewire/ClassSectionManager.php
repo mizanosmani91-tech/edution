@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Department;
 use App\Models\SchoolClass;
 use App\Models\Section;
+use App\Models\Teacher;
 use Livewire\Component;
 
 class ClassSectionManager extends Component
@@ -19,6 +20,7 @@ class ClassSectionManager extends Component
     public ?string $activeClassId = null;
     public string $sectionName = '';
     public int $sectionCapacity = 40;
+    public ?string $sectionClassTeacherId = null;
 
     public function openClassModal(): void
     {
@@ -66,7 +68,7 @@ class ClassSectionManager extends Component
     public function openSectionModal(string $classId): void
     {
         $this->activeClassId = $classId;
-        $this->reset(['sectionName', 'sectionCapacity']);
+        $this->reset(['sectionName', 'sectionCapacity', 'sectionClassTeacherId']);
         $this->sectionCapacity = 40;
         $this->showSectionModal = true;
     }
@@ -79,6 +81,7 @@ class ClassSectionManager extends Component
             'class_id' => $this->activeClassId,
             'name' => $this->sectionName,
             'capacity' => $this->sectionCapacity,
+            'class_teacher_id' => $this->sectionClassTeacherId ?: null,
         ]);
 
         $this->showSectionModal = false;
@@ -89,15 +92,26 @@ class ClassSectionManager extends Component
         Section::findOrFail($id)->delete();
     }
 
+    /**
+     * পুরোনো সেকশনে (তৈরির সময় ক্লাস শিক্ষক নির্ধারণ করা হয়নি) দ্রুত
+     * ক্লাস শিক্ষক বসিয়ে দেওয়ার ইনলাইন কুইক-অ্যাকশন — quickAssignDepartment
+     * এর মতো একই প্যাটার্ন।
+     */
+    public function quickAssignClassTeacher(string $sectionId, string $teacherId): void
+    {
+        Section::findOrFail($sectionId)->update(['class_teacher_id' => $teacherId ?: null]);
+    }
+
     public function render()
     {
         $institution = auth()->user()->institution;
 
         return view('livewire.class-section-manager', [
-            'classes' => SchoolClass::with(['department', 'sections' => fn ($q) => $q->withCount('students')])
+            'classes' => SchoolClass::with(['department', 'sections' => fn ($q) => $q->withCount('students')->with('classTeacher')])
                 ->orderBy('display_order')
                 ->get(),
             'departments' => Department::orderBy('display_order')->get(),
+            'teachers' => Teacher::where('status', 'active')->orderBy('name')->get(),
             'hasDepartments' => $institution->hasDepartments(),
         ])->layout('components.layouts.app', ['title' => 'ক্লাস ও সেকশন']);
     }

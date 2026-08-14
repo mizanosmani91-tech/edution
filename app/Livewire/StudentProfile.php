@@ -15,6 +15,18 @@ class StudentProfile extends Component
 
     public function mount(Student $student): void
     {
+        // ⚠️ Student এ BelongsToTenant থাকায় route-model-binding এমনিতেই
+        // অন্য প্রতিষ্ঠানের ছাত্রকে আটকায়, কিন্তু একই প্রতিষ্ঠানে অন্য
+        // কারো সন্তান/অন্য ছাত্রের প্রোফাইল দেখা আটকানো দরকার — অভিভাবক
+        // শুধু নিজের সন্তানের, ছাত্র শুধু নিজের প্রোফাইল দেখতে পারবে।
+        $user = auth()->user();
+
+        if ($user->role === 'guardian') {
+            abort_unless($user->children()->where('students.id', $student->id)->exists(), 403, 'এই শিক্ষার্থীর তথ্য দেখার অনুমতি আপনার নেই।');
+        } elseif ($user->role === 'student') {
+            abort_unless($user->student_id === $student->id, 403, 'এই শিক্ষার্থীর তথ্য দেখার অনুমতি আপনার নেই।');
+        }
+
         $this->student = $student;
     }
 

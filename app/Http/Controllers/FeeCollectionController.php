@@ -77,6 +77,18 @@ class FeeCollectionController extends Controller
      */
     public function receipt(FeeCollection $feeCollection)
     {
+        $user = auth()->user();
+
+        if ($user->role === 'guardian') {
+            abort_unless(
+                $user->children()->where('students.id', $feeCollection->student_id)->exists(),
+                403,
+                'এই রশিদ দেখার অনুমতি আপনার নেই।'
+            );
+        } elseif ($user->role === 'student') {
+            abort_unless($user->student_id === $feeCollection->student_id, 403, 'এই রশিদ দেখার অনুমতি আপনার নেই।');
+        }
+
         $feeCollection->load(['student.schoolClass', 'student.section', 'student.guardians', 'institution']);
 
         $collector = $feeCollection->collected_by

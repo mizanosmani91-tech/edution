@@ -48,6 +48,16 @@
                     <div class="section-chip" wire:key="section-{{ $section->id }}">
                         <span>{{ $section->name }} শাখা</span>
                         <span class="scount">({{ $section->students_count }} জন)</span>
+                        @if ($section->classTeacher)
+                            <span class="scount" title="ক্লাস শিক্ষক">— {{ $section->classTeacher->name }}</span>
+                        @else
+                            <select onchange="if(this.value) @this.call('quickAssignClassTeacher', '{{ $section->id }}', this.value)" style="padding:2px 6px;font-size:11px;border-radius:6px;border:1px solid var(--line);color:var(--bad);">
+                                <option value="">⚠ ক্লাস শিক্ষক নেই</option>
+                                @foreach ($teachers as $t)
+                                    <option value="{{ $t->id }}">{{ $t->name }}</option>
+                                @endforeach
+                            </select>
+                        @endif
                         <button wire:click="deleteSection('{{ $section->id }}')" wire:confirm="এই শাখা মুছে ফেলবেন?" type="button">
                             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
                         </button>
@@ -164,6 +174,16 @@
                 <div class="field">
                     <label>ধারণক্ষমতা</label>
                     <input type="number" wire:model="sectionCapacity" min="1">
+                </div>
+
+                <div class="field">
+                    <label>ক্লাস শিক্ষক <span class="opt">(ঐচ্ছিক)</span></label>
+                    <select wire:model="sectionClassTeacherId">
+                        <option value="">নির্বাচন করুন</option>
+                        @foreach ($teachers as $t)
+                            <option value="{{ $t->id }}">{{ $t->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="modal-foot">
