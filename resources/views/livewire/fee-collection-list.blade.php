@@ -4,6 +4,10 @@
             <div style="font-size:12px;color:var(--ink-soft);margin-bottom:2px;">অর্থ ব্যবস্থাপনা / ফি সংগ্রহ</div>
             <h2 style="margin:0;">ফি সংগ্রহ ও লেজার</h2>
         </div>
+        <a href="{{ route('import.fees') }}" class="btn-ghost">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+            পুরাতন ফি হিস্টোরি ইমপোর্ট
+        </a>
     </div>
 
     <div class="filter-card">

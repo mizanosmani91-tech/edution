@@ -114,12 +114,15 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/marksheet/student/{student}', [\App\Http\Controllers\MarksheetController::class, 'studentMarksheet'])->name('marksheet.student');
     Route::get('/admit-cards/class', [\App\Http\Controllers\AdmitCardController::class, 'classAdmitCards'])->name('admit-cards.class');
     Route::get('/report-cards', \App\Livewire\ReportCardCenter::class)->name('report-cards.index');
+    Route::get('/import/students', \App\Livewire\DataImporter::class)->name('import.students')->defaults('entity', 'students');
+    Route::get('/import/teachers', \App\Livewire\DataImporter::class)->name('import.teachers')->defaults('entity', 'teachers');
+    Route::get('/import/fees', \App\Livewire\DataImporter::class)->name('import.fees')->defaults('entity', 'fees');
+    Route::get('/import/exam-results', \App\Livewire\DataImporter::class)->name('import.exam-results')->defaults('entity', 'exam-results');
 
     Route::get('/export/students', [\App\Http\Controllers\ExportController::class, 'students'])->name('export.students');
     Route::get('/export/attendance', [\App\Http\Controllers\ExportController::class, 'attendance'])->name('export.attendance');
     Route::get('/export/fees', [\App\Http\Controllers\ExportController::class, 'fees'])->name('export.fees');
 
-    Route::post('/import/students', [\App\Http\Controllers\BulkImportController::class, 'importStudents'])->name('import.students');
 
     Route::get('/exams', [\App\Http\Controllers\ExamController::class, 'index']);
     Route::post('/exams', [\App\Http\Controllers\ExamController::class, 'store']);

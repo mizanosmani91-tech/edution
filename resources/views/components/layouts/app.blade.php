@@ -73,7 +73,7 @@
             </div>
 
             {{-- শিক্ষার্থী --}}
-            <div class="nav-module {{ $activeIf('students.*','id-cards.*','student-promotion.*','certificates.*','discipline.*','student-health.*','alumni.*') }}" x-data="{ open: {{ request()->routeIs(['students.*','id-cards.*','student-promotion.*','certificates.*','discipline.*','student-health.*','alumni.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('students.*','id-cards.*','student-promotion.*','certificates.*','discipline.*','student-health.*','alumni.*','import.students') }}" x-data="{ open: {{ request()->routeIs(['students.*','id-cards.*','student-promotion.*','certificates.*','discipline.*','student-health.*','alumni.*','import.students']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4.5 5-6.5 8-6.5s6.5 2 8 6.5"/></svg></span>
                     <span class="lbl">শিক্ষার্থী</span>
@@ -92,7 +92,7 @@
             </div>
 
             {{-- শিক্ষক ও স্টাফ --}}
-            <div class="nav-module {{ $activeIf('teachers.*','payroll.*','performance.*','leave-requests.*') }}" x-data="{ open: {{ request()->routeIs(['teachers.*','payroll.*','performance.*','leave-requests.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('teachers.*','payroll.*','performance.*','leave-requests.*','import.teachers') }}" x-data="{ open: {{ request()->routeIs(['teachers.*','payroll.*','performance.*','leave-requests.*','import.teachers']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8"/></svg></span>
                     <span class="lbl">শিক্ষক ও স্টাফ</span>
@@ -123,7 +123,7 @@
             </div>
 
             {{-- পরীক্ষা ও ফলাফল --}}
-            <div class="nav-module {{ $activeIf('exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*') }}" x-data="{ open: {{ request()->routeIs(['exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results') }}" x-data="{ open: {{ request()->routeIs(['exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3h6l1 3H8l1-3Z"/><rect x="5" y="6" width="14" height="15" rx="2"/><path d="M9 12h6M9 16h6"/></svg></span>
                     <span class="lbl">পরীক্ষা ও ফলাফল</span>
@@ -142,7 +142,7 @@
             </div>
 
             {{-- ফি/অর্থ --}}
-            <div class="nav-module {{ $activeIf('fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*') }}" x-data="{ open: {{ request()->routeIs(['fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees') }}" x-data="{ open: {{ request()->routeIs(['fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/><circle cx="16.5" cy="15" r="1.4"/></svg></span>
                     <span class="lbl">ফি/অর্থ</span>

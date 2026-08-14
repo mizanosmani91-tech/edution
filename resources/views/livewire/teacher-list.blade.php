@@ -4,10 +4,16 @@
             <h2>সকল শিক্ষক ও স্টাফ</h2>
             <p>মোট {{ number_format($totalTeachers) }} জন কর্মরত আছেন — অনুসন্ধান করুন অথবা নতুন নিয়োগ দিন</p>
         </div>
-        <a href="{{ route('teachers.hire') }}" class="btn-primary">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
-            নতুন শিক্ষক নিয়োগ
-        </a>
+        <div class="row-actions">
+            <a href="{{ route('import.teachers') }}" class="btn-ghost">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+                ইমপোর্ট করুন
+            </a>
+            <a href="{{ route('teachers.hire') }}" class="btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                নতুন শিক্ষক নিয়োগ
+            </a>
+        </div>
     </div>
 
     <div class="stat-strip">

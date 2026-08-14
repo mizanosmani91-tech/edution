@@ -4,10 +4,16 @@
             <h2>সকল শিক্ষার্থী</h2>
             <p>মোট {{ number_format($totalStudents) }} জন শিক্ষার্থী নথিভুক্ত আছে — অনুসন্ধান করুন অথবা নতুন ভর্তি করুন</p>
         </div>
-        <a href="{{ route('students.admission') }}" class="btn-primary">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
-            নতুন শিক্ষার্থী ভর্তি
-        </a>
+        <div class="row-actions">
+            <a href="{{ route('import.students') }}" class="btn-ghost">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+                ইমপোর্ট করুন
+            </a>
+            <a href="{{ route('students.admission') }}" class="btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                নতুন শিক্ষার্থী ভর্তি
+            </a>
+        </div>
     </div>
 
     <div class="stat-strip">

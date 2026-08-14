@@ -4,10 +4,16 @@
             <div style="font-size:12px;color:var(--ink-soft);margin-bottom:2px;">পরীক্ষা ও ফলাফল / সময়সূচি</div>
             <h2>পরীক্ষার সময়সূচি</h2>
         </div>
-        <button class="btn-primary" wire:click="openExamModal" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
-            নতুন পরীক্ষা
-        </button>
+        <div class="row-actions">
+            <a href="{{ route('import.exam-results') }}" class="btn-ghost">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+                পুরাতন ফলাফল ইমপোর্ট
+            </a>
+            <button class="btn-primary" wire:click="openExamModal" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                নতুন পরীক্ষা
+            </button>
+        </div>
     </div>
 
     <div class="lc-grid">
