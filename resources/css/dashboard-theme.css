@@ -29,6 +29,11 @@ button{font-family:inherit;}
 
 .app{display:grid;grid-template-columns:var(--sidebar-w) 1fr;min-height:100vh;transition:grid-template-columns .22s ease;}
 .app.collapsed{grid-template-columns:var(--sidebar-w-collapsed) 1fr;}
+/* ডেস্কটপে .mobile-backdrop সবসময় লুকানো থাকবে -- নাহলে এটা .app গ্রিডের
+   ৩য় সন্তান হিসেবে গণ্য হয়ে পুরো লেআউট ভেঙে দেয় (sidebar/content ভুল
+   কলামে চলে যায়)। মোবাইলে display:block/fixed override হয় নিচের
+   @media ব্লকে। */
+.mobile-backdrop{display:none;}
 
 .sidebar{background:radial-gradient(140% 120% at 0% 0%, #6E2136 0%, var(--cover-maroon) 45%, var(--cover-maroon-deep) 100%);color:#F3E9D2;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:hidden;}
 .sidebar-head{display:flex;align-items:center;gap:11px;padding:22px 20px 18px;border-bottom:1px solid rgba(231,199,103,.16);flex-shrink:0;}
