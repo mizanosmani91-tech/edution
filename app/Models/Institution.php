@@ -39,6 +39,9 @@ class Institution extends Model
         'preferred_subdomain',
         'enabled_modules',
         'student_limit_override',
+        'latitude',
+        'longitude',
+        'geofence_radius_meters',
     ];
 
     protected $casts = [
@@ -68,6 +71,39 @@ class Institution extends Model
         }
 
         return (bool) ($this->enabled_modules[$key] ?? false);
+    }
+
+    public function hasGeofence(): bool
+    {
+        return $this->latitude !== null && $this->longitude !== null;
+    }
+
+    /**
+     * Haversine সূত্র দিয়ে প্রতিষ্ঠানের অবস্থান থেকে দূরত্ব (মিটারে) —
+     * চেক-ইন/চেক-আউট প্রতিষ্ঠানের বাইরে থেকে করা যাবে না এটা নিশ্চিত করতে।
+     */
+    public function distanceInMetersFrom(float $lat, float $lng): float
+    {
+        $earthRadius = 6371000; // মিটার
+
+        $latDelta = deg2rad($lat - (float) $this->latitude);
+        $lngDelta = deg2rad($lng - (float) $this->longitude);
+
+        $a = sin($latDelta / 2) ** 2
+            + cos(deg2rad((float) $this->latitude)) * cos(deg2rad($lat)) * sin($lngDelta / 2) ** 2;
+
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        return $earthRadius * $c;
+    }
+
+    public function isWithinGeofence(float $lat, float $lng): bool
+    {
+        if (! $this->hasGeofence()) {
+            return true; // geofence সেট করা না থাকলে চেক স্কিপ
+        }
+
+        return $this->distanceInMetersFrom($lat, $lng) <= $this->geofence_radius_meters;
     }
 
     public function users()

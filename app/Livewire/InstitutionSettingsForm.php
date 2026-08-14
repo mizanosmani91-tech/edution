@@ -20,6 +20,11 @@ class InstitutionSettingsForm extends Component
     public string $themePrimaryColor = '#5C1A2B';
     public string $themeAccentColor = '#C9A227';
 
+    // চেক-ইন/চেক-আউট geofence
+    public ?string $institutionLatitude = null;
+    public ?string $institutionLongitude = null;
+    public int $geofenceRadius = 150;
+
     public bool $saved = false;
 
     public function mount(): void
@@ -37,6 +42,16 @@ class InstitutionSettingsForm extends Component
         $this->consecutivePeriodBlocking = (bool) ($settings->consecutive_period_blocking ?? true);
         $this->themePrimaryColor = $settings->theme_primary_color ?? '#5C1A2B';
         $this->themeAccentColor = $settings->theme_accent_color ?? '#C9A227';
+
+        $this->institutionLatitude = $institution->latitude !== null ? (string) $institution->latitude : null;
+        $this->institutionLongitude = $institution->longitude !== null ? (string) $institution->longitude : null;
+        $this->geofenceRadius = $institution->geofence_radius_meters ?? 150;
+    }
+
+    public function setCurrentLocation(string $lat, string $lng): void
+    {
+        $this->institutionLatitude = $lat;
+        $this->institutionLongitude = $lng;
     }
 
     public function save(): void
@@ -50,6 +65,9 @@ class InstitutionSettingsForm extends Component
             'name' => $this->institutionName,
             'phone' => $this->institutionPhone ?: null,
             'address' => $this->institutionAddress ?: null,
+            'latitude' => $this->institutionLatitude !== null && $this->institutionLatitude !== '' ? $this->institutionLatitude : null,
+            'longitude' => $this->institutionLongitude !== null && $this->institutionLongitude !== '' ? $this->institutionLongitude : null,
+            'geofence_radius_meters' => $this->geofenceRadius ?: 150,
         ]);
 
         InstitutionSetting::updateOrCreate(

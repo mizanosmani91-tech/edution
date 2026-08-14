@@ -108,6 +108,52 @@
         </div>
     </div>
 
+    <div class="settings-section">
+        <h3>প্রতিষ্ঠানের অবস্থান (চেক-ইন/চেক-আউট)</h3>
+        <p class="sub">শিক্ষক-স্টাফরা শুধু এই অবস্থানের নির্দিষ্ট ব্যাসার্ধের মধ্যে থেকেই চেক-ইন/চেক-আউট করতে পারবেন। খালি রাখলে এই যাচাই বন্ধ থাকবে।</p>
+
+        <div class="grid2">
+            <div class="field">
+                <label>Latitude</label>
+                <input type="text" wire:model="institutionLatitude" placeholder="যেমন 23.7808875">
+            </div>
+            <div class="field">
+                <label>Longitude</label>
+                <input type="text" wire:model="institutionLongitude" placeholder="যেমন 90.2792371">
+            </div>
+        </div>
+        <div class="field" style="max-width:220px;">
+            <label>অনুমোদিত ব্যাসার্ধ (মিটার)</label>
+            <input type="number" min="20" max="5000" wire:model="geofenceRadius">
+        </div>
+
+        <button type="button" id="useCurrentLocationBtn" style="margin-top:10px;padding:9px 16px;border-radius:8px;border:1.5px solid var(--color-line);background:#fff;font-weight:600;font-size:13px;cursor:pointer;color:var(--color-ink);">
+            📍 বর্তমান অবস্থান ব্যবহার করুন
+        </button>
+        <p id="locationStatus" class="hint" style="margin-top:6px;"></p>
+
+        <script>
+            (function () {
+                const btn = document.getElementById('useCurrentLocationBtn');
+                const status = document.getElementById('locationStatus');
+                if (!btn) return;
+                btn.addEventListener('click', function () {
+                    if (!navigator.geolocation) {
+                        status.textContent = 'আপনার ব্রাউজার লোকেশন সাপোর্ট করে না।';
+                        return;
+                    }
+                    status.textContent = 'অবস্থান খোঁজা হচ্ছে...';
+                    navigator.geolocation.getCurrentPosition(function (pos) {
+                        @this.call('setCurrentLocation', String(pos.coords.latitude), String(pos.coords.longitude));
+                        status.textContent = 'অবস্থান সেট হয়েছে — নিচে সংরক্ষণ করুন চাপুন।';
+                    }, function () {
+                        status.textContent = 'অবস্থান পাওয়া যায়নি, ব্রাউজারে লোকেশন পারমিশন দিন।';
+                    });
+                });
+            })();
+        </script>
+    </div>
+
     <div class="save-bar">
         <button class="btn-primary" wire:click="save" type="button">সংরক্ষণ করুন</button>
     </div>
