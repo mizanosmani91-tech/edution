@@ -298,6 +298,30 @@
             {{ $slot }}
         </div>
     </main>
+
+    {{-- ============ মোবাইল কুইক অ্যাকশন বার ============ --}}
+    <nav class="mobile-bottom-nav">
+        <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12 12 4l8 8"/><path d="M6 10v9h12v-9"/></svg>
+            <span>ড্যাশবোর্ড</span>
+        </a>
+        <a href="{{ route('students.admission') }}" class="{{ request()->routeIs('students.admission') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.3"/><path d="M3 20c1-3.6 3.4-5.4 6-5.4s5 1.8 6 5.4"/><path d="M17 8h4M19 6v4"/></svg>
+            <span>ভর্তি</span>
+        </a>
+        <a href="{{ route('attendance.index') }}" class="mid {{ request()->routeIs('attendance.index') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12 2.3 2.3L16 9.7"/></svg>
+            <span>হাজিরা</span>
+        </a>
+        <a href="{{ route('fees.index') }}" class="{{ request()->routeIs('fees.index') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/></svg>
+            <span>ফি</span>
+        </a>
+        <button type="button" @click="mobileOpen = !mobileOpen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            <span>মেনু</span>
+        </button>
+    </nav>
 </div>
 
 @livewireScripts

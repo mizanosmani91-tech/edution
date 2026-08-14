@@ -158,6 +158,30 @@ tbody tr:last-child td{border-bottom:0;}
   .charts-grid{grid-template-columns:1fr;}
   .bottom-grid{grid-template-columns:1fr;}
 }
+
+/* ===== মোবাইল বটম কুইক-অ্যাকশন বার ===== */
+.mobile-bottom-nav{
+  display:none;
+  position:fixed; left:0; right:0; bottom:0; z-index:40;
+  background:#fff; border-top:1px solid var(--line);
+  padding:8px 4px calc(8px + env(safe-area-inset-bottom));
+  box-shadow:0 -8px 20px -12px rgba(60,30,20,.25);
+}
+.mobile-bottom-nav a,.mobile-bottom-nav button{
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+  border:0; background:none; cursor:pointer; padding:6px 2px;
+  color:var(--ink-muted); font-family:inherit; font-size:10.5px; font-weight:600;
+}
+.mobile-bottom-nav svg{width:20px;height:20px;}
+.mobile-bottom-nav a.active{color:var(--cover-maroon);}
+.mobile-bottom-nav a.mid{
+  position:relative; top:-14px;
+  background:linear-gradient(180deg,var(--gold-light),var(--gold));
+  color:#3E1120; border-radius:50%; width:50px; height:50px; flex:0 0 auto;
+  box-shadow:0 10px 20px -8px rgba(201,162,39,.6); border:3px solid #fff;
+}
+.mobile-bottom-nav a.mid span{display:none;}
+.mobile-bottom-nav a.mid svg{width:22px;height:22px;}
 @media (max-width:860px){
   .app{grid-template-columns:1fr;}
   .sidebar{position:fixed;inset:0 auto 0 0;width:278px;z-index:50;transform:translateX(-100%);transition:transform .25s ease;}
@@ -168,6 +192,7 @@ tbody tr:last-child td{border-bottom:0;}
   .menu-toggle{display:flex;}
   .search-box{display:none;}
   .content{padding:18px 16px 90px;}
+  .mobile-bottom-nav{display:flex; align-items:flex-end;}
   .topbar{padding:14px 16px;}
   .kpi-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
   /* বেশিরভাগ পেজে .card-list markup নেই — তাই ডিফল্টে টেবিলকে লুকানোর বদলে
