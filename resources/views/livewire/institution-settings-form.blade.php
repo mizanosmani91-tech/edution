@@ -40,10 +40,12 @@
         <h3>ফিচার সেটিংস</h3>
         <p class="sub">প্রতিষ্ঠানের প্রয়োজন অনুযায়ী চালু/বন্ধ করুন</p>
 
-        <div class="info-box" style="margin-bottom:16px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-            বিভাগ (Department) সিস্টেম আলাদা করে চালু করা লাগে না — <a href="{{ route('academic.departments') }}" style="color:var(--color-maroon);text-decoration:underline;">বিভাগ পেজ</a>-এ প্রথম বিভাগ (যেমন সাধারণ/হিফয) যোগ করলেই এটা ক্লাস ফর্মে স্বয়ংক্রিয়ভাবে চালু হয়ে যাবে।
-        </div>
+        @unless (auth()->user()->institution->hasDepartments())
+            <div class="info-box" style="margin-bottom:16px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+                বিভাগ (Department) সিস্টেম আলাদা করে চালু করা লাগে না — <a href="{{ route('academic.departments') }}" style="color:var(--color-maroon);text-decoration:underline;">বিভাগ পেজ</a>-এ প্রথম বিভাগ (যেমন সাধারণ/হিফয) যোগ করলেই এটা ক্লাস ফর্মে স্বয়ংক্রিয়ভাবে চালু হয়ে যাবে।
+            </div>
+        @endunless
 
         <div class="switch-row">
             <div class="switch-label">
