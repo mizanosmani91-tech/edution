@@ -47,7 +47,7 @@
     <div class="grid w-full max-w-[1080px] overflow-hidden rounded-[22px] bg-[var(--color-paper)] shadow-[0_30px_60px_-20px_rgba(60,30,20,.35)] md:grid-cols-[0.86fr_28px_1.14fr]">
 
         {{-- কভার (বাম) --}}
-        <div class="relative hidden flex-col overflow-hidden bg-[radial-gradient(120%_140%_at_8%_0%,#6E2136_0%,var(--color-maroon)_45%,var(--color-maroon-deep)_100%)] p-10 text-[var(--color-gold-light)] md:flex">
+        <div class="relative hidden flex-col overflow-hidden p-10 text-[var(--color-gold-light)] md:flex" style="background:var(--color-maroon);">
             <div class="relative z-10 mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-[rgba(231,199,103,.65)] overflow-hidden bg-[rgba(231,199,103,.08)]">
                 @if ($institution && $institution->logo_path)
                     <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($institution->logo_path) }}" alt="{{ $institution->name }}" class="h-full w-full object-cover">

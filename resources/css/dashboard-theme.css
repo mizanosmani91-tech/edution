@@ -35,7 +35,7 @@ button{font-family:inherit;}
    @media ব্লকে। */
 .mobile-backdrop{display:none;}
 
-.sidebar{background:radial-gradient(140% 120% at 0% 0%, #6E2136 0%, var(--cover-maroon) 45%, var(--cover-maroon-deep) 100%);color:#F3E9D2;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:hidden;}
+.sidebar{background:var(--cover-maroon);color:#F3E9D2;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:hidden;}
 .sidebar-head{display:flex;align-items:center;gap:11px;padding:22px 20px 18px;border-bottom:1px solid rgba(231,199,103,.16);flex-shrink:0;}
 .sidebar-emblem{width:38px;height:38px;border-radius:50%;border:1.5px solid rgba(231,199,103,.55);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .sidebar-emblem svg{width:19px;height:19px;}
