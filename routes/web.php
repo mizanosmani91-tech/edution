@@ -98,6 +98,8 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/seat-management', \App\Livewire\SeatManagement::class)->name('seat-management.index');
     Route::get('/entrance-test', \App\Livewire\AdmissionApplicationManager::class)->name('entrance-test.index')->defaults('view', 'test');
     Route::get('/admission-waiting-list', \App\Livewire\AdmissionApplicationManager::class)->name('admission-waiting.index')->defaults('view', 'waiting');
+    Route::get('/payment-gateway-settings', \App\Livewire\PaymentGatewaySettings::class)->name('payment-gateway.index');
+    Route::get('/notification-gateway-settings', \App\Livewire\NotificationGatewaySettings::class)->name('notification-gateway.index');
     Route::get('/settings-page', \App\Livewire\InstitutionSettingsForm::class)->name('settings.index');
     Route::get('/routine-page', \App\Livewire\RoutineBoard::class)->name('routine.index');
 

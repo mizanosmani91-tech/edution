@@ -142,7 +142,7 @@
             </div>
 
             {{-- ফি/অর্থ --}}
-            <div class="nav-module {{ $activeIf('fees.*','fee-structures.*','expenses.*','income-expense-report.*') }}" x-data="{ open: {{ request()->routeIs(['fees.*','fee-structures.*','expenses.*','income-expense-report.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*') }}" x-data="{ open: {{ request()->routeIs(['fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/><circle cx="16.5" cy="15" r="1.4"/></svg></span>
                     <span class="lbl">ফি/অর্থ</span>
@@ -151,7 +151,7 @@
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('fee-structures.index') }}" class="sub-item {{ request()->routeIs('fee-structures.*') ? 'active' : '' }}">ফি স্ট্রাকচার সেটআপ</a>
                     <a href="{{ route('fees.index') }}" class="sub-item {{ request()->routeIs('fees.*') ? 'active' : '' }}">ফি সংগ্রহ</a>
-                    <a href="{{ $stub('অনলাইন পেমেন্ট') }}" class="sub-item">অনলাইন পেমেন্ট গেটওয়ে</a>
+                    <a href="{{ route('payment-gateway.index') }}" class="sub-item {{ request()->routeIs('payment-gateway.*') ? 'active' : '' }}">অনলাইন পেমেন্ট গেটওয়ে</a>
                     <a href="{{ route('fees.index') }}" class="sub-item">বকেয়া তালিকা</a>
                     <a href="{{ $stub('বৃত্তি ও মওকুফ') }}" class="sub-item">বৃত্তি/মওকুফ</a>
                     <a href="{{ route('expenses.index') }}" class="sub-item {{ request()->routeIs('expenses.*') ? 'active' : '' }}">খরচ/ব্যয় ট্র্যাকিং</a>
@@ -200,7 +200,7 @@
             </div>
 
             {{-- যোগাযোগ --}}
-            <div class="nav-module {{ $activeIf('chat.*','notice-board.*','complaints.*') }}" x-data="{ open: {{ request()->routeIs(['chat.*','notice-board.*','complaints.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('chat.*','notice-board.*','complaints.*','notification-gateway.*') }}" x-data="{ open: {{ request()->routeIs(['chat.*','notice-board.*','complaints.*','notification-gateway.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16v11H8l-4 4V5Z"/></svg></span>
                     <span class="lbl">যোগাযোগ</span>
@@ -209,8 +209,8 @@
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('notice-board.index') }}" class="sub-item {{ request()->routeIs('notice-board.*') ? 'active' : '' }}">নোটিশ বোর্ড</a>
                     <a href="{{ route('chat.index') }}" class="sub-item {{ request()->routeIs('chat.*') ? 'active' : '' }}">মেসেজিং/চ্যাট</a>
-                    <a href="{{ $stub('SMS Gateway') }}" class="sub-item">SMS Gateway</a>
-                    <a href="{{ $stub('Email Notification') }}" class="sub-item">Email Notification</a>
+                    <a href="{{ route('notification-gateway.index') }}" class="sub-item {{ request()->routeIs('notification-gateway.*') ? 'active' : '' }}">SMS Gateway</a>
+                    <a href="{{ route('notification-gateway.index') }}" class="sub-item {{ request()->routeIs('notification-gateway.*') ? 'active' : '' }}">Email Notification</a>
                     <a href="{{ route('complaints.index') }}" class="sub-item {{ request()->routeIs('complaints.*') ? 'active' : '' }}">Complaint/Suggestion</a>
                 </div></div></div>
             </div>
