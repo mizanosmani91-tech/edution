@@ -79,6 +79,21 @@
             <div class="grid2">
                 <div class="field"><label>সর্বোচ্চ শিক্ষাগত যোগ্যতা <span class="opt">(ঐচ্ছিক)</span></label>
                     <input type="text" wire:model="education" placeholder="যেমন: এম.এসসি (গণিত)">
+                    <div class="preset-chips">
+                        <span class="lbl">দ্রুত যোগ:</span>
+                        <button type="button" class="preset-chip" wire:click="$set('education', 'এসএসসি')">এসএসসি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('education', 'এইচএসসি')">এইচএসসি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('education', 'দাখিল')">দাখিল</button>
+                        <button type="button" class="preset-chip" wire:click="$set('education', 'আলিম')">আলিম</button>
+                        <button type="button" class="preset-chip" wire:click="$set('education', 'ফাজিল')">ফাজিল</button>
+                        <button type="button" class="preset-chip" wire:click="$set('education', 'কামিল')">কামিল</button>
+                        <button type="button" class="preset-chip" wire:click="$set('education', 'স্নাতক (সম্মান)')">স্নাতক (সম্মান)</button>
+                        <button type="button" class="preset-chip" wire:click="$set('education', 'স্নাতকোত্তর')">স্নাতকোত্তর</button>
+                        <button type="button" class="preset-chip" wire:click="$set('education', 'বি.এড')">বি.এড</button>
+                        <button type="button" class="preset-chip" wire:click="$set('education', 'এম.এড')">এম.এড</button>
+                        <button type="button" class="preset-chip" wire:click="$set('education', 'হাফেজ')">হাফেজ</button>
+                        <button type="button" class="preset-chip" wire:click="$set('education', 'কারী')">কারী</button>
+                    </div>
                 </div>
                 <div class="field"><label>পাসের প্রতিষ্ঠান <span class="opt">(ঐচ্ছিক)</span></label>
                     <input type="text" wire:model="passing_institution" placeholder="বিশ্ববিদ্যালয়/কলেজের নাম">

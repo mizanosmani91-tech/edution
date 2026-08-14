@@ -93,6 +93,17 @@
                     <label>পরীক্ষার নাম <span class="req">*</span></label>
                     <input type="text" wire:model="name" placeholder="যেমনঃ প্রথম সাময়িক পরীক্ষা">
                     @error('name') <p class="hint" style="color:var(--bad)">{{ $message }}</p> @enderror
+                    <div class="preset-chips">
+                        <span class="lbl">দ্রুত যোগ:</span>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'প্রথম সাময়িক পরীক্ষা')">প্রথম সাময়িক পরীক্ষা</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'দ্বিতীয় সাময়িক পরীক্ষা')">দ্বিতীয় সাময়িক পরীক্ষা</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'অর্ধ-বার্ষিক পরীক্ষা')">অর্ধ-বার্ষিক পরীক্ষা</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'বার্ষিক পরীক্ষা')">বার্ষিক পরীক্ষা</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'মাসিক মূল্যায়ন পরীক্ষা')">মাসিক মূল্যায়ন পরীক্ষা</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'সাপ্তাহিক পরীক্ষা')">সাপ্তাহিক পরীক্ষা</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'নির্বাচনী পরীক্ষা')">নির্বাচনী পরীক্ষা</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'মডেল টেস্ট')">মডেল টেস্ট</button>
+                    </div>
                 </div>
                 <div class="info-grid" style="grid-template-columns:1fr 1fr;">
                     <div class="field">

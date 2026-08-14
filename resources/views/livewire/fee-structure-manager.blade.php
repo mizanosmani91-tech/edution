@@ -59,6 +59,21 @@
                     <label>ফি'র ধরন <span class="req">*</span></label>
                     <input type="text" wire:model="feeType" placeholder="যেমন: মাসিক বেতন, ভর্তি ফি">
                     @error('feeType') <p class="hint" style="color:var(--bad)">{{ $message }}</p> @enderror
+                    <div class="preset-chips">
+                        <span class="lbl">দ্রুত যোগ:</span>
+                        <button type="button" class="preset-chip" wire:click="$set('feeType', 'ভর্তি ফি')">ভর্তি ফি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('feeType', 'সেশন ফি')">সেশন ফি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('feeType', 'মাসিক বেতন')">মাসিক বেতন</button>
+                        <button type="button" class="preset-chip" wire:click="$set('feeType', 'পরীক্ষার ফি')">পরীক্ষার ফি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('feeType', 'উন্নয়ন ফি')">উন্নয়ন ফি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('feeType', 'লাইব্রেরি ফি')">লাইব্রেরি ফি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('feeType', 'পরিবহন ফি')">পরিবহন ফি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('feeType', 'হোস্টেল ফি')">হোস্টেল ফি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('feeType', 'ক্রীড়া ফি')">ক্রীড়া ফি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('feeType', 'সনদপত্র ফি')">সনদপত্র ফি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('feeType', 'পুনঃভর্তি ফি')">পুনঃভর্তি ফি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('feeType', 'আইডি কার্ড ফি')">আইডি কার্ড ফি</button>
+                    </div>
                 </div>
 
                 <div class="field">

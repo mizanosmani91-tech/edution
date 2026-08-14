@@ -60,6 +60,16 @@
                     <label>বিভাগের নাম (ইংরেজি/সাধারণ) <span class="req">*</span></label>
                     <input type="text" wire:model="name" placeholder="যেমন: Science">
                     @error('name') <p class="hint" style="color:var(--bad)">{{ $message }}</p> @enderror
+                    <div class="preset-chips">
+                        <span class="lbl">দ্রুত যোগ:</span>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'General'); $set('name_bn', 'সাধারণ')">সাধারণ</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'Hifz'); $set('name_bn', 'হিফজ')">হিফজ</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'Kitab'); $set('name_bn', 'কিতাব বিভাগ')">কিতাব বিভাগ</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'Noorani'); $set('name_bn', 'নূরানী')">নূরানী</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'Science'); $set('name_bn', 'বিজ্ঞান')">বিজ্ঞান</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'Humanities'); $set('name_bn', 'মানবিক')">মানবিক</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'Commerce'); $set('name_bn', 'ব্যবসায় শিক্ষা')">ব্যবসায় শিক্ষা</button>
+                    </div>
                 </div>
 
                 <div class="field">

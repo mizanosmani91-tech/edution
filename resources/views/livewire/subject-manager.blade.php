@@ -51,6 +51,25 @@
                     <label>বিষয়ের নাম <span class="req">*</span></label>
                     <input type="text" wire:model="name" placeholder="যেমন: বাংলা">
                     @error('name') <p class="hint" style="color:var(--bad)">{{ $message }}</p> @enderror
+                    <div class="preset-chips">
+                        <span class="lbl">দ্রুত যোগ:</span>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'বাংলা')">বাংলা</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'English')">English</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'গণিত')">গণিত</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'Mathematics')">Mathematics</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'বিজ্ঞান')">বিজ্ঞান</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'সামাজিক বিজ্ঞান')">সামাজিক বিজ্ঞান</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'ইসলাম ও নৈতিক শিক্ষা')">ইসলাম ও নৈতিক শিক্ষা</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'তথ্য ও যোগাযোগ প্রযুক্তি')">তথ্য ও যোগাযোগ প্রযুক্তি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'শারীরিক শিক্ষা')">শারীরিক শিক্ষা</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'চারু ও কারুকলা')">চারু ও কারুকলা</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'কুরআন মাজীদ')">কুরআন মাজীদ</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'হাদিস')">হাদিস</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'ফিকহ')">ফিকহ</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'আরবি ভাষা')">আরবি ভাষা</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'তাজবীদ')">তাজবীদ</button>
+                        <button type="button" class="preset-chip" wire:click="$set('name', 'আকাইদ')">আকাইদ</button>
+                    </div>
                 </div>
 
                 <div class="field">

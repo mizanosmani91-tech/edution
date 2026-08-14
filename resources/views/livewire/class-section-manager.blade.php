@@ -81,6 +81,40 @@
                     <label>ক্লাসের নাম <span class="req">*</span></label>
                     <input type="text" wire:model="className" placeholder="যেমন: ৯ম শ্রেণি">
                     @error('className') <p class="hint" style="color:var(--bad)">{{ $message }}</p> @enderror
+                    <div class="preset-chips">
+                        <span class="lbl">সাধারণ:</span>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'প্রি-প্লে')">প্রি-প্লে</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'নার্সারি')">নার্সারি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'প্লে')">প্লে</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'কেজি')">কেজি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'প্রথম শ্রেণি')">প্রথম শ্রেণি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'দ্বিতীয় শ্রেণি')">দ্বিতীয় শ্রেণি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'তৃতীয় শ্রেণি')">তৃতীয় শ্রেণি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'চতুর্থ শ্রেণি')">চতুর্থ শ্রেণি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'পঞ্চম শ্রেণি')">পঞ্চম শ্রেণি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'ষষ্ঠ শ্রেণি')">ষষ্ঠ শ্রেণি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'সপ্তম শ্রেণি')">সপ্তম শ্রেণি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'অষ্টম শ্রেণি')">অষ্টম শ্রেণি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'নবম শ্রেণি')">নবম শ্রেণি</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'দশম শ্রেণি')">দশম শ্রেণি</button>
+                    </div>
+                    <div class="preset-chips">
+                        <span class="lbl">মাদরাসা:</span>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'ইবতেদায়ী ১ম')">ইবতেদায়ী ১ম</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'ইবতেদায়ী ২য়')">ইবতেদায়ী ২য়</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'ইবতেদায়ী ৩য়')">ইবতেদায়ী ৩য়</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'ইবতেদায়ী ৪র্থ')">ইবতেদায়ী ৪র্থ</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'ইবতেদায়ী ৫ম')">ইবতেদায়ী ৫ম</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'দাখিল ৬ষ্ঠ')">দাখিল ৬ষ্ঠ</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'দাখিল ৭ম')">দাখিল ৭ম</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'দাখিল ৮ম')">দাখিল ৮ম</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'দাখিল ৯ম')">দাখিল ৯ম</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'দাখিল ১০ম')">দাখিল ১০ম</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'আলিম ১ম বর্ষ')">আলিম ১ম বর্ষ</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'আলিম ২য় বর্ষ')">আলিম ২য় বর্ষ</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'ফাজিল')">ফাজিল</button>
+                        <button type="button" class="preset-chip" wire:click="$set('className', 'কামিল')">কামিল</button>
+                    </div>
                 </div>
 
                 @if ($hasDepartments)
@@ -119,6 +153,12 @@
                     <label>শাখার নাম <span class="req">*</span></label>
                     <input type="text" wire:model="sectionName" placeholder="যেমন: এ">
                     @error('sectionName') <p class="hint" style="color:var(--bad)">{{ $message }}</p> @enderror
+                    <div class="preset-chips">
+                        <span class="lbl">দ্রুত যোগ:</span>
+                        @foreach (['A','B','C','D','ক','খ','গ','ঘ'] as $__sec)
+                            <button type="button" class="preset-chip" wire:click="$set('sectionName', '{{ $__sec }}')">{{ $__sec }}</button>
+                        @endforeach
+                    </div>
                 </div>
 
                 <div class="field">
