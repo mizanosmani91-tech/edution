@@ -21,6 +21,9 @@ jobs:
             cd ~/edution-laravel
             git pull origin main
             composer install --no-dev --optimize-autoloader
+            if ! php -r "require 'vendor/autoload.php'; exit(class_exists('PhpOffice\\PhpSpreadsheet\\Spreadsheet') && class_exists('PhpOffice\\PhpWord\\IOFactory') ? 0 : 1);" 2>/dev/null; then
+              composer update phpoffice/phpspreadsheet phpoffice/phpword --no-dev --with-dependencies --optimize-autoloader
+            fi
             npm ci
             npm run build
             php artisan migrate --force
