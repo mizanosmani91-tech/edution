@@ -7,6 +7,7 @@
     </div>
     <nav class="nav-scroll">
       <div class="nav-item {{ $activeSection === 'overview' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('overview')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 12 12 4l8 8"/><path d="M6 10v9h12v-9"/></svg></span><span class="lbl">ওভারভিউ</span></button></div>
+      <div class="nav-item {{ $activeSection === 'applications' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('applications')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 5v14M5 12h14"/></svg></span><span class="lbl">নতুন আবেদন</span>@if($stats['pendingInstitutions'] > 0)<span class="cnt">{{ $stats['pendingInstitutions'] }}</span>@endif</button></div>
       <div class="nav-item {{ $activeSection === 'institutions' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('institutions')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2 2 0 0 1 6 4h13v14H6a2 2 0 0 0-2 2V5.5Z"/></svg></span><span class="lbl">প্রতিষ্ঠানসমূহ</span></button></div>
       <div class="nav-item {{ $activeSection === 'billing' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('billing')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/></svg></span><span class="lbl">প্যাকেজ ও বিলিং</span></button></div>
       <div class="nav-item {{ $activeSection === 'notices' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('notices')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h13l3 4-3 4H4z"/><path d="M6 13v6"/></svg></span><span class="lbl">নোটিশ ও ঘোষণা</span></button></div>
@@ -21,6 +22,11 @@
       <button class="menu-toggle" @click="mobileOpen = !mobileOpen" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       <div class="breadcrumb"><div class="path">সুপার এডমিন</div><h1>{{ ['overview'=>'ওভারভিউ','institutions'=>'প্রতিষ্ঠানসমূহ','billing'=>'প্যাকেজ ও বিলিং','notices'=>'নোটিশ ও ঘোষণা','support'=>'সাপোর্ট টিকেট','settings'=>'সেটিংস'][$activeSection] }}</h1></div>
       <div class="topbar-actions">
+        <button class="icon-btn" wire:click="setSection('applications')" type="button" title="নতুন প্রতিষ্ঠান আবেদন">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 1 0-12 0c0 5-2 6-2 6h16s-2-1-2-6"/><path d="M9.5 20a2.5 2.5 0 0 0 5 0"/></svg>
+          @php($bellCount = $stats['pendingInstitutions'] + $stats['pendingPayments'])
+          @if ($bellCount > 0)<span class="badge" style="position:absolute; top:-4px; right:-4px; background:var(--bad); color:#fff; font-size:9.5px; font-weight:700; width:16px;height:16px;border-radius:50%; display:flex;align-items:center;justify-content:center;">{{ $bellCount > 9 ? '9+' : $bellCount }}</span>@endif
+        </button>
         <div class="profile-chip"><div class="avatar">{{ mb_substr(auth()->user()->name, 0, 1) }}</div><div class="who">{{ auth()->user()->name }}<div class="role">Platform Owner</div></div></div>
         <form method="POST" action="{{ route('logout') }}">@csrf<button class="icon-btn" type="submit" title="লগআউট"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg></button></form>
       </div>
@@ -116,6 +122,54 @@
         @endif
       @endif
 
+      {{-- ============ NEW APPLICATIONS ============ --}}
+      @if ($activeSection === 'applications')
+        <div class="page-head">
+          <div><h2>নতুন প্রতিষ্ঠান আবেদন</h2><p>সদ্য রেজিস্ট্রেশন করা প্রতিষ্ঠানসমূহ যাচাই করে অনুমোদন বা বাতিল করুন</p></div>
+        </div>
+
+        @if ($justApprovedPassword)
+          <div class="card" style="border-color:var(--good);">
+            <h3 style="color:var(--good);">অনুমোদন সম্পন্ন হয়েছে</h3>
+            <p class="sub">সাময়িক পাসওয়ার্ড: <b style="direction:ltr; display:inline-block;">{{ $justApprovedPassword }}</b> — এটা {{ $justApprovedSlug }}.edution.xyz এর এডমিনকে (ফোন/হোয়াটসঅ্যাপে) জানিয়ে দিন, কারণ এখনো automated email নেই।</p>
+          </div>
+        @endif
+
+        <div class="card">
+          <h3>যাচাইয়ের অপেক্ষায় ({{ $pendingInstitutions->count() }})</h3>
+          @forelse ($pendingInstitutions as $p)
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 0; border-bottom:1px dashed var(--line);" wire:key="pending-{{ $p->id }}">
+              <div>
+                <div style="font-weight:700;font-size:13.5px;">{{ $p->name }}</div>
+                <div style="font-size:11.5px;color:var(--ink-soft);">{{ $p->registration_email }} • {{ $p->phone }}</div>
+                <div style="font-size:11px;color:var(--ink-soft);">{{ $p->address }}, {{ $p->district }} • {{ ['school'=>'স্কুল','madrasa'=>'মাদরাসা','kindergarten'=>'কিন্ডারগার্টেন'][$p->institution_type] ?? $p->institution_type }} • প্ল্যান: {{ \App\Livewire\SuperadminDashboard::PLAN_LABELS[$p->plan] ?? $p->plan }}</div>
+                <div style="font-size:10.5px;color:var(--ink-soft);margin-top:2px;">আবেদন করেছে: {{ $p->created_at->diffForHumans() }}</div>
+              </div>
+              <div style="display:flex;gap:8px; flex-shrink:0;">
+                <button class="btn-primary" style="padding:8px 14px;font-size:12px;" wire:click="approvePendingInstitution('{{ $p->id }}')">অনুমোদন</button>
+                <button class="btn-ghost" style="padding:8px 14px;font-size:12px;" wire:click="rejectPendingInstitution('{{ $p->id }}')">বাতিল</button>
+              </div>
+            </div>
+          @empty
+            <p style="color:var(--ink-soft);font-size:13px;">যাচাইয়ের অপেক্ষায় কোনো নতুন আবেদন নেই</p>
+          @endforelse
+        </div>
+
+        @if ($recentlyReviewed->count() > 0)
+          <div class="card">
+            <h3>সাম্প্রতিক বাতিল হওয়া আবেদন</h3>
+            <table>
+              <thead><tr><th>প্রতিষ্ঠান</th><th>ইমেইল</th><th>তারিখ</th></tr></thead>
+              <tbody>
+                @foreach ($recentlyReviewed as $r)
+                  <tr><td>{{ $r->name }}</td><td>{{ $r->registration_email }}</td><td>{{ $r->updated_at->format('d M, Y') }}</td></tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+        @endif
+      @endif
+
       {{-- ============ INSTITUTIONS ============ --}}
       @if ($activeSection === 'institutions')
         <div class="page-head">
@@ -126,21 +180,6 @@
           <div class="card" style="border-color:var(--good);">
             <h3 style="color:var(--good);">অনুমোদন সম্পন্ন হয়েছে</h3>
             <p class="sub">সাময়িক পাসওয়ার্ড: <b style="direction:ltr; display:inline-block;">{{ $justApprovedPassword }}</b> — এটা {{ $justApprovedSlug }}.edution.xyz এর এডমিনকে (ফোন/হোয়াটসঅ্যাপে) জানিয়ে দিন, কারণ এখনো automated email নেই।</p>
-          </div>
-        @endif
-
-        @if ($pendingInstitutions->count() > 0)
-          <div class="card">
-            <h3>নতুন প্রতিষ্ঠান রেজিস্ট্রেশন — অনুমোদন বাকি</h3>
-            @foreach ($pendingInstitutions as $p)
-              <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px dashed var(--line);">
-                <div><div style="font-weight:700;font-size:13.5px;">{{ $p->name }}</div><div style="font-size:11.5px;color:var(--ink-soft);">{{ $p->registration_email }} • {{ $p->phone }}</div><div style="font-size:11px;color:var(--ink-soft);">{{ $p->address }}</div></div>
-                <div style="display:flex;gap:8px;">
-                  <button class="btn-primary" style="padding:8px 14px;font-size:12px;" wire:click="approvePendingInstitution('{{ $p->id }}')">অনুমোদন</button>
-                  <button class="btn-ghost" style="padding:8px 14px;font-size:12px;" wire:click="rejectPendingInstitution('{{ $p->id }}')">বাতিল</button>
-                </div>
-              </div>
-            @endforeach
           </div>
         @endif
 

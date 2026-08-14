@@ -313,8 +313,12 @@ class SuperadminDashboard extends Component
                 $data['planDistribution'] = $this->planDistribution();
                 break;
 
-            case 'institutions':
+            case 'applications':
                 $data['pendingInstitutions'] = Institution::query()->where('status', 'pending')->latest()->get();
+                $data['recentlyReviewed'] = Institution::query()->whereIn('status', ['rejected'])->latest()->limit(10)->get();
+                break;
+
+            case 'institutions':
                 $data['institutions'] = $this->filteredInstitutions();
                 break;
 
@@ -387,6 +391,7 @@ class SuperadminDashboard extends Component
             'openTickets' => $openTickets,
             'urgentTickets' => $urgentTickets,
             'pendingPayments' => InstitutionPayment::where('status', 'pending')->count(),
+            'pendingInstitutions' => Institution::query()->where('status', 'pending')->count(),
         ];
     }
 
