@@ -54,7 +54,10 @@ class SmsOtpService
         Cache::put('reg_otp:' . $normalized, $code, now()->addMinutes(self::TTL_MINUTES));
         Cache::put('reg_otp_cooldown:' . $normalized, true, now()->addSeconds(self::RESEND_COOLDOWN_SECONDS));
 
-        $message = "আপনার EDUTION যাচাইকরণ কোড: {$code} — এটি " . self::TTL_MINUTES . " মিনিটের জন্য কার্যকর। কারো সাথে শেয়ার করবেন না।";
+        // ⚠️ Unicode (বাংলা) SMS-এ ৭০ ক্যারেক্টারের বেশি হলেই ২ পার্টে ভেঙে
+        // যায় (ডাবল খরচ) — তাই বার্তাটা ইচ্ছাকৃতভাবে ছোট রাখা হয়েছে,
+        // যাতে ১ পার্টেই (৭০ ক্যারেক্টারের নিচে) পাঠানো যায়।
+        $message = "EDUTION যাচাই কোড: {$code}, মেয়াদ " . self::TTL_MINUTES . " মিনিট। শেয়ার করবেন না।";
 
         try {
             Http::timeout(10)->get(config('services.bulksms.endpoint'), [
