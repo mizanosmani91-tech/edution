@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>লগইন — EDUTION</title>
     @vite(['resources/css/app.css'])
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
 </head>
 <body class="flex min-h-screen items-center justify-center bg-[radial-gradient(1200px_700px_at_15%_10%,#EFE7D3_0%,transparent_60%),radial-gradient(1000px_600px_at_90%_90%,#E7DEC5_0%,transparent_55%),#E5DCC5] p-4"
       x-data="{ role: 'admin', roles: {
@@ -78,6 +79,30 @@
                 <p class="mt-1 text-sm text-[var(--color-ink-muted)]" x-text="roles[role].sub">প্রতিষ্ঠানের সার্বিক নিয়ন্ত্রণ ও পরিচালনার জন্য প্রবেশ করুন।</p>
             </div>
 
+            @if (!$institution)
+                <div class="mb-5 rounded-lg border border-[var(--color-gold)]/50 bg-[var(--color-gold)]/10 px-4 py-3.5 text-sm">
+                    <p class="mb-2 font-semibold text-[var(--color-ink)]">লাইভ ডেমো দিয়ে ঘুরে দেখুন</p>
+                    <div class="flex flex-col gap-1.5">
+                        <div class="flex items-center justify-between gap-2 rounded-md bg-white px-3 py-1.5">
+                            <span class="text-[var(--color-ink-muted)]">ইমেইল</span>
+                            <span class="flex items-center gap-2 font-medium text-[var(--color-ink)]">
+                                <span id="demo-email">{{ \Database\Seeders\DemoSeeder::EMAIL }}</span>
+                                <button type="button" onclick="navigator.clipboard.writeText('{{ \Database\Seeders\DemoSeeder::EMAIL }}'); this.textContent='কপি হয়েছে'; setTimeout(() => this.textContent='কপি', 1500)"
+                                    class="rounded border border-[var(--color-line)] px-2 py-0.5 text-[11px] text-[var(--color-ink-muted)] hover:bg-[var(--color-paper-deep)]">কপি</button>
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between gap-2 rounded-md bg-white px-3 py-1.5">
+                            <span class="text-[var(--color-ink-muted)]">পাসওয়ার্ড</span>
+                            <span class="flex items-center gap-2 font-medium text-[var(--color-ink)]">
+                                <span id="demo-password">{{ \Database\Seeders\DemoSeeder::PASSWORD }}</span>
+                                <button type="button" onclick="navigator.clipboard.writeText('{{ \Database\Seeders\DemoSeeder::PASSWORD }}'); this.textContent='কপি হয়েছে'; setTimeout(() => this.textContent='কপি', 1500)"
+                                    class="rounded border border-[var(--color-line)] px-2 py-0.5 text-[11px] text-[var(--color-ink-muted)] hover:bg-[var(--color-paper-deep)]">কপি</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             @if ($errors->any())
                 <div class="mb-4 rounded-lg border border-[var(--color-bad)]/30 bg-[var(--color-bad)]/10 px-4 py-3 text-sm text-[var(--color-bad)]">
                     {{ $errors->first() }}
@@ -117,7 +142,7 @@
                 </div>
 
                 <button type="submit"
-                    class="flex items-center justify-center gap-2 rounded-lg py-3 font-medium text-white transition"
+                    class="flex items-center justify-center gap-2 rounded-lg bg-[var(--color-maroon)] py-3 font-medium text-white transition hover:brightness-110"
                     :style="'background:' + roles[role].color">
                     লগইন করুন
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>

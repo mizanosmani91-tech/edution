@@ -97,13 +97,6 @@
   .trust-strip .item .n{ font-family:'Tiro Bangla',serif; font-size:26px; color:var(--cover-maroon); }
   .trust-strip .item .l{ font-size:12px; color:var(--ink-muted); margin-top:2px; }
 
-  /* ===== DEMO ===== */
-  .demo-box{ max-width:560px; margin:0 auto; background:var(--card); border:1.5px solid var(--gold); border-radius:18px; padding:30px; text-align:center; box-shadow:0 20px 50px -25px rgba(60,30,20,.3); }
-  .demo-box .cred{ display:flex; flex-direction:column; gap:8px; max-width:340px; margin:18px auto; background:var(--paper); border-radius:10px; padding:14px 16px; text-align:left; font-size:14px; }
-  .demo-box .cred .row2{ display:flex; justify-content:space-between; }
-  .demo-box .cred .row2 .k{ color:var(--ink-muted); }
-  .demo-box .cred .row2 .v{ font-weight:700; }
-
   .feat-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
   .feat-card{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:24px; }
   .feat-ic{ width:44px;height:44px;border-radius:12px; display:flex;align-items:center;justify-content:center; margin-bottom:16px; background:color-mix(in srgb, var(--accent) 14%, white); }
@@ -294,16 +287,11 @@
   <div class="wrap center">
     <div class="eyebrow">সাইনআপ ছাড়াই ঘুরে দেখুন</div>
     <h2 class="sec-title">লাইভ ডেমো ড্যাশবোর্ড</h2>
-    <p class="sec-sub">নিচের ক্রেডেনশিয়াল দিয়ে সরাসরি লগইন করে EDUTION-এর সবকিছু নিজে হাতে দেখুন।</p>
-  </div>
-  <div class="wrap">
-    <div class="demo-box">
-      <div class="cred">
-        <div class="row2"><span class="k">ইমেইল</span><span class="v">{{ \Database\Seeders\DemoSeeder::EMAIL }}</span></div>
-        <div class="row2"><span class="k">পাসওয়ার্ড</span><span class="v">{{ \Database\Seeders\DemoSeeder::PASSWORD }}</span></div>
-      </div>
-      <a href="{{ route('login') }}" class="btn-primary">ডেমো ড্যাশবোর্ডে প্রবেশ করুন</a>
-    </div>
+    <p class="sec-sub">সাইনআপ ছাড়াই এক ক্লিকে EDUTION-এর সবকিছু নিজে হাতে দেখুন — লগইন পেজে ডেমো আইডি-পাস দেওয়া আছে।</p>
+    <a href="{{ route('login') }}" class="btn-primary" style="display:inline-flex;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4V8Z"/></svg>
+      ডেমোতে প্রবেশ করুন
+    </a>
   </div>
 </section>
 
