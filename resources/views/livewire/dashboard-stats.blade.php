@@ -297,7 +297,6 @@
         @endif
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
     <script>
         (function () {
             const chartData = {
@@ -311,13 +310,11 @@
             };
 
             function boot() {
+                // Chart.js এখন resources/js/app.js এর মাধ্যমে Vite বান্ডেলে লোড হয়
+                // (আগে external CDN থেকে লোড হতো, নেটওয়ার্ক/অ্যাডব্লকার এ ব্লক হলে
+                // চুপচাপ ফেইল করত আর চার্ট কখনো দেখাই যেত না)।
                 if (window.Chart) initCharts();
-                else {
-                    const s = document.createElement('script');
-                    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js';
-                    s.onload = initCharts;
-                    document.head.appendChild(s);
-                }
+                else window.addEventListener('chartjs:ready', initCharts, { once: true });
             }
 
             function mk(id, config) {

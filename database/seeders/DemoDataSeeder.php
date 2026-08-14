@@ -224,8 +224,8 @@ class DemoDataSeeder extends Seeder
         $days = 60;
         for ($d = $days; $d >= 0; $d--) {
             $date = Carbon::now()->subDays($d);
-            if ($date->isFriday() || $date->isSaturday()) {
-                continue;
+            if ($d !== 0 && ($date->isFriday() || $date->isSaturday())) {
+                continue; // ঐতিহাসিক সাপ্তাহিক ছুটি বাদ, কিন্তু আজকের দিন সবসময় ডেটা থাকবে
             }
             foreach ($students as $s) {
                 $roll = rand(1, 100);
@@ -259,8 +259,8 @@ class DemoDataSeeder extends Seeder
         $days = 60;
         for ($d = $days; $d >= 0; $d--) {
             $date = Carbon::now()->subDays($d);
-            if ($date->isFriday() || $date->isSaturday()) {
-                continue;
+            if ($d !== 0 && ($date->isFriday() || $date->isSaturday())) {
+                continue; // ঐতিহাসিক সাপ্তাহিক ছুটি বাদ, কিন্তু আজকের দিন সবসময় ডেটা থাকবে
             }
             foreach ($teachers as $t) {
                 $roll = rand(1, 100);
