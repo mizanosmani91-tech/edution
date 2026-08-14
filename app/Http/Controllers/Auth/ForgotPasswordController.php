@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Institution;
-use App\Models\Teacher;
 use App\Models\User;
 use App\Services\SmsOtpService;
 use Illuminate\Http\JsonResponse;
@@ -68,11 +67,9 @@ class ForgotPasswordController extends Controller
             return response()->json(['message' => 'একটু আগেই কোড পাঠানো হয়েছে, ১ মিনিট পর আবার চেষ্টা করুন।'], 429);
         }
 
-        $phone = match ($user->role) {
-            'admin' => $institution->phone,
-            'teacher' => Teacher::find($user->teacher_id)?->phone,
-            default => null,
-        };
+        // ⚠️ SMS খরচ নিয়ন্ত্রণে রাখতে শুধু প্রতিষ্ঠান এডমিনের ক্ষেত্রেই SMS
+        // ব্যাকআপ অপশন দেখানো হয় (টিচার/গার্ডিয়ান/স্টুডেন্ট শুধু ইমেইল)।
+        $phone = $user->role === 'admin' ? $institution->phone : null;
 
         $code = $this->issueCode($user->id);
         $this->sendEmailCode($user->email, $code);
@@ -102,12 +99,7 @@ class ForgotPasswordController extends Controller
         }
 
         $institution = Institution::find($user->institution_id);
-
-        $phone = match ($user->role) {
-            'admin' => $institution?->phone,
-            'teacher' => Teacher::find($user->teacher_id)?->phone,
-            default => null,
-        };
+        $phone = $user->role === 'admin' ? $institution?->phone : null;
 
         if (! $phone) {
             return response()->json(['message' => 'এই অ্যাকাউন্টের সাথে কোনো ফোন নম্বর যুক্ত নেই।'], 422);

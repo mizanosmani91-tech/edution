@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="margin:0;padding:0;background:#E5DCC5;font-family:'Hind Siliguri','Noto Sans Bengali',Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#E5DCC5;padding:32px 16px;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#FFFFFF;border-radius:18px;overflow:hidden;box-shadow:0 20px 40px -20px rgba(60,30,20,.3);">
+        <tr>
+          <td style="background:linear-gradient(135deg,#6E2136,#5C1A2B 45%,#3E1120);padding:32px 32px 28px;text-align:center;">
+            <div style="width:52px;height:52px;margin:0 auto 14px;border-radius:50%;background:rgba(231,199,103,.12);border:1.5px solid rgba(231,199,103,.5);line-height:52px;color:#E7C767;font-size:22px;font-weight:700;">E</div>
+            <div style="color:#F3E9D2;font-size:20px;font-weight:700;letter-spacing:.5px;">EDUTION</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:32px;">
+            @if ($isReset)
+              <h1 style="margin:0 0 10px;font-size:20px;color:#2A2320;">পাসওয়ার্ড রিসেট হয়েছে</h1>
+              <p style="margin:0 0 20px;font-size:14.5px;line-height:1.8;color:#7A7061;">
+                <strong style="color:#2A2320;">{{ $institution->name }}</strong>-এর এডমিন অ্যাকাউন্টের জন্য একটা নতুন সাময়িক পাসওয়ার্ড তৈরি করা হয়েছে।
+              </p>
+            @else
+              <h1 style="margin:0 0 10px;font-size:20px;color:#2A2320;">🎉 আপনার প্রতিষ্ঠান অনুমোদিত হয়েছে!</h1>
+              <p style="margin:0 0 20px;font-size:14.5px;line-height:1.8;color:#7A7061;">
+                অভিনন্দন! <strong style="color:#2A2320;">{{ $institution->name }}</strong>-এর জন্য EDUTION অ্যাকাউন্ট চালু হয়ে গেছে। নিচের তথ্য দিয়ে লগইন করুন।
+              </p>
+            @endif
+
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F7F2E5;border-radius:12px;margin-bottom:22px;">
+              <tr><td style="padding:18px 20px;font-size:14px;color:#2A2320;">
+                <div style="margin-bottom:10px;"><span style="color:#7A7061;">ওয়েব ঠিকানা:</span><br><strong>{{ $institution->slug }}.edution.xyz</strong></div>
+                <div style="margin-bottom:10px;"><span style="color:#7A7061;">ইমেইল:</span><br><strong>{{ $loginEmail }}</strong></div>
+                <div>
+                  <span style="color:#7A7061;">সাময়িক পাসওয়ার্ড:</span><br>
+                  <span style="display:inline-block;margin-top:4px;padding:8px 14px;background:#FFFFFF;border:1.5px dashed #C9A227;border-radius:8px;font-size:17px;font-weight:700;letter-spacing:2px;color:#5C1A2B;">{{ $password }}</span>
+                </div>
+              </tr></td>
+            </table>
+
+            <a href="https://{{ $institution->slug }}.edution.xyz/login" style="display:block;text-align:center;background:linear-gradient(90deg,#E7C767,#C9A227);color:#2A2320;text-decoration:none;font-weight:700;font-size:14.5px;padding:13px;border-radius:10px;margin-bottom:18px;">
+              এখনই লগইন করুন →
+            </a>
+
+            <p style="margin:0;font-size:13px;line-height:1.8;color:#AFA593;">
+              নিরাপত্তার জন্য প্রথমবার লগইন করার সাথে সাথেই নতুন পাসওয়ার্ড সেট করতে বলা হবে। এই পাসওয়ার্ড কারো সাথে শেয়ার করবেন না।
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:18px 32px;background:#F7F2E5;text-align:center;font-size:11.5px;color:#AFA593;">
+            এটা একটা স্বয়ংক্রিয় ইমেইল, দয়া করে সরাসরি রিপ্লাই করবেন না।
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

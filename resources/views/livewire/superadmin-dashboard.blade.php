@@ -400,10 +400,12 @@
           <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
             <div class="f-field"><label>নাম</label><input type="text" wire:model="inviteName" placeholder="পূর্ণ নাম"></div>
             <div class="f-field"><label>ইমেইল</label><input type="email" wire:model="inviteEmail" placeholder="email@edution.xyz"></div>
+            <div class="f-field"><label>মোবাইল (forgot-password SMS-এর জন্য)</label><input type="text" wire:model="invitePhone" placeholder="01XXXXXXXXX"></div>
             <button class="btn-primary" wire:click="inviteSuperadmin" type="button">যোগ করুন</button>
           </div>
           @error('inviteName')<div class="err" style="margin-top:6px;">{{ $message }}</div>@enderror
           @error('inviteEmail')<div class="err" style="margin-top:6px;">{{ $message }}</div>@enderror
+          @error('invitePhone')<div class="err" style="margin-top:6px;">{{ $message }}</div>@enderror
         </div>
 
         <div class="card">

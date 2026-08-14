@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Route;
 Route::domain('panel.edution.xyz')->group(function () {
     Route::get('/login', [\App\Http\Controllers\Auth\SuperadminLoginController::class, 'create'])->name('superadmin.login');
     Route::post('/login', [\App\Http\Controllers\Auth\SuperadminLoginController::class, 'store'])->name('superadmin.login.store');
+
+    Route::get('/forgot-password', [\App\Http\Controllers\Auth\SuperadminForgotPasswordController::class, 'create'])->name('superadmin.password.forgot');
+    Route::post('/forgot-password/send-code', [\App\Http\Controllers\Auth\SuperadminForgotPasswordController::class, 'sendCode'])
+        ->middleware('throttle:5,1')->name('superadmin.password.forgot.send');
+    Route::post('/forgot-password/reset', [\App\Http\Controllers\Auth\SuperadminForgotPasswordController::class, 'reset'])
+        ->middleware('throttle:10,1')->name('superadmin.password.forgot.reset');
 });
 
 Route::middleware(['auth', 'superadmin'])->domain('panel.edution.xyz')->group(function () {

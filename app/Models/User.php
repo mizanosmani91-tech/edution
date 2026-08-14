@@ -34,6 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'institution_id',
         'name',
         'email',
+        'phone',
         'password',
         'role',        // admin / teacher / guardian / student / superadmin
         'teacher_id',  // role='teacher' হলে সেট থাকবে (নিজের teacher রেকর্ডের লিংক)

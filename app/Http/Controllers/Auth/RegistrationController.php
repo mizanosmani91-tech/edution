@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\RegistrationReceivedMail;
 use App\Models\Institution;
 use App\Services\SmsOtpService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -52,7 +55,7 @@ class RegistrationController extends Controller
             $slug = $baseSlug . '-' . $counter++;
         }
 
-        Institution::create([
+        $institution = Institution::create([
             'name' => $validated['name'],
             'slug' => $slug,
             'preferred_subdomain' => $validated['preferred_subdomain'] ?? null,
@@ -72,6 +75,13 @@ class RegistrationController extends Controller
         ]);
 
         $otpService->clearVerified($validated['phone']);
+
+        try {
+            Mail::to($institution->registration_email)->send(new RegistrationReceivedMail($institution));
+        } catch (\Throwable $e) {
+            // ⚠️ ইমেইল পাঠাতে ব্যর্থ হলেও রেজিস্ট্রেশন ভেঙে না পড়ে — শুধু লগ করা হলো
+            Log::warning('রেজিস্ট্রেশন কনফার্মেশন ইমেইল পাঠাতে ব্যর্থ: ' . $e->getMessage());
+        }
 
         return redirect()->route('register')->with('success', true)
             ->with('successSlug', $slug)

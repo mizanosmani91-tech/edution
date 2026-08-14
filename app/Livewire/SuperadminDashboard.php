@@ -8,9 +8,12 @@ use App\Models\PlatformNotice;
 use App\Models\PlatformSetting;
 use App\Models\SupportTicket;
 use App\Models\SupportTicketMessage;
+use App\Mail\AdminCredentialsMail;
 use App\Models\User;
 use App\Services\SmsOtpService;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -61,6 +64,7 @@ class SuperadminDashboard extends Component
 
     public string $inviteName = '';
     public string $inviteEmail = '';
+    public string $invitePhone = '';
 
     public const PLAN_PRICES = [
         'basic' => 1500,
@@ -113,12 +117,20 @@ class SuperadminDashboard extends Component
         $this->justApprovedPassword = $tempPassword;
 
         // ⚠️ স্ক্রিনে দেখানো পাসওয়ার্ড রিলোড/ব্রাউজার বন্ধ হলে হারিয়ে যেতে পারে —
-        // তাই approve করার সাথে সাথেই প্রতিষ্ঠানের ফোনে SMS হিসেবে পাঠিয়ে দেওয়া
-        // হচ্ছে, যাতে এটা কোথাও না কোথাও স্থায়ীভাবে থেকে যায়।
+        // তাই approve করার সাথে সাথেই দুই জায়গায় (ইমেইল + SMS) স্থায়ীভাবে
+        // পাঠিয়ে দেওয়া হচ্ছে। SMS ইংরেজিতে ও ৬০ ক্যারেক্টারের মধ্যে রাখা
+        // হয়েছে (single SMS part, খরচ বাড়ে না), বিস্তারিত তথ্য ইমেইলে থাকে।
+        try {
+            Mail::to($institution->registration_email)
+                ->send(new AdminCredentialsMail($institution, $institution->registration_email, $tempPassword, isReset: false));
+        } catch (\Throwable $e) {
+            Log::warning('এডমিন ক্রেডেনশিয়াল ইমেইল পাঠাতে ব্যর্থ: ' . $e->getMessage());
+        }
+
         if ($institution->phone) {
             $sms->sendMessage(
                 $institution->phone,
-                "EDUTION অনুমোদিত! ঠিকানা: {$institution->slug}.edution.xyz ইমেইল: {$institution->registration_email} পাসওয়ার্ড: {$tempPassword}"
+                "EDUTION: Approved. Password: {$tempPassword}"
             );
         }
     }
@@ -146,15 +158,22 @@ class SuperadminDashboard extends Component
         $this->justApprovedSlug = $institution->slug;
         $this->justApprovedPassword = $tempPassword;
 
+        try {
+            Mail::to($admin->email)
+                ->send(new AdminCredentialsMail($institution, $admin->email, $tempPassword, isReset: true));
+        } catch (\Throwable $e) {
+            Log::warning('পাসওয়ার্ড রিসেট ইমেইল পাঠাতে ব্যর্থ: ' . $e->getMessage());
+        }
+
         if ($institution->phone) {
             $sms->sendMessage(
                 $institution->phone,
-                "EDUTION নতুন পাসওয়ার্ড: {$tempPassword} — {$institution->slug}.edution.xyz ({$admin->email})"
+                "EDUTION: New password: {$tempPassword}"
             );
         }
 
         $this->manageInstitutionId = null;
-        $this->dispatch('toast', message: 'নতুন পাসওয়ার্ড জেনারেট ও SMS করা হয়েছে');
+        $this->dispatch('toast', message: 'নতুন পাসওয়ার্ড জেনারেট, ইমেইল ও SMS করা হয়েছে');
     }
 
     public function rejectPendingInstitution(string $institutionId): void
@@ -322,6 +341,7 @@ class SuperadminDashboard extends Component
         $this->validate([
             'inviteName' => ['required', 'string', 'max:255'],
             'inviteEmail' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'invitePhone' => ['required', 'string', 'max:20'],
         ]);
 
         $tempPassword = Str::password(10, symbols: false);
@@ -330,13 +350,14 @@ class SuperadminDashboard extends Component
             'institution_id' => null,
             'name' => $this->inviteName,
             'email' => $this->inviteEmail,
+            'phone' => $this->invitePhone,
             'password' => Hash::make($tempPassword),
             'role' => 'superadmin',
             'must_change_password' => true,
         ]);
 
         $this->justApprovedPassword = $tempPassword;
-        $this->reset(['inviteName', 'inviteEmail']);
+        $this->reset(['inviteName', 'inviteEmail', 'invitePhone']);
         $this->dispatch('toast', message: 'নতুন সুপার এডমিন যোগ করা হয়েছে — সাময়িক পাসওয়ার্ড উপরে দেখানো হয়েছে');
     }
 

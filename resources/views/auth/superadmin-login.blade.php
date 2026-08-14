@@ -150,7 +150,7 @@
 
     <div class="row-between">
       <label class="remember"><input type="checkbox" name="remember" value="1">এই ডিভাইস মনে রাখুন</label>
-      <a href="#" class="forgot">পাসওয়ার্ড ভুলে গেছেন?</a>
+      <a href="{{ route('superadmin.password.forgot') }}" class="forgot">পাসওয়ার্ড ভুলে গেছেন?</a>
     </div>
 
     <button type="submit" class="btn-primary">
