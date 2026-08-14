@@ -139,7 +139,7 @@ button{font-family:inherit;}
 
 table{width:100%;border-collapse:collapse;font-size:13px;}
 thead th{text-align:right;font-size:11.5px;color:var(--ink-soft);font-weight:700;padding:0 4px 10px;border-bottom:1px solid var(--line);}
-tbody td{padding:10px 4px;border-bottom:1px solid var(--line);vertical-align:middle;}
+tbody td{padding:10px 4px;border-bottom:1px solid var(--line);vertical-align:middle;text-align:right;}
 tbody tr:last-child td{border-bottom:0;}
 .stud{display:flex;align-items:center;gap:9px;}
 .stud .ini{width:28px;height:28px;border-radius:50%;background:color-mix(in srgb, var(--student) 16%, white);color:var(--student);font-weight:700;font-size:11.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -280,7 +280,7 @@ tbody tr:last-child td{border-bottom:0;}
 .table-card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;}
 .table-card table{width:100%;border-collapse:collapse;font-size:13.3px;}
 .table-card thead th{text-align:right;font-size:11.5px;color:var(--ink-muted);font-weight:700;padding:13px 14px;background:var(--paper-deep);border-bottom:1px solid var(--line);white-space:nowrap;}
-.table-card tbody td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle;}
+.table-card tbody td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle;text-align:right;}
 .table-card tbody tr:last-child td{border-bottom:0;}
 .table-card tbody tr:hover{background:rgba(201,162,39,.04);}
 .table-card .stud{display:flex;align-items:center;gap:10px;}
@@ -292,7 +292,7 @@ tbody tr:last-child td{border-bottom:0;}
 .pill.day{background:color-mix(in srgb, var(--ink-soft) 20%, white);color:var(--ink-muted);}
 .pill.active{background:color-mix(in srgb, var(--good) 14%, white);color:var(--good);}
 .pill.due{background:color-mix(in srgb, var(--bad) 14%, white);color:var(--bad);}
-.row-actions{display:flex;gap:6px;justify-content:flex-start;flex-wrap:wrap;align-items:center;}
+.row-actions{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;align-items:center;}
 .row-actions > a:not(.btn-ghost):not(.btn-primary),.row-actions > button:not(.btn-ghost):not(.btn-primary){width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-muted);}
 .row-actions > a:not(.btn-ghost):not(.btn-primary):hover,.row-actions > button:not(.btn-ghost):not(.btn-primary):hover{border-color:var(--gold);color:var(--ink);}
 .row-actions > a:not(.btn-ghost):not(.btn-primary) svg,.row-actions > button:not(.btn-ghost):not(.btn-primary) svg{width:14px;height:14px;}
