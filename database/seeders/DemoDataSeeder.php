@@ -84,6 +84,7 @@ class DemoDataSeeder extends Seeder
             [$classes, $sections] = $this->seedClassesAndSections($instId);
             $teachers = $this->seedTeachers($instId, $subjects, $classes);
             $students = $this->seedStudents($instId, $classes, $sections);
+            $this->seedPortalLogins($instId, $teachers, $students, $sections);
 
             $this->seedAttendance($instId, $students, $adminId);
             $this->seedStaffAttendance($instId, $teachers, $adminId);
@@ -104,6 +105,63 @@ class DemoDataSeeder extends Seeder
             $this->seedQuestionBank($instId, $classes, $subjects);
             $this->seedScholarships($instId, $students, $adminId);
         }
+    }
+
+    /**
+     * পাবলিক ডেমোতে শুধু এডমিন লগইন থাকলে শিক্ষক/অভিভাবক পোর্টাল দুটো
+     * দেখানো যেত না — তাই একজন শিক্ষক (যিনি প্রধান শিক্ষকও) আর একজন
+     * অভিভাবকের লগইন তৈরি করে দেওয়া হচ্ছে। প্রতি ডিপ্লয়ে teacher/student
+     * রো নতুন UUID নিয়ে আবার তৈরি হয় (wipe()), তাই এখানে updateOrCreate
+     * দিয়ে fixed ইমেইলের ইউজারের FK-গুলো প্রতিবার নতুন ID দিয়ে
+     * রিফ্রেশ করা হচ্ছে — নাহলে stale reference থেকে যেত।
+     */
+    private function seedPortalLogins(string $instId, array $teachers, array $students, array $sections): void
+    {
+        $headmaster = collect($teachers)->firstWhere('designation', 'প্রধান শিক্ষক') ?? $teachers[0];
+
+        \App\Models\User::updateOrCreate(
+            ['institution_id' => $instId, 'email' => DemoSeeder::TEACHER_EMAIL],
+            [
+                'name' => $headmaster->name,
+                'password' => \Illuminate\Support\Facades\Hash::make(DemoSeeder::STAFF_PASSWORD),
+                'role' => 'teacher',
+                'teacher_id' => $headmaster->id,
+                'must_change_password' => false,
+            ]
+        );
+
+        // এই শিক্ষককেই প্রথম সেকশনের ক্লাস শিক্ষক বানিয়ে দেওয়া হলো, যাতে
+        // অভিভাবক পোর্টালের "বার্তা" ট্যাবে ক্লাস শিক্ষক ও প্রধান শিক্ষক —
+        // দুটো যোগাযোগ অপশনই বাস্তবে কাজ করা অবস্থায় দেখা যায়।
+        $demoSection = $sections[0] ?? null;
+        $demoSection?->update(['class_teacher_id' => $headmaster->id]);
+
+        $demoChild = collect($students)->firstWhere('section_id', $demoSection?->id) ?? ($students[0] ?? null);
+
+        if (! $demoChild) {
+            return;
+        }
+
+        $guardianUser = \App\Models\User::updateOrCreate(
+            ['institution_id' => $instId, 'email' => DemoSeeder::GUARDIAN_EMAIL],
+            [
+                'name' => 'ডেমো অভিভাবক',
+                'password' => \Illuminate\Support\Facades\Hash::make(DemoSeeder::STAFF_PASSWORD),
+                'role' => 'guardian',
+                'must_change_password' => false,
+            ]
+        );
+
+        DB::table('guardian_student')->updateOrInsert(
+            ['guardian_id' => $guardianUser->id, 'student_id' => $demoChild->id],
+            [
+                'id' => (string) Str::uuid(),
+                'institution_id' => $instId,
+                'relationship' => 'পিতা',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
     }
 
     private function wipe(string $instId): void

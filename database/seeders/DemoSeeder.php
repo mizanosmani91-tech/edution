@@ -18,6 +18,13 @@ class DemoSeeder extends Seeder
     public const PASSWORD = 'Demo@1234';
     public const SLUG = 'demo';
 
+    // DemoDataSeeder এ তৈরি হওয়া শিক্ষক/অভিভাবক ডেমো লগইন — লগইন পেজে
+    // দেখানোর জন্য এখানে কনস্ট্যান্ট রাখা হলো (একই জায়গা থেকে দুই সিডার
+    // ও ব্লেড ভিউ রেফারেন্স করবে, ডুপ্লিকেট স্ট্রিং এড়ানোর জন্য)।
+    public const TEACHER_EMAIL = 'teacher@demo-edution.test';
+    public const GUARDIAN_EMAIL = 'guardian@demo-edution.test';
+    public const STAFF_PASSWORD = 'Demo@1234';
+
     public function run(): void
     {
         $institution = Institution::updateOrCreate(

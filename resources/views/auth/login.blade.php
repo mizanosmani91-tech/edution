@@ -38,10 +38,10 @@
 </head>
 <body class="flex min-h-screen items-center justify-center bg-[radial-gradient(1200px_700px_at_15%_10%,#EFE7D3_0%,transparent_60%),radial-gradient(1000px_600px_at_90%_90%,#E7DEC5_0%,transparent_55%),#E5DCC5] p-4"
       x-data="{ role: 'admin', roles: {
-          admin: { color: '#C9A227', title: 'এডমিন হিসেবে লগইন করুন', sub: 'প্রতিষ্ঠানের সার্বিক নিয়ন্ত্রণ ও পরিচালনার জন্য প্রবেশ করুন।', idLabel: 'এডমিন আইডি অথবা ইমেইল' },
-          teacher: { color: '#35528F', title: 'শিক্ষক/স্টাফ হিসেবে লগইন করুন', sub: 'ক্লাস, হাজিরা ও ফলাফল ব্যবস্থাপনায় প্রবেশ করুন।', idLabel: 'স্টাফ ইমেইল' },
-          guardian: { color: '#2F6E52', title: 'অভিভাবক হিসেবে লগইন করুন', sub: 'সন্তানের হাজিরা, ফলাফল ও নোটিশ দেখতে প্রবেশ করুন।', idLabel: 'অভিভাবক ইমেইল' },
-          student: { color: '#A65A2E', title: 'শিক্ষার্থী হিসেবে লগইন করুন', sub: 'রুটিন, ফলাফল ও লার্নিং ম্যাটেরিয়াল দেখতে প্রবেশ করুন।', idLabel: 'শিক্ষার্থী ইমেইল' }
+          admin: { color: '#C9A227', title: 'এডমিন হিসেবে লগইন করুন', sub: 'প্রতিষ্ঠানের সার্বিক নিয়ন্ত্রণ ও পরিচালনার জন্য প্রবেশ করুন।', idLabel: 'এডমিন আইডি অথবা ইমেইল', demoEmail: '{{ \Database\Seeders\DemoSeeder::EMAIL }}', demoPassword: '{{ \Database\Seeders\DemoSeeder::PASSWORD }}' },
+          teacher: { color: '#35528F', title: 'শিক্ষক/স্টাফ হিসেবে লগইন করুন', sub: 'ক্লাস, হাজিরা ও ফলাফল ব্যবস্থাপনায় প্রবেশ করুন।', idLabel: 'স্টাফ ইমেইল', demoEmail: '{{ \Database\Seeders\DemoSeeder::TEACHER_EMAIL }}', demoPassword: '{{ \Database\Seeders\DemoSeeder::STAFF_PASSWORD }}' },
+          guardian: { color: '#2F6E52', title: 'অভিভাবক হিসেবে লগইন করুন', sub: 'সন্তানের হাজিরা, ফলাফল ও নোটিশ দেখতে প্রবেশ করুন।', idLabel: 'অভিভাবক ইমেইল', demoEmail: '{{ \Database\Seeders\DemoSeeder::GUARDIAN_EMAIL }}', demoPassword: '{{ \Database\Seeders\DemoSeeder::STAFF_PASSWORD }}' },
+          student: { color: '#A65A2E', title: 'শিক্ষার্থী হিসেবে লগইন করুন', sub: 'রুটিন, ফলাফল ও লার্নিং ম্যাটেরিয়াল দেখতে প্রবেশ করুন।', idLabel: 'শিক্ষার্থী ইমেইল', demoEmail: null, demoPassword: null }
       } }">
 
     <div class="grid w-full max-w-[1080px] overflow-hidden rounded-[22px] bg-[var(--color-paper)] shadow-[0_30px_60px_-20px_rgba(60,30,20,.35)] md:grid-cols-[0.86fr_28px_1.14fr]">
@@ -119,22 +119,22 @@
             </div>
 
             @if (!$institution)
-                <div class="mb-5 rounded-lg border border-[var(--color-gold)]/50 bg-[var(--color-gold)]/10 px-4 py-3.5 text-sm">
-                    <p class="mb-2 font-semibold text-[var(--color-ink)]">লাইভ ডেমো দিয়ে ঘুরে দেখুন</p>
+                <div class="mb-5 rounded-lg border border-[var(--color-gold)]/50 bg-[var(--color-gold)]/10 px-4 py-3.5 text-sm" x-show="roles[role].demoEmail" x-cloak>
+                    <p class="mb-2 font-semibold text-[var(--color-ink)]" x-text="{admin:'এডমিন ডেমো দিয়ে ঘুরে দেখুন',teacher:'শিক্ষক ডেমো দিয়ে ঘুরে দেখুন',guardian:'অভিভাবক ডেমো দিয়ে ঘুরে দেখুন'}[role]">লাইভ ডেমো দিয়ে ঘুরে দেখুন</p>
                     <div class="flex flex-col gap-1.5">
                         <div class="flex items-center justify-between gap-2 rounded-md bg-white px-3 py-1.5">
                             <span class="text-[var(--color-ink-muted)]">ইমেইল</span>
                             <span class="flex items-center gap-2 font-medium text-[var(--color-ink)]">
-                                <span id="demo-email">{{ \Database\Seeders\DemoSeeder::EMAIL }}</span>
-                                <button type="button" onclick="navigator.clipboard.writeText('{{ \Database\Seeders\DemoSeeder::EMAIL }}'); this.textContent='কপি হয়েছে'; setTimeout(() => this.textContent='কপি', 1500)"
+                                <span id="demo-email" x-text="roles[role].demoEmail">{{ \Database\Seeders\DemoSeeder::EMAIL }}</span>
+                                <button type="button" @click="navigator.clipboard.writeText(roles[role].demoEmail); $el.textContent='কপি হয়েছে'; setTimeout(() => $el.textContent='কপি', 1500)"
                                     class="rounded border border-[var(--color-line)] px-2 py-0.5 text-[11px] text-[var(--color-ink-muted)] hover:bg-[var(--color-paper-deep)]">কপি</button>
                             </span>
                         </div>
                         <div class="flex items-center justify-between gap-2 rounded-md bg-white px-3 py-1.5">
                             <span class="text-[var(--color-ink-muted)]">পাসওয়ার্ড</span>
                             <span class="flex items-center gap-2 font-medium text-[var(--color-ink)]">
-                                <span id="demo-password">{{ \Database\Seeders\DemoSeeder::PASSWORD }}</span>
-                                <button type="button" onclick="navigator.clipboard.writeText('{{ \Database\Seeders\DemoSeeder::PASSWORD }}'); this.textContent='কপি হয়েছে'; setTimeout(() => this.textContent='কপি', 1500)"
+                                <span id="demo-password" x-text="roles[role].demoPassword">{{ \Database\Seeders\DemoSeeder::PASSWORD }}</span>
+                                <button type="button" @click="navigator.clipboard.writeText(roles[role].demoPassword); $el.textContent='কপি হয়েছে'; setTimeout(() => $el.textContent='কপি', 1500)"
                                     class="rounded border border-[var(--color-line)] px-2 py-0.5 text-[11px] text-[var(--color-ink-muted)] hover:bg-[var(--color-paper-deep)]">কপি</button>
                             </span>
                         </div>
