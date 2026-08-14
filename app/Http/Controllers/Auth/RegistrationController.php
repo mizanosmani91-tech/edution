@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Institution;
+use App\Services\SmsOtpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -36,6 +37,14 @@ class RegistrationController extends Controller
             'terms' => ['accepted'],
         ]);
 
+        // ⚠️ ফর্ম সাবমিট করার আগে OTP দিয়ে মোবাইল নম্বর যাচাই বাধ্যতামূলক —
+        // /register/send-otp ও /register/verify-otp দিয়ে ফ্রন্টএন্ডে যাচাই হয়,
+        // এখানে সার্ভার-সাইডে সেটা আবার নিশ্চিত করা হচ্ছে (ফর্ম বাইপাস ঠেকাতে)
+        $otpService = app(SmsOtpService::class);
+        if (! $otpService->isVerified($validated['phone'])) {
+            return back()->withErrors(['phone' => 'অনুগ্রহ করে আগে মোবাইল নম্বর OTP দিয়ে যাচাই করুন।'])->withInput();
+        }
+
         $baseSlug = $validated['preferred_subdomain'] ?? Str::slug($validated['name']);
         $slug = $baseSlug;
         $counter = 1;
@@ -61,6 +70,8 @@ class RegistrationController extends Controller
             'admin_designation' => $validated['admin_designation'],
             'registration_email' => $validated['email'],
         ]);
+
+        $otpService->clearVerified($validated['phone']);
 
         return redirect()->route('register')->with('success', true)
             ->with('successSlug', $slug)

@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <title>প্রতিষ্ঠান রেজিস্ট্রেশন — EDUTION</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -259,7 +260,22 @@
                     <div class="field"><label>পদবি <span class="req">*</span></label><input type="text" name="admin_designation" placeholder="যেমন: প্রিন্সিপাল, পরিচালক" value="{{ old('admin_designation') }}" required>@error('admin_designation')<div class="err">{{ $message }}</div>@enderror</div>
                 </div>
                 <div class="grid2">
-                    <div class="field"><label>মোবাইল নম্বর <span class="req">*</span></label><input type="tel" name="phone" placeholder="০১৭XXXXXXXX" value="{{ old('phone') }}" required>@error('phone')<div class="err">{{ $message }}</div>@enderror</div>
+                    <div class="field">
+                        <label>মোবাইল নম্বর <span class="req">*</span></label>
+                        <div style="display:flex; gap:8px;">
+                            <input type="tel" name="phone" id="phoneInput" placeholder="০১৭XXXXXXXX" value="{{ old('phone') }}" required style="flex:1;">
+                            <button type="button" id="sendOtpBtn" class="btn-ghost" style="white-space:nowrap; padding:11px 16px; font-size:12.5px;">OTP পাঠান</button>
+                        </div>
+                        @error('phone')<div class="err">{{ $message }}</div>@enderror
+                        <div id="otpBox" style="display:none; margin-top:10px;">
+                            <div style="display:flex; gap:8px; align-items:center;">
+                                <input type="text" id="otpCodeInput" maxlength="6" inputmode="numeric" placeholder="৬ সংখ্যার কোড" style="flex:1;">
+                                <button type="button" id="verifyOtpBtn" class="btn-primary" style="white-space:nowrap; padding:11px 16px; font-size:12.5px;">যাচাই করুন</button>
+                            </div>
+                            <div id="otpStatus" class="hint"></div>
+                        </div>
+                        <input type="hidden" id="phoneVerifiedInput" value="0">
+                    </div>
                     <div class="field"><label>ইমেইল <span class="req">*</span></label><input type="email" name="email" placeholder="you@example.com" value="{{ old('email') }}" required>@error('email')<div class="err">{{ $message }}</div>@enderror
                         <div class="hint">এই ইমেইল দিয়েই পরে লগইন করবেন</div>
                     </div>
@@ -370,8 +386,114 @@
   const bnDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
   function toBnDigit(n){ return bnDigits[n]; }
 
+  // ── মোবাইল নম্বর OTP যাচাই ──
+  const phoneInput = document.getElementById('phoneInput');
+  const sendOtpBtn = document.getElementById('sendOtpBtn');
+  const otpBox = document.getElementById('otpBox');
+  const otpCodeInput = document.getElementById('otpCodeInput');
+  const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+  const otpStatus = document.getElementById('otpStatus');
+  const phoneVerifiedInput = document.getElementById('phoneVerifiedInput');
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+  let cooldownTimer = null;
+
+  function setOtpStatus(msg, ok){
+    if (!otpStatus) return;
+    otpStatus.textContent = msg;
+    otpStatus.style.color = ok ? 'var(--good)' : 'var(--bad)';
+  }
+
+  function startCooldown(sec){
+    let remaining = sec;
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.textContent = `আবার পাঠান (${remaining})`;
+    clearInterval(cooldownTimer);
+    cooldownTimer = setInterval(()=>{
+      remaining--;
+      if (remaining <= 0) {
+        clearInterval(cooldownTimer);
+        sendOtpBtn.textContent = 'আবার পাঠান';
+        sendOtpBtn.disabled = false;
+      } else {
+        sendOtpBtn.textContent = `আবার পাঠান (${remaining})`;
+      }
+    }, 1000);
+  }
+
+  if (sendOtpBtn) {
+    sendOtpBtn.addEventListener('click', async ()=>{
+      if (!phoneInput.value.trim()) { setOtpStatus('আগে মোবাইল নম্বর লিখুন', false); return; }
+      sendOtpBtn.disabled = true;
+      try {
+        const res = await fetch("{{ route('register.otp.send') }}", {
+          method: 'POST',
+          headers: {'Content-Type':'application/json', 'X-CSRF-TOKEN': csrfToken, 'Accept':'application/json'},
+          body: JSON.stringify({ phone: phoneInput.value.trim() })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          otpBox.style.display = 'block';
+          setOtpStatus(data.message, true);
+          startCooldown(60);
+        } else {
+          setOtpStatus(data.message || 'কোড পাঠানো যায়নি', false);
+          sendOtpBtn.disabled = false;
+        }
+      } catch (e) {
+        setOtpStatus('নেটওয়ার্ক সমস্যা, আবার চেষ্টা করুন', false);
+        sendOtpBtn.disabled = false;
+      }
+    });
+  }
+
+  if (verifyOtpBtn) {
+    verifyOtpBtn.addEventListener('click', async ()=>{
+      if (!otpCodeInput.value.trim()) { setOtpStatus('কোড লিখুন', false); return; }
+      verifyOtpBtn.disabled = true;
+      try {
+        const res = await fetch("{{ route('register.otp.verify') }}", {
+          method: 'POST',
+          headers: {'Content-Type':'application/json', 'X-CSRF-TOKEN': csrfToken, 'Accept':'application/json'},
+          body: JSON.stringify({ phone: phoneInput.value.trim(), code: otpCodeInput.value.trim() })
+        });
+        const data = await res.json();
+        if (res.ok && data.verified) {
+          setOtpStatus('✓ ' + data.message, true);
+          phoneVerifiedInput.value = '1';
+          phoneInput.readOnly = true;
+          otpCodeInput.disabled = true;
+          verifyOtpBtn.disabled = true;
+          sendOtpBtn.style.display = 'none';
+          clearInterval(cooldownTimer);
+        } else {
+          setOtpStatus(data.message || 'ভুল কোড', false);
+          verifyOtpBtn.disabled = false;
+        }
+      } catch (e) {
+        setOtpStatus('নেটওয়ার্ক সমস্যা, আবার চেষ্টা করুন', false);
+        verifyOtpBtn.disabled = false;
+      }
+    });
+  }
+
+  if (phoneInput) {
+    phoneInput.addEventListener('input', ()=>{
+      if (phoneVerifiedInput.value === '1') {
+        phoneVerifiedInput.value = '0';
+        phoneInput.readOnly = false;
+        otpBox.style.display = 'none';
+        otpCodeInput.value = '';
+        sendOtpBtn.style.display = '';
+      }
+    });
+  }
+
   if (nextBtn) {
     nextBtn.addEventListener('click', ()=>{
+      if (current === 2 && phoneVerifiedInput && phoneVerifiedInput.value !== '1') {
+        setOtpStatus('পরবর্তী ধাপে যাওয়ার আগে মোবাইল নম্বর OTP দিয়ে যাচাই করুন', false);
+        return;
+      }
       if(current === totalSteps){
         regForm.submit();
         return;

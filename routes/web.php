@@ -22,6 +22,12 @@ Route::get('/', fn () => view('landing'))->name('landing');
 Route::get('/register', [\App\Http\Controllers\Auth\RegistrationController::class, 'create'])->name('register');
 Route::post('/register', [\App\Http\Controllers\Auth\RegistrationController::class, 'store'])->name('register.store');
 
+// ⚠️ রেজিস্ট্রেশনের সময় মোবাইল নম্বর OTP যাচাই — throttle দিয়ে abuse ঠেকানো হলো
+Route::post('/register/send-otp', [\App\Http\Controllers\Auth\OtpController::class, 'send'])
+    ->middleware('throttle:5,1')->name('register.otp.send');
+Route::post('/register/verify-otp', [\App\Http\Controllers\Auth\OtpController::class, 'verify'])
+    ->middleware('throttle:10,1')->name('register.otp.verify');
+
 Route::get('/login', function () {
     $institution = \App\Models\Institution::resolveFromSubdomain(request()->getHost());
     return view('auth.login', ['institution' => $institution]);

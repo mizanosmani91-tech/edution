@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    // ⚠️ প্ল্যাটফর্ম-লেভেল SMS (রেজিস্ট্রেশন OTP যাচাইয়ের জন্য) — Onecodesoft
+    // Bulk SMS অ্যাকাউন্ট। এটা প্রতিষ্ঠানের নিজস্ব per-tenant SMS গেটওয়ে
+    // সেটিংস (IntegrationSetting মডেল) থেকে আলাদা।
+    'bulksms' => [
+        'endpoint' => env('BULKSMS_ENDPOINT', 'https://sms.ocs-api.top/api/send-sms'),
+        'api_key' => env('BULKSMS_API_KEY'),
+        'sender_id' => env('BULKSMS_SENDER_ID'),
+    ],
+
 ];
