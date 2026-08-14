@@ -4,7 +4,7 @@
             <h2>সকল শিক্ষার্থী</h2>
             <p>মোট {{ number_format($totalStudents) }} জন শিক্ষার্থী নথিভুক্ত আছে — অনুসন্ধান করুন অথবা নতুন ভর্তি করুন</p>
         </div>
-        <div class="row-actions">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <a href="{{ route('import.students') }}" class="btn-ghost">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
                 ইমপোর্ট করুন

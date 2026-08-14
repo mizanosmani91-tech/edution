@@ -4,7 +4,7 @@
             <div style="font-size:12px;color:var(--ink-soft);margin-bottom:2px;">পরীক্ষা ও ফলাফল / সময়সূচি</div>
             <h2>পরীক্ষার সময়সূচি</h2>
         </div>
-        <div class="row-actions">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <a href="{{ route('import.exam-results') }}" class="btn-ghost">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
                 পুরাতন ফলাফল ইমপোর্ট

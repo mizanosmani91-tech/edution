@@ -253,10 +253,10 @@ tbody tr:last-child td{border-bottom:0;}
 .pill.day{background:color-mix(in srgb, var(--ink-soft) 20%, white);color:var(--ink-muted);}
 .pill.active{background:color-mix(in srgb, var(--good) 14%, white);color:var(--good);}
 .pill.due{background:color-mix(in srgb, var(--bad) 14%, white);color:var(--bad);}
-.row-actions{display:flex;gap:6px;justify-content:flex-start;}
-.row-actions a,.row-actions button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-muted);}
-.row-actions a:hover,.row-actions button:hover{border-color:var(--gold);color:var(--ink);}
-.row-actions svg{width:14px;height:14px;}
+.row-actions{display:flex;gap:6px;justify-content:flex-start;flex-wrap:wrap;align-items:center;}
+.row-actions > a:not(.btn-ghost):not(.btn-primary),.row-actions > button:not(.btn-ghost):not(.btn-primary){width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-muted);}
+.row-actions > a:not(.btn-ghost):not(.btn-primary):hover,.row-actions > button:not(.btn-ghost):not(.btn-primary):hover{border-color:var(--gold);color:var(--ink);}
+.row-actions > a:not(.btn-ghost):not(.btn-primary) svg,.row-actions > button:not(.btn-ghost):not(.btn-primary) svg{width:14px;height:14px;}
 
 .table-foot{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;font-size:12.5px;color:var(--ink-muted);flex-wrap:wrap;gap:10px;}
 .pager{display:flex;gap:6px;}
