@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\RoutinePeriod;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -20,11 +21,35 @@ class AttendanceController extends Controller
             'date' => ['required', 'date'],
         ]);
 
+        $this->authorizeClassAccess((int) $validated['class_id'], $validated['section_id'] ?? null);
+
         return Attendance::with('student')
             ->where('class_id', $validated['class_id'])
             ->when($validated['section_id'] ?? null, fn ($q, $id) => $q->where('section_id', $id))
             ->where('date', $validated['date'])
             ->get();
+    }
+
+    /**
+     * ⚠️ teacher role হলে শুধু নিজের assigned ক্লাস/সেকশনেই (RoutinePeriod
+     * অনুযায়ী) হাজিরা দেখা/নেওয়ার অনুমতি — admin/superadmin-এর জন্য উন্মুক্ত।
+     */
+    protected function authorizeClassAccess(int $classId, ?int $sectionId): void
+    {
+        $user = auth()->user();
+
+        if ($user->role !== 'teacher') {
+            return;
+        }
+
+        abort_unless($user->teacher_id, 403, 'এই একাউন্ট কোনো শিক্ষকের সাথে যুক্ত না।');
+
+        $assigned = RoutinePeriod::where('teacher_id', $user->teacher_id)
+            ->where('class_id', $classId)
+            ->when($sectionId, fn ($q, $id) => $q->where('section_id', $id))
+            ->exists();
+
+        abort_unless($assigned, 403, 'আপনি এই ক্লাসের জন্য নিযুক্ত না।');
     }
 
     /**
@@ -46,6 +71,8 @@ class AttendanceController extends Controller
             'records.*.status' => ['required', Rule::in(['present', 'absent', 'late', 'leave'])],
             'records.*.remarks' => ['nullable', 'string', 'max:255'],
         ]);
+
+        $this->authorizeClassAccess((int) $validated['class_id'], $validated['section_id'] ?? null);
 
         $markedBy = auth()->id();
         $created = [];

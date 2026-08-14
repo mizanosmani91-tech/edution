@@ -71,6 +71,7 @@
                 $activeIf = fn(...$patterns) => request()->routeIs($patterns) ? 'open active' : '';
             @endphp
 
+            @if (auth()->user()->role !== 'teacher')
             {{-- একাডেমিক --}}
             <div class="nav-module {{ $activeIf('academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*') }}" x-data="{ open: {{ request()->routeIs(['academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
@@ -141,6 +142,8 @@
                 </div></div></div>
             </div>
 
+            @endif
+
             {{-- হাজিরা --}}
             <div class="nav-module {{ $activeIf('attendance.*','staff-attendance.*','attendance-report.*','leave-requests.*') }}" x-data="{ open: {{ request()->routeIs(['attendance.*','staff-attendance.*','attendance-report.*','leave-requests.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
@@ -175,6 +178,7 @@
                 </div></div></div>
             </div>
 
+            @if (auth()->user()->role !== 'teacher')
             {{-- ফি/অর্থ --}}
             <div class="nav-module {{ $activeIf('fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees','scholarships.*') }}" x-data="{ open: {{ request()->routeIs(['fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees','scholarships.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
@@ -233,6 +237,8 @@
                 </div></div></div>
             </div>
 
+            @endif
+
             {{-- যোগাযোগ --}}
             <div class="nav-module {{ $activeIf('chat.*','notice-board.*','complaints.*','notification-gateway.*','support-tickets.*') }}" x-data="{ open: {{ request()->routeIs(['chat.*','notice-board.*','complaints.*','notification-gateway.*','support-tickets.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
@@ -264,6 +270,7 @@
                 </div></div></div>
             </div>
 
+            @if (auth()->user()->role !== 'teacher')
             {{-- রিপোর্ট --}}
             <div class="nav-module {{ $activeIf('export.*') }}" x-data="{ open: {{ request()->routeIs(['export.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
@@ -277,6 +284,8 @@
                     <a href="{{ route('export.fees') }}" class="sub-item {{ request()->routeIs('export.fees') ? 'active' : '' }}">ফি রিপোর্ট (Export)</a>
                 </div></div></div>
             </div>
+
+            @endif
 
             <div class="nav-single {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                 <a href="{{ route('settings.index') }}" class="nav-btn">

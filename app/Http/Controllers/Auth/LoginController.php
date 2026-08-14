@@ -84,6 +84,12 @@ class LoginController extends Controller
             return redirect()->route('password.force-change');
         }
 
+        // ⚠️ শিক্ষকদের জন্য admin dashboard-এর বদলে নিজের পোর্টাল-ই ডিফল্ট
+        // ল্যান্ডিং পেজ — institution-wide KPI দেখার দরকার নেই তাদের।
+        if ($user->role === 'teacher' && $user->teacher_id) {
+            return redirect()->intended(route('portal.teacher'));
+        }
+
         return redirect()->intended('/dashboard');
     }
 

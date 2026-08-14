@@ -18,6 +18,24 @@ class MarksEntry extends Component
 
     public ?string $savedMessage = null;
 
+    public function mount(): void
+    {
+        // ⚠️ teacher role হলে শুধু নিজের assign করা subject-ই দেখতে/এন্ট্রি
+        // করতে পারবে — admin/superadmin-এর জন্য উন্মুক্ত।
+        if (auth()->user()->role === 'teacher') {
+            abort_unless(auth()->user()->teacher_id, 403, 'এই একাউন্ট কোনো শিক্ষকের সাথে যুক্ত না।');
+        }
+    }
+
+    protected function assertSubjectAccess(ExamSubject $examSubject): void
+    {
+        $user = auth()->user();
+
+        if ($user->role === 'teacher' && $examSubject->teacher_id !== $user->teacher_id) {
+            abort(403, 'আপনি এই বিষয়ের জন্য নিযুক্ত না।');
+        }
+    }
+
     public function updatedExamId(): void
     {
         $this->examSubjectId = null;
@@ -44,6 +62,8 @@ class MarksEntry extends Component
         if (! $examSubject) {
             return;
         }
+
+        $this->assertSubjectAccess($examSubject);
 
         $students = Student::where('class_id', $examSubject->class_id)->where('status', 'active')->get();
         $existing = ExamMark::where('exam_subject_id', $this->examSubjectId)->get()->keyBy('student_id');
@@ -76,6 +96,7 @@ class MarksEntry extends Component
         }
 
         $examSubject = ExamSubject::findOrFail($this->examSubjectId);
+        $this->assertSubjectAccess($examSubject);
 
         foreach ($this->students as $student) {
             $isAbsent = (bool) ($this->absent[$student->id] ?? false);
@@ -98,7 +119,12 @@ class MarksEntry extends Component
     {
         return view('livewire.marks-entry', [
             'exams' => Exam::orderByDesc('start_date')->get(),
-            'examSubjects' => $this->examId ? ExamSubject::with('subject', 'schoolClass')->where('exam_id', $this->examId)->get() : collect(),
+            'examSubjects' => $this->examId
+                ? ExamSubject::with('subject', 'schoolClass')
+                    ->where('exam_id', $this->examId)
+                    ->when(auth()->user()->role === 'teacher', fn ($q) => $q->where('teacher_id', auth()->user()->teacher_id))
+                    ->get()
+                : collect(),
             'students' => $this->students,
         ])->layout('components.layouts.app', ['title' => 'মার্কস এন্ট্রি']);
     }
