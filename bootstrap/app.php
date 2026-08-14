@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,6 +13,13 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withSchedule(function (Schedule $schedule): void {
+        // ⚠️ সার্ভারের crontab এ `* * * * * php artisan schedule:run` চালু
+        // না থাকলে এই দুটো কমান্ড কখনো চলবে না — deploy এর পর একবার
+        // যাচাই করে নিতে হবে।
+        $schedule->command('edution:notify-overdue-fees')->dailyAt('08:00');
+        $schedule->command('edution:process-billing')->dailyAt('07:00');
+    })
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'tenant.context' => \App\Http\Middleware\SetTenantContext::class,

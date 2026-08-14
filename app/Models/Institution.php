@@ -30,6 +30,12 @@ class Institution extends Model
         'registration_email',
         'institution_type',
         'plan',
+        'billing_type',
+        'prepaid_balance',
+        'billing_last_charged_month',
+        'billing_due_at',
+        'billing_grace_ends_at',
+        'billing_suspended',
         'student_count_estimate',
         'eiin',
         'division',
@@ -48,6 +54,10 @@ class Institution extends Model
     protected $casts = [
         'trial_ends_at' => 'datetime',
         'enabled_modules' => 'array',
+        'prepaid_balance' => 'decimal:2',
+        'billing_due_at' => 'date',
+        'billing_grace_ends_at' => 'date',
+        'billing_suspended' => 'boolean',
     ];
 
     // superadmin "প্রতিষ্ঠান পরিচালনা" মোডালে যেসব মডিউল টগল করা যায় —
@@ -159,6 +169,39 @@ class Institution extends Model
     public function blocksConsecutivePeriods(): bool
     {
         return $this->settings === null ? true : (bool) $this->settings->consecutive_period_blocking;
+    }
+
+    public function walletTransactions()
+    {
+        return $this->hasMany(WalletTransaction::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(InstitutionPayment::class);
+    }
+
+    public function isPrepaid(): bool
+    {
+        return $this->billing_type === 'prepaid';
+    }
+
+    public function isPostpaid(): bool
+    {
+        return $this->billing_type !== 'prepaid';
+    }
+
+    /**
+     * গ্রেস পিরিয়ড শেষ হতে (postpaid) আর কত দিন বাকি — নেগেটিভ মানে
+     * ইতিমধ্যে গ্রেস পিরিয়ড পার হয়ে গেছে।
+     */
+    public function graceDaysLeft(): ?int
+    {
+        if (! $this->billing_grace_ends_at) {
+            return null;
+        }
+
+        return (int) now()->startOfDay()->diffInDays($this->billing_grace_ends_at, false);
     }
 
     public static function resolveFromSubdomain(string $host): ?self

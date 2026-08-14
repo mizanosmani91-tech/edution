@@ -62,18 +62,17 @@
             </div>
           </div>
           <div class="card">
-            <h3>প্ল্যান বণ্টন</h3>
-            <p class="sub">সক্রিয় প্রতিষ্ঠান অনুযায়ী</p>
+            <h3>বিলিং ধরন বণ্টন</h3>
+            <p class="sub">postpaid বনাম prepaid প্রতিষ্ঠান</p>
             <div class="chart-box" style="height:190px;" wire:ignore>
               <canvas x-init="
                 if ($el.chartInstance) { $el.chartInstance.destroy(); }
-                $el.chartInstance = new Chart($el, { type:'doughnut', data:{ labels:['বেসিক','স্ট্যান্ডার্ড','প্রিমিয়াম'], datasets:[{ data: @js($planDistribution), backgroundColor:['#C9A227','#35528F','#5C1A2B'], borderWidth:3, borderColor:'#fff' }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'68%', plugins:{legend:{display:false}} } });
+                $el.chartInstance = new Chart($el, { type:'doughnut', data:{ labels:['পোস্টপেইড','প্রিপেইড'], datasets:[{ data: @js($planDistribution), backgroundColor:['#35528F','#C9A227'], borderWidth:3, borderColor:'#fff' }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'68%', plugins:{legend:{display:false}} } });
               "></canvas>
             </div>
             <div class="legend">
-              <span><i style="background:#C9A227"></i>বেসিক</span>
-              <span><i style="background:#35528F"></i>স্ট্যান্ডার্ড</span>
-              <span><i style="background:#5C1A2B"></i>প্রিমিয়াম</span>
+              <span><i style="background:#35528F"></i>পোস্টপেইড (মাসিক, ছাত্রসংখ্যা টায়ার)</span>
+              <span><i style="background:#C9A227"></i>প্রিপেইড (৳৫/ছাত্র, ব্যালেন্স)</span>
             </div>
           </div>
         </div>
@@ -88,7 +87,14 @@
                   <tr>
                     <td>{{ $inst->name }}</td>
                     <td>{{ ['school'=>'স্কুল','madrasa'=>'মাদরাসা','kindergarten'=>'কিন্ডারগার্টেন'][$inst->institution_type] ?? $inst->institution_type }}</td>
-                    <td><span class="tag {{ $inst->plan === 'premium' ? 'info' : 'gold' }}">{{ \App\Livewire\SuperadminDashboard::PLAN_LABELS[$inst->plan] ?? $inst->plan }}</span></td>
+                    <td>
+                      @if ($inst->isPrepaid())
+                        <span class="tag gold">প্রিপেইড • ৳{{ number_format((float) $inst->prepaid_balance) }}</span>
+                      @else
+                        @php($due = $billingSvc->postpaidDueAmount($inst))
+                        <span class="tag info">পোস্টপেইড • {{ $due ? '৳'.number_format($due) : 'কাস্টম' }}</span>
+                      @endif
+                    </td>
                     <td><span class="tag {{ $inst->status === 'active' ? 'good' : ($inst->status === 'suspended' ? 'bad' : 'gold') }}">{{ ['active'=>'সক্রিয়','trial'=>'ট্রায়াল','suspended'=>'স্থগিত'][$inst->status] ?? $inst->status }}</span></td>
                   </tr>
                 @empty
@@ -146,7 +152,7 @@
               <div>
                 <div style="font-weight:700;font-size:13.5px;">{{ $p->name }}</div>
                 <div style="font-size:11.5px;color:var(--ink-soft);">{{ $p->registration_email }} • {{ $p->phone }}</div>
-                <div style="font-size:11px;color:var(--ink-soft);">{{ $p->address }}, {{ $p->district }} • {{ ['school'=>'স্কুল','madrasa'=>'মাদরাসা','kindergarten'=>'কিন্ডারগার্টেন'][$p->institution_type] ?? $p->institution_type }} • প্ল্যান: {{ \App\Livewire\SuperadminDashboard::PLAN_LABELS[$p->plan] ?? $p->plan }}</div>
+                <div style="font-size:11px;color:var(--ink-soft);">{{ $p->address }}, {{ $p->district }} • {{ ['school'=>'স্কুল','madrasa'=>'মাদরাসা','kindergarten'=>'কিন্ডারগার্টেন'][$p->institution_type] ?? $p->institution_type }} • আনুমানিক ছাত্র: {{ $p->student_count_estimate ?? '—' }}</div>
                 <div style="font-size:10.5px;color:var(--ink-soft);margin-top:2px;">আবেদন করেছে: {{ $p->created_at->diffForHumans() }}</div>
               </div>
               <div style="display:flex;gap:8px; flex-shrink:0;">
@@ -192,7 +198,7 @@
             <select wire:model.live="instType"><option value="">সকল</option><option value="school">স্কুল</option><option value="madrasa">মাদরাসা</option><option value="kindergarten">কিন্ডারগার্টেন</option></select>
           </div>
           <div class="f-field"><label>প্ল্যান</label>
-            <select wire:model.live="instPlan"><option value="">সকল</option><option value="basic">বেসিক</option><option value="standard">স্ট্যান্ডার্ড</option><option value="premium">প্রিমিয়াম</option></select>
+            <select wire:model.live="instBillingType"><option value="">সকল</option><option value="postpaid">পোস্টপেইড</option><option value="prepaid">প্রিপেইড</option></select>
           </div>
           <div class="f-field"><label>স্ট্যাটাস</label>
             <select wire:model.live="instStatus"><option value="">সকল</option><option value="active">সক্রিয়</option><option value="trial">ট্রায়াল</option><option value="suspended">স্থগিত</option></select>
@@ -208,7 +214,14 @@
                 <tr wire:key="inst-{{ $inst->id }}">
                   <td><div class="inst-cell"><div class="ini" style="background:#5C1A2B">{{ mb_substr($inst->name, 0, 1) }}</div><div><div class="nm">{{ $inst->name }}</div><div class="sub">{{ $inst->slug }}.edution.xyz</div></div></div></td>
                   <td>{{ ['school'=>'স্কুল','madrasa'=>'মাদরাসা','kindergarten'=>'কিন্ডারগার্টেন'][$inst->institution_type] ?? '—' }}</td>
-                  <td><span class="tag {{ $inst->plan === 'premium' ? 'info' : 'gold' }}">{{ \App\Livewire\SuperadminDashboard::PLAN_LABELS[$inst->plan] ?? $inst->plan }}</span></td>
+                  <td>
+                      @if ($inst->isPrepaid())
+                        <span class="tag gold">প্রিপেইড • ৳{{ number_format((float) $inst->prepaid_balance) }}</span>
+                      @else
+                        @php($due = $billingSvc->postpaidDueAmount($inst))
+                        <span class="tag info">পোস্টপেইড • {{ $due ? '৳'.number_format($due) : 'কাস্টম' }}</span>
+                      @endif
+                    </td>
                   <td>{{ number_format($inst->students_count) }}</td>
                   <td><span class="tag {{ $inst->status === 'active' ? 'good' : ($inst->status === 'suspended' ? 'bad' : 'gold') }}">{{ ['active'=>'সক্রিয়','trial'=>'ট্রায়াল','suspended'=>'স্থগিত','rejected'=>'বাতিল'][$inst->status] ?? $inst->status }}</span></td>
                   <td>{{ $inst->created_at->format('d M, Y') }}</td>
@@ -250,7 +263,7 @@
             <h3>যাচাইয়ের অপেক্ষায় থাকা পেমেন্ট</h3>
             @foreach ($pendingPayments as $pay)
               <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px dashed var(--line);">
-                <div><div style="font-weight:700;font-size:13.5px;">{{ $pay->institution->name ?? 'অজ্ঞাত' }}</div><div style="font-size:11.5px;color:var(--ink-soft);">৳{{ number_format($pay->amount, 2) }} • {{ $pay->method }} • {{ $pay->transaction_ref }} • {{ $pay->for_month }}</div></div>
+                <div><div style="font-weight:700;font-size:13.5px;">{{ $pay->institution->name ?? 'অজ্ঞাত' }} <span class="tag {{ $pay->purpose === 'wallet_topup' ? 'gold' : 'info' }}" style="margin-left:6px;">{{ $pay->purpose === 'wallet_topup' ? 'প্রিপেইড টপ-আপ' : 'সাবস্ক্রিপশন' }}</span></div><div style="font-size:11.5px;color:var(--ink-soft);">৳{{ number_format($pay->amount, 2) }} • {{ $pay->method }} • {{ $pay->transaction_ref }} • {{ $pay->for_month }}</div></div>
                 <div style="display:flex;gap:8px;">
                   <button class="btn-primary" style="padding:8px 14px;font-size:12px;" wire:click="approvePayment('{{ $pay->id }}')">অনুমোদন</button>
                   <button class="btn-ghost" style="padding:8px 14px;font-size:12px;" wire:click="rejectPayment('{{ $pay->id }}')">বাতিল</button>
@@ -259,6 +272,41 @@
             @endforeach
           </div>
         @endif
+
+        <div class="split-grid">
+          <div class="card">
+            <h3>পোস্টপেইড — বকেয়া/গ্রেস পিরিয়ড</h3>
+            <p class="sub">গ্রেস পিরিয়ড শেষ হওয়ার তারিখ অনুযায়ী সাজানো</p>
+            @forelse ($postpaidDue as $inst)
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px dashed var(--line);">
+                <div>
+                  <div style="font-weight:700;font-size:13px;">{{ $inst->name }}</div>
+                  <div style="font-size:11.5px;color:var(--ink-soft);">বিল ৳{{ number_format($billingSvc->postpaidDueAmount($inst) ?? 0) }} • গ্রেস শেষ: {{ $inst->billing_grace_ends_at?->translatedFormat('d M') }}</div>
+                </div>
+                <span class="tag {{ $inst->billing_suspended ? 'bad' : ((int) $inst->graceDaysLeft() <= 3 ? 'gold' : 'good') }}">
+                  {{ $inst->billing_suspended ? 'সাসপেন্ড' : ((int) $inst->graceDaysLeft()) . ' দিন বাকি' }}
+                </span>
+              </div>
+            @empty
+              <p style="color:var(--ink-soft);font-size:13px;">কোনো পোস্টপেইড প্রতিষ্ঠানের বিল বকেয়া নেই</p>
+            @endforelse
+          </div>
+          <div class="card">
+            <h3>প্রিপেইড — কম ব্যালেন্স</h3>
+            <p class="sub">ব্যালেন্স অনুযায়ী সাজানো (কম থেকে বেশি)</p>
+            @forelse ($prepaidLow->take(10) as $inst)
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px dashed var(--line);">
+                <div>
+                  <div style="font-weight:700;font-size:13px;">{{ $inst->name }}</div>
+                  <div style="font-size:11.5px;color:var(--ink-soft);">মাসিক খরচ আনুমানিক ৳{{ number_format($billingSvc->prepaidMonthlyCost($inst)) }}</div>
+                </div>
+                <span class="tag {{ $inst->billing_suspended ? 'bad' : ((float) $inst->prepaid_balance < $billingSvc->prepaidMonthlyCost($inst) ? 'gold' : 'good') }}">৳{{ number_format((float) $inst->prepaid_balance) }}</span>
+              </div>
+            @empty
+              <p style="color:var(--ink-soft);font-size:13px;">কোনো প্রিপেইড প্রতিষ্ঠান নেই</p>
+            @endforelse
+          </div>
+        </div>
 
         <div class="table-card">
           <table>
@@ -547,15 +595,30 @@
             </div>
 
             <div class="modal-sec">
-              <h4>প্ল্যান ও সীমা</h4>
+              <h4>বিলিং ধরন</h4>
               <div class="plan-row">
-                <select wire:model="managePlan">
-                  <option value="basic">বেসিক — ২০০ শিক্ষার্থী</option>
-                  <option value="standard">স্ট্যান্ডার্ড — ১,০০০ শিক্ষার্থী</option>
-                  <option value="premium">প্রিমিয়াম — সীমাহীন</option>
+                <select wire:model="manageBillingType">
+                  <option value="postpaid">পোস্টপেইড — মাসিক, ছাত্রসংখ্যা অনুযায়ী টায়ার (১-২০০=৳৪৯৯, ২০১-৫০০=৳৯৯৯, ৫০১-১০০০=৳১৯৯৯)</option>
+                  <option value="prepaid">প্রিপেইড — ছাত্র প্রতি ৳৫, আগে ব্যালেন্স লোড করা লাগবে</option>
                 </select>
                 <input type="number" wire:model="manageLimit" placeholder="শিক্ষার্থী সীমা override (ঐচ্ছিক)">
               </div>
+
+              @if ($manageInst->isPrepaid())
+                <div style="margin-top:10px;padding:12px 14px;background:var(--paper-deep);border-radius:10px;">
+                  <div class="sub" style="margin-bottom:6px;">বর্তমান ব্যালেন্স: <strong>৳{{ number_format((float) $manageInst->prepaid_balance) }}</strong> • আনুমানিক মাসিক খরচ: ৳{{ number_format($billingSvc->prepaidMonthlyCost($manageInst)) }}</div>
+                  <div class="plan-row">
+                    <input type="number" wire:model="manageTopUpAmount" placeholder="টপ-আপ টাকার পরিমাণ">
+                    <button class="btn-secondary" type="button" wire:click="manualTopUp">টপ-আপ করুন</button>
+                  </div>
+                </div>
+              @else
+                <div class="sub" style="margin-top:8px;">চলতি মাসের বিল: ৳{{ number_format($billingSvc->postpaidDueAmount($manageInst) ?? 0) }}
+                  @if ($manageInst->billing_grace_ends_at)
+                    • গ্রেস পিরিয়ড শেষ: {{ $manageInst->billing_grace_ends_at->translatedFormat('d M, Y') }}
+                  @endif
+                </div>
+              @endif
             </div>
 
             <div class="modal-sec">

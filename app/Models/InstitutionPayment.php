@@ -27,6 +27,7 @@ class InstitutionPayment extends Model
         'method',
         'transaction_ref',
         'for_month',
+        'purpose', // subscription | wallet_topup
         'status',
         'submitted_by',
         'reviewed_by',

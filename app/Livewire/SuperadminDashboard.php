@@ -11,6 +11,9 @@ use App\Models\SupportTicket;
 use App\Models\SupportTicketMessage;
 use App\Mail\AdminCredentialsMail;
 use App\Models\User;
+use App\Models\WalletTransaction;
+use App\Services\BillingService;
+use App\Services\NotificationService;
 use App\Services\SmsOtpService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -33,7 +36,7 @@ class SuperadminDashboard extends Component
 
     // ── Institutions section ──
     public string $instType = '';
-    public string $instPlan = '';
+    public string $instBillingType = '';
     public string $instStatus = '';
     public string $instSearch = '';
 
@@ -49,6 +52,8 @@ class SuperadminDashboard extends Component
     public string $managePlan = 'basic';
     public ?int $manageLimit = null;
     public array $manageModules = [];
+    public string $manageBillingType = 'postpaid';
+    public string $manageTopUpAmount = '';
 
     // ── Notices ──
     public string $noticeTitle = '';
@@ -193,6 +198,8 @@ class SuperadminDashboard extends Component
         $this->manageActive = $institution->status !== 'suspended';
         $this->managePlan = $institution->plan ?? 'basic';
         $this->manageLimit = $institution->student_limit_override;
+        $this->manageBillingType = $institution->billing_type ?? 'postpaid';
+        $this->manageTopUpAmount = '';
 
         $this->manageModules = [];
         foreach (array_keys(Institution::TOGGLEABLE_MODULES) as $key) {
@@ -293,6 +300,8 @@ class SuperadminDashboard extends Component
         $institution->update([
             'status' => $this->manageActive ? 'active' : 'suspended',
             'plan' => $this->managePlan,
+            'billing_type' => $this->manageBillingType,
+            'billing_suspended' => $this->manageActive ? false : $institution->billing_suspended,
             'student_limit_override' => $this->manageLimit ?: null,
             'enabled_modules' => $this->manageModules,
         ]);
@@ -303,9 +312,10 @@ class SuperadminDashboard extends Component
 
     // ================= Billing =================
 
-    public function approvePayment(string $paymentId): void
+    public function approvePayment(string $paymentId, BillingService $billing): void
     {
         $payment = InstitutionPayment::findOrFail($paymentId);
+        $institution = $payment->institution;
 
         $payment->update([
             'status' => 'approved',
@@ -313,7 +323,23 @@ class SuperadminDashboard extends Component
             'reviewed_at' => now(),
         ]);
 
-        $payment->institution->update(['status' => 'active']);
+        if ($payment->purpose === 'wallet_topup') {
+            // প্রিপেইড টপ-আপ — ব্যালেন্সে যোগ + লেজার এন্ট্রি, এখানে status
+            // সরাসরি active করা হয় না, কারণ ব্যালেন্স ঋণাত্মক থাকলেও
+            // suspended থাকতে পারে (topUp() নিজেই billing_suspended=false করে)
+            $billing->topUp($institution, (float) $payment->amount, 'পেমেন্ট অনুমোদন — ' . ($payment->transaction_ref ?? ''), auth()->id());
+        } else {
+            // postpaid সাবস্ক্রিপশন পেমেন্ট — চলতি মাসের বিল পরিশোধ, পরের
+            // মাসের ১ তারিখ পর্যন্ত নতুন due/grace সেট
+            $institution->update([
+                'status' => 'active',
+                'billing_suspended' => false,
+                'billing_due_at' => now()->addMonthNoOverflow()->startOfMonth()->toDateString(),
+                'billing_grace_ends_at' => now()->addMonthNoOverflow()->startOfMonth()->addDays(BillingService::GRACE_DAYS)->toDateString(),
+            ]);
+        }
+
+        $this->dispatch('toast', message: 'পেমেন্ট অনুমোদন করা হয়েছে');
     }
 
     public function rejectPayment(string $paymentId): void
@@ -323,6 +349,24 @@ class SuperadminDashboard extends Component
             'reviewed_by' => auth()->id(),
             'reviewed_at' => now(),
         ]);
+    }
+
+    /**
+     * সুপারএডমিন ম্যানুয়াল টপ-আপ (ফোনে কথা বলে/bKash যাচাই করে সরাসরি
+     * ব্যালেন্স যোগ — InstitutionPayment সাবমিশন ছাড়াই দ্রুত করার জন্য)।
+     */
+    public function manualTopUp(): void
+    {
+        if (!$this->manageInstitutionId || !is_numeric($this->manageTopUpAmount) || (float) $this->manageTopUpAmount <= 0) {
+            $this->dispatch('toast', message: 'সঠিক টাকার পরিমাণ দিন');
+            return;
+        }
+
+        $institution = Institution::query()->findOrFail($this->manageInstitutionId);
+        app(BillingService::class)->topUp($institution, (float) $this->manageTopUpAmount, 'সুপারএডমিন ম্যানুয়াল টপ-আপ', auth()->id());
+
+        $this->manageTopUpAmount = '';
+        $this->dispatch('toast', message: 'ব্যালেন্স টপ-আপ করা হয়েছে');
     }
 
     // ================= Notices =================
@@ -466,6 +510,7 @@ class SuperadminDashboard extends Component
     {
         $data = [
             'stats' => $this->computeOverviewStats(),
+            'billingSvc' => app(BillingService::class),
         ];
 
         switch ($this->activeSection) {
@@ -491,6 +536,17 @@ class SuperadminDashboard extends Component
                 $data['pendingPayments'] = InstitutionPayment::with('institution')->where('status', 'pending')->latest()->get();
                 $data['payments'] = InstitutionPayment::with('institution')->where('status', '!=', 'pending')->latest()->limit(20)->get();
                 $data['revenueMonths'] = $this->revenueByMonth();
+                $data['postpaidDue'] = Institution::query()
+                    ->where('billing_type', '!=', 'prepaid')
+                    ->whereNotNull('billing_grace_ends_at')
+                    ->whereIn('status', ['active', 'suspended'])
+                    ->orderBy('billing_grace_ends_at')
+                    ->get();
+                $data['prepaidLow'] = Institution::query()
+                    ->where('billing_type', 'prepaid')
+                    ->whereIn('status', ['active', 'suspended'])
+                    ->orderBy('prepaid_balance')
+                    ->get();
                 break;
 
             case 'notices':
@@ -532,7 +588,7 @@ class SuperadminDashboard extends Component
             ->withCount(['students' => fn ($q) => $q->withoutGlobalScope('tenant')])
             ->where('status', '!=', 'pending')
             ->when($this->instType, fn ($q) => $q->where('institution_type', $this->instType))
-            ->when($this->instPlan, fn ($q) => $q->where('plan', $this->instPlan))
+            ->when($this->instBillingType, fn ($q) => $q->where('billing_type', $this->instBillingType))
             ->when($this->instStatus, fn ($q) => $q->where('status', $this->instStatus))
             ->when($this->instSearch, fn ($q) => $q->where(function ($q2) {
                 $q2->where('name', 'like', '%' . $this->instSearch . '%')
@@ -547,15 +603,12 @@ class SuperadminDashboard extends Component
         $totalInstitutions = Institution::query()->where('status', '!=', 'pending')->count();
         $trialCount = Institution::query()->where('status', 'trial')->count();
 
-        $activeByPlan = Institution::query()
-            ->where('status', 'active')
-            ->selectRaw('plan, count(*) as c')
-            ->groupBy('plan')
-            ->pluck('c', 'plan');
-
+        $billing = app(BillingService::class);
         $mrr = 0;
-        foreach ($activeByPlan as $plan => $count) {
-            $mrr += ($count * (self::PLAN_PRICES[$plan] ?? 0));
+        foreach (Institution::query()->where('status', 'active')->get() as $active) {
+            $mrr += $active->isPrepaid()
+                ? $billing->prepaidMonthlyCost($active)
+                : ($billing->postpaidDueAmount($active) ?? 0);
         }
 
         $openTickets = SupportTicket::withoutGlobalScope('tenant-or-superadmin')->where('status', 'open')->count();
@@ -596,12 +649,11 @@ class SuperadminDashboard extends Component
     private function planDistribution(): array
     {
         $counts = Institution::query()->where('status', '!=', 'pending')
-            ->selectRaw('plan, count(*) as c')->groupBy('plan')->pluck('c', 'plan');
+            ->selectRaw('billing_type, count(*) as c')->groupBy('billing_type')->pluck('c', 'billing_type');
 
         return [
-            (int) ($counts['basic'] ?? 0),
-            (int) ($counts['standard'] ?? 0),
-            (int) ($counts['premium'] ?? 0),
+            (int) ($counts['postpaid'] ?? 0),
+            (int) ($counts['prepaid'] ?? 0),
         ];
     }
 

@@ -297,6 +297,15 @@
 
             @endif
 
+            @if (auth()->user()->role === 'admin')
+              <div class="nav-single {{ request()->routeIs('billing.*') ? 'active' : '' }}">
+                <a href="{{ route('billing.index') }}" class="nav-btn">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/></svg></span>
+                    <span class="lbl">বিলিং</span>
+                </a>
+              </div>
+            @endif
+
             <div class="nav-single {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                 <a href="{{ route('settings.index') }}" class="nav-btn">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></span>
@@ -353,6 +362,27 @@
                     {{ session('guard_notice') }}
                 </div>
             @endif
+
+            @if (auth()->user()->role === 'admin' && !request()->routeIs('billing.*'))
+                @php($inst = auth()->user()->institution)
+                @if ($inst && $inst->billing_suspended)
+                    <div class="info-box" style="margin-bottom:16px;background:#FCE4E4;border-color:#D9534F;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+                        বিলিং বকেয়ার কারণে আপনার অ্যাকাউন্ট সাসপেন্ড করা হয়েছে। <a href="{{ route('billing.index') }}" style="font-weight:700;text-decoration:underline;">এখনই পরিশোধ করুন →</a>
+                    </div>
+                @elseif ($inst && $inst->isPostpaid() && $inst->billing_grace_ends_at && $inst->graceDaysLeft() !== null && $inst->graceDaysLeft() <= 5)
+                    <div class="info-box" style="margin-bottom:16px;background:#FFF4E5;border-color:#F0B429;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+                        এই মাসের বিল এখনো বকেয়া — আর {{ $inst->graceDaysLeft() }} দিন পর অ্যাক্সেস বন্ধ হয়ে যাবে। <a href="{{ route('billing.index') }}" style="font-weight:700;text-decoration:underline;">বিলিং পেজে যান →</a>
+                    </div>
+                @elseif ($inst && $inst->isPrepaid() && (float) $inst->prepaid_balance < 500)
+                    <div class="info-box" style="margin-bottom:16px;background:#FFF4E5;border-color:#F0B429;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+                        প্রিপেইড ব্যালেন্স কমে যাচ্ছে (বর্তমান ৳{{ number_format((float) $inst->prepaid_balance) }})। <a href="{{ route('billing.index') }}" style="font-weight:700;text-decoration:underline;">এখনই টপ-আপ করুন →</a>
+                    </div>
+                @endif
+            @endif
+
             {{ $slot }}
         </div>
     </main>
