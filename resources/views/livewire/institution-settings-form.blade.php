@@ -74,7 +74,7 @@
                     model="App\Models\Institution"
                     :model-id="auth()->user()->institution_id"
                     category="institution-logos"
-                    :current-url="auth()->user()->institution->logo_path ? \Illuminate\Support\Facades\Storage::url(auth()->user()->institution->logo_path) : null"
+                    :current-url="auth()->user()->institution->logo_path ? \Illuminate\Support\Facades\Storage::disk('public')->url(auth()->user()->institution->logo_path) : null"
                     key="institution-logo-upload"
                 />
             </div>
@@ -84,7 +84,7 @@
                     model="App\Models\Institution"
                     :model-id="auth()->user()->institution_id"
                     category="institution-favicons"
-                    :current-url="auth()->user()->institution->favicon_path ? \Illuminate\Support\Facades\Storage::url(auth()->user()->institution->favicon_path) : null"
+                    :current-url="auth()->user()->institution->favicon_path ? \Illuminate\Support\Facades\Storage::disk('public')->url(auth()->user()->institution->favicon_path) : null"
                     key="institution-favicon-upload"
                 />
             </div>

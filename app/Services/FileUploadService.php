@@ -25,7 +25,7 @@ class FileUploadService
     {
         $institutionId = app('tenant.institution_id');
 
-        if (!in_array($file->getClientOriginalExtension(), self::ALLOWED_MIMES)) {
+        if (!in_array(strtolower($file->getClientOriginalExtension()), self::ALLOWED_MIMES)) {
             throw new \InvalidArgumentException('শুধু jpg, png, webp ফাইল আপলোড করা যাবে।');
         }
 
