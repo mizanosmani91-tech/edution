@@ -519,6 +519,7 @@ class SuperadminDashboard extends Component
                     ->latest()
                     ->limit(50)
                     ->get();
+                $data['demoLeads'] = \App\Models\DemoLead::with('accessRequests')->latest()->limit(200)->get();
                 break;
         }
 

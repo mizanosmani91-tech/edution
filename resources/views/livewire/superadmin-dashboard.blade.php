@@ -406,9 +406,42 @@
       @endif
 
       @if ($activeSection === 'demo-access')
-        <div class="page-head"><div><h2>ডেমো এক্সেস রিকোয়েস্ট</h2><p>পাবলিক ডেমোতে কেউ শিক্ষক/অভিভাবক পোর্টাল দেখতে চাইলে এখানে আসবে — কল দিয়ে যাচাই করে সময়সীমা দিয়ে আনলক করুন</p></div></div>
+        <div class="page-head"><div><h2>ডেমো এক্সেস</h2><p>পাবলিক ডেমোতে কারা রেজিস্ট্রেশন করেছে, আর কারা শিক্ষক/অভিভাবক পোর্টাল দেখতে অনুরোধ করেছে — সব এখানে</p></div></div>
+
+        <div class="card" style="margin-bottom:18px;">
+          <h3 style="margin:0 0 4px;">সব ডেমো লিড <span class="sub" style="font-weight:400;">({{ $demoLeads->count() }} জন রেজিস্ট্রেশন করেছে)</span></h3>
+          <table>
+            <thead><tr><th>নাম/ফোন</th><th>প্রতিষ্ঠান</th><th>রেজিস্ট্রেশন</th><th>এডমিন</th><th>শিক্ষক</th><th>অভিভাবক</th></tr></thead>
+            <tbody>
+              @forelse ($demoLeads as $lead)
+                @php
+                  $tReq = $lead->accessRequests->firstWhere('role', 'teacher');
+                  $gReq = $lead->accessRequests->firstWhere('role', 'guardian');
+                  $badge = function ($req) {
+                      if (! $req) return '<span class="pill inactive">দেখেনি</span>';
+                      if ($req->isCurrentlyUnlocked()) return '<span class="pill active">আনলক আছে</span>';
+                      if ($req->status === 'pending') return '<span class="pill day">অনুরোধ পেন্ডিং</span>';
+                      if ($req->status === 'rejected') return '<span class="pill due">প্রত্যাখ্যাত</span>';
+                      return '<span class="pill inactive">মেয়াদ শেষ</span>';
+                  };
+                @endphp
+                <tr wire:key="lead-{{ $lead->id }}">
+                  <td><b>{{ $lead->name }}</b><div class="sub" style="font-size:11.5px;">{{ $lead->phone }}</div></td>
+                  <td>{{ $lead->institution_name ?? '—' }}</td>
+                  <td>{{ $lead->created_at?->format('d M, Y h:i A') }}</td>
+                  <td><span class="pill active">দেখেছে</span></td>
+                  <td>{!! $badge($tReq) !!}</td>
+                  <td>{!! $badge($gReq) !!}</td>
+                </tr>
+              @empty
+                <tr><td colspan="6" style="text-align:center;color:var(--ink-soft);padding:24px;">এখনো কেউ রেজিস্ট্রেশন করেনি</td></tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
 
         <div class="card">
+          <h3 style="margin:0 0 4px;">শিক্ষক/অভিভাবক এক্সেস রিকোয়েস্ট</h3>
           <table>
             <thead><tr><th>নাম/ফোন</th><th>প্রতিষ্ঠান</th><th>কোন পোর্টাল</th><th>স্ট্যাটাস</th><th>কার্যক্রম</th></tr></thead>
             <tbody>
