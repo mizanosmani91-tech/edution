@@ -56,7 +56,7 @@
 
     @if ($showModal)
         <div class="modal-overlay open" wire:click.self="$set('showModal', false)">
-            <div class="modal" style="max-width:520px;">
+            <div class="modal-box" style="max-width:520px;">
                 <div class="modal-head">
                     <div><h3>নতুন সাপোর্ট টিকেট</h3></div>
                     <button class="modal-close" type="button" wire:click="$set('showModal', false)">&times;</button>

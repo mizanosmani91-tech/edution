@@ -192,6 +192,7 @@
     .nav-toggle{ display:block; }
     .hero h1{ font-size:32px; }
     .feat-grid, .whom-grid, .price-grid, .test-grid, .roles-grid{ grid-template-columns:1fr; }
+    .mock-kpis{ grid-template-columns:1fr; }
     section{ padding:54px 0; }
     .roles-band, .final-cta{ padding:32px 22px; }
     .foot-grid{ grid-template-columns:1fr; }

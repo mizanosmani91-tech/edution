@@ -207,8 +207,10 @@
   @media (max-width:1080px){ .charts-grid, .split-grid{ grid-template-columns:1fr; } .compose-card, .reply-panel{ position:static; } }
   @media (max-width:860px){
     .app{ grid-template-columns:1fr; }
-    .sidebar{ position:fixed; inset:0 auto 0 0; width:270px; z-index:50; transform:translateX(100%); transition:transform .25s ease; }
+    .sidebar{ position:fixed; inset:0 auto 0 0; width:270px; z-index:50; transform:translateX(-100%); transition:transform .25s ease; }
     .app.mobile-open .sidebar{ transform:translateX(0); }
+    .mobile-backdrop{ display:none; }
+    .app.mobile-open .mobile-backdrop{ display:block; position:fixed; inset:0; background:rgba(20,10,8,.45); z-index:45; }
     .app.collapsed{ grid-template-columns:1fr; }
     .menu-toggle{ display:flex; }
     .content{ padding:16px 14px 60px; }
@@ -216,6 +218,7 @@
     .table-card{ overflow-x:auto; }
     table{ min-width:680px; }
     .module-grid{ grid-template-columns:1fr; }
+    .plan-row{ grid-template-columns:1fr; }
   }
 </style>
 </head>
