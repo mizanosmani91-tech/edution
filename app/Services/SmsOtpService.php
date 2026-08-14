@@ -59,6 +59,20 @@ class SmsOtpService
         // যাতে ১ পার্টেই (৭০ ক্যারেক্টারের নিচে) পাঠানো যায়।
         $message = "EDUTION যাচাই কোড: {$code}, মেয়াদ " . self::TTL_MINUTES . " মিনিট। শেয়ার করবেন না।";
 
+        $this->sendMessage($normalized, $message);
+    }
+
+    /**
+     * ⚠️ সাধারণ SMS পাঠানোর জেনেরিক মেথড — শুধু OTP না, প্রতিষ্ঠান অনুমোদনের
+     * পর সাময়িক পাসওয়ার্ড পাঠাতেও এটা ব্যবহার হয় (SuperadminDashboard দেখুন)।
+     * কারণ: superadmin প্যানেলে দেখানো পাসওয়ার্ড রিলোড/ব্রাউজার বন্ধ হলে
+     * হারিয়ে যেতে পারে, কিন্তু SMS হিসেবে প্রতিষ্ঠানের ফোনে একবার পৌঁছে
+     * গেলে সেটা স্থায়ীভাবে থেকে যায় — তাই approve করার সময়ই স্বয়ংক্রিয়ভাবে SMS যায়।
+     */
+    public function sendMessage(string $phone, string $message): void
+    {
+        $normalized = $this->normalizePhone($phone);
+
         try {
             Http::timeout(10)->get(config('services.bulksms.endpoint'), [
                 'api_key' => config('services.bulksms.api_key'),
@@ -68,10 +82,10 @@ class SmsOtpService
                 'message' => $message,
             ]);
         } catch (\Throwable $e) {
-            // ⚠️ SMS গেটওয়ে ডাউন থাকলেও কোড cache-এ থেকে যায় — শুধু লগ করা হলো,
-            // যাতে পুরো রেজিস্ট্রেশন ফ্লো ভেঙে না পড়ে। ব্যবহারকারী "আবার পাঠান" চাপলে
-            // পরের চেষ্টায় ঠিক হয়ে যেতে পারে।
-            Log::warning('SMS OTP পাঠাতে ব্যর্থ: ' . $e->getMessage());
+            // ⚠️ SMS গেটওয়ে ডাউন থাকলেও মূল কাজ (approve/OTP) যেন ভেঙে না পড়ে —
+            // শুধু লগ করা হলো, superadmin স্ক্রিনে দেখানো পাসওয়ার্ড দিয়ে
+            // ম্যানুয়ালি জানানো যাবে fallback হিসেবে।
+            Log::warning('SMS পাঠাতে ব্যর্থ: ' . $e->getMessage());
         }
     }
 

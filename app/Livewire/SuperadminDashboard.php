@@ -9,6 +9,7 @@ use App\Models\PlatformSetting;
 use App\Models\SupportTicket;
 use App\Models\SupportTicketMessage;
 use App\Models\User;
+use App\Services\SmsOtpService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -89,7 +90,7 @@ class SuperadminDashboard extends Component
 
     // ================= Institutions =================
 
-    public function approvePendingInstitution(string $institutionId): void
+    public function approvePendingInstitution(string $institutionId, SmsOtpService $sms): void
     {
         $institution = Institution::query()->findOrFail($institutionId);
 
@@ -110,6 +111,50 @@ class SuperadminDashboard extends Component
 
         $this->justApprovedSlug = $institution->slug;
         $this->justApprovedPassword = $tempPassword;
+
+        // ⚠️ স্ক্রিনে দেখানো পাসওয়ার্ড রিলোড/ব্রাউজার বন্ধ হলে হারিয়ে যেতে পারে —
+        // তাই approve করার সাথে সাথেই প্রতিষ্ঠানের ফোনে SMS হিসেবে পাঠিয়ে দেওয়া
+        // হচ্ছে, যাতে এটা কোথাও না কোথাও স্থায়ীভাবে থেকে যায়।
+        if ($institution->phone) {
+            $sms->sendMessage(
+                $institution->phone,
+                "EDUTION অনুমোদিত! ঠিকানা: {$institution->slug}.edution.xyz ইমেইল: {$institution->registration_email} পাসওয়ার্ড: {$tempPassword}"
+            );
+        }
+    }
+
+    public function resetAdminPassword(string $institutionId, SmsOtpService $sms): void
+    {
+        $institution = Institution::query()->findOrFail($institutionId);
+
+        $admin = User::query()
+            ->where('institution_id', $institution->id)
+            ->where('role', 'admin')
+            ->first();
+
+        if (!$admin) {
+            $this->dispatch('toast', message: 'এই প্রতিষ্ঠানের কোনো এডমিন ইউজার পাওয়া যায়নি');
+            return;
+        }
+
+        $tempPassword = Str::password(10, symbols: false);
+        $admin->update([
+            'password' => Hash::make($tempPassword),
+            'must_change_password' => true,
+        ]);
+
+        $this->justApprovedSlug = $institution->slug;
+        $this->justApprovedPassword = $tempPassword;
+
+        if ($institution->phone) {
+            $sms->sendMessage(
+                $institution->phone,
+                "EDUTION নতুন পাসওয়ার্ড: {$tempPassword} — {$institution->slug}.edution.xyz ({$admin->email})"
+            );
+        }
+
+        $this->manageInstitutionId = null;
+        $this->dispatch('toast', message: 'নতুন পাসওয়ার্ড জেনারেট ও SMS করা হয়েছে');
     }
 
     public function rejectPendingInstitution(string $institutionId): void

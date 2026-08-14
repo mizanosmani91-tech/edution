@@ -131,7 +131,7 @@
         @if ($justApprovedPassword)
           <div class="card" style="border-color:var(--good);">
             <h3 style="color:var(--good);">অনুমোদন সম্পন্ন হয়েছে</h3>
-            <p class="sub">সাময়িক পাসওয়ার্ড: <b style="direction:ltr; display:inline-block;">{{ $justApprovedPassword }}</b> — এটা {{ $justApprovedSlug }}.edution.xyz এর এডমিনকে (ফোন/হোয়াটসঅ্যাপে) জানিয়ে দিন, কারণ এখনো automated email নেই।</p>
+            <p class="sub">সাময়িক পাসওয়ার্ড: <b style="direction:ltr; display:inline-block;">{{ $justApprovedPassword }}</b> — এটা প্রতিষ্ঠানের ফোন নম্বরে SMS হিসেবে পাঠানো হয়েছে (নম্বর দেওয়া থাকলে), তবু কপি করে রাখাই নিরাপদ।</p>
           </div>
         @endif
 
@@ -179,7 +179,7 @@
         @if ($justApprovedPassword)
           <div class="card" style="border-color:var(--good);">
             <h3 style="color:var(--good);">অনুমোদন সম্পন্ন হয়েছে</h3>
-            <p class="sub">সাময়িক পাসওয়ার্ড: <b style="direction:ltr; display:inline-block;">{{ $justApprovedPassword }}</b> — এটা {{ $justApprovedSlug }}.edution.xyz এর এডমিনকে (ফোন/হোয়াটসঅ্যাপে) জানিয়ে দিন, কারণ এখনো automated email নেই।</p>
+            <p class="sub">সাময়িক পাসওয়ার্ড: <b style="direction:ltr; display:inline-block;">{{ $justApprovedPassword }}</b> — এটা প্রতিষ্ঠানের ফোন নম্বরে SMS হিসেবে পাঠানো হয়েছে (নম্বর দেওয়া থাকলে), তবু কপি করে রাখাই নিরাপদ।</p>
           </div>
         @endif
 
@@ -465,6 +465,14 @@
                     <label class="switch small"><input type="checkbox" wire:model="manageModules.{{ $key }}"><span class="switch-track"></span></label>
                   </div>
                 @endforeach
+              </div>
+            </div>
+
+            <div class="modal-sec">
+              <h4>এডমিন পাসওয়ার্ড</h4>
+              <div class="status-toggle-row">
+                <div><div class="lbl">পাসওয়ার্ড ভুলে গেছে বা হারিয়ে ফেলেছে?</div><div class="desc">নতুন সাময়িক পাসওয়ার্ড জেনারেট হয়ে প্রতিষ্ঠানের ফোনে SMS চলে যাবে</div></div>
+                <button class="btn-ghost" wire:click="resetAdminPassword('{{ $manageInstitutionId }}')" type="button">রিসেট করুন</button>
               </div>
             </div>
 
