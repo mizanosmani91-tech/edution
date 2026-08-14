@@ -47,6 +47,6 @@ class ForcePasswordChange extends Component
             $isSuperAdmin
                 ? 'livewire.superadmin-force-password-change'
                 : 'livewire.force-password-change'
-        );
+        )->layout('components.layouts.blank');
     }
 }

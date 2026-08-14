@@ -235,6 +235,6 @@ class ForgotPassword extends Component
     {
         return view('livewire.forgot-password', [
             'institution' => $this->resolveInstitution(),
-        ]);
+        ])->layout('components.layouts.blank');
     }
 }
