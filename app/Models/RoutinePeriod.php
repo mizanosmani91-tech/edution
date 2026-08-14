@@ -23,7 +23,7 @@ class RoutinePeriod extends Model
         'section_id',
         'teacher_id',
         'subject_id',
-        'day_of_week',   // 1=রবি ... 7=শনি (institution_settings এর সপ্তাহ কনভেনশন অনুযায়ী)
+        'day_of_week',   // 1=শনি, 2=রবি, 3=সোম, 4=মঙ্গল, 5=বুধ, 6=বৃহঃ, 7=শুক্র — দেখুন App\Support\RoutineWeek
         'period_number',
         'start_time',
         'end_time',

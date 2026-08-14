@@ -73,7 +73,7 @@
 
             @if (auth()->user()->role !== 'teacher')
             {{-- একাডেমিক --}}
-            <div class="nav-module {{ $activeIf('academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*') }}" x-data="{ open: {{ request()->routeIs(['academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*','live-class-monitor.*') }}" x-data="{ open: {{ request()->routeIs(['academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*','live-class-monitor.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2 2 0 0 1 6 4h13v14H6a2 2 0 0 0-2 2V5.5Z"/><path d="M19 18v3"/></svg></span>
                     <span class="lbl">একাডেমিক</span>
@@ -84,6 +84,7 @@
                     <a href="{{ route('academic.departments') }}" class="sub-item {{ request()->routeIs('academic.departments') ? 'active' : '' }}">বিভাগ</a>
                     <a href="{{ route('academic.subjects') }}" class="sub-item {{ request()->routeIs('academic.subjects') ? 'active' : '' }}">বিষয় ও সিলেবাস</a>
                     <a href="{{ route('routine.index') }}" class="sub-item {{ request()->routeIs('routine.*') ? 'active' : '' }}">ক্লাস রুটিন</a>
+                    <a href="{{ route('live-class-monitor.index') }}" class="sub-item {{ request()->routeIs('live-class-monitor.*') ? 'active' : '' }}">লাইভ ক্লাস মনিটর</a>
                     <a href="{{ route('academic-sessions.index') }}" class="sub-item {{ request()->routeIs('academic-sessions.*') ? 'active' : '' }}">একাডেমিক সেশন</a>
                     <a href="{{ route('homework.index') }}" class="sub-item {{ request()->routeIs('homework.*') ? 'active' : '' }}">হোমওয়ার্ক/অ্যাসাইনমেন্ট</a>
                     <a href="{{ route('lesson-plans.index') }}" class="sub-item {{ request()->routeIs('lesson-plans.*') ? 'active' : '' }}">লেসন প্ল্যান</a>
@@ -158,6 +159,15 @@
                     <a href="{{ route('attendance-report.index') }}" class="sub-item {{ request()->routeIs('attendance-report.*') ? 'active' : '' }}">হাজিরা রিপোর্ট</a>
                 </div></div></div>
             </div>
+
+            @if (auth()->user()->role === 'teacher')
+                <div class="nav-single {{ request()->routeIs('homework.*') ? 'active' : '' }}">
+                    <a href="{{ route('homework.index') }}" class="nav-btn">
+                        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2 2 0 0 1 6 4h13v14H6a2 2 0 0 0-2 2V5.5Z"/><path d="M19 18v3"/></svg></span>
+                        <span class="lbl">হোমওয়ার্ক</span>
+                    </a>
+                </div>
+            @endif
 
             {{-- পরীক্ষা ও ফলাফল --}}
             <div class="nav-module {{ $activeIf('exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*') }}" x-data="{ open: {{ request()->routeIs(['exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*']) ? 'true' : 'false' }} }" :class="{ open: open }">

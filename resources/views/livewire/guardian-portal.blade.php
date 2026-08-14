@@ -27,6 +27,7 @@
         <div class="tabs-bar">
             <button type="button" class="tab-btn {{ $activeTab === 'overview' ? 'active' : '' }}" wire:click="setTab('overview')">ওভারভিউ</button>
             <button type="button" class="tab-btn {{ $activeTab === 'fees' ? 'active' : '' }}" wire:click="setTab('fees')">ফি</button>
+            <button type="button" class="tab-btn {{ $activeTab === 'homework' ? 'active' : '' }}" wire:click="setTab('homework')">হোমওয়ার্ক</button>
             <button type="button" class="tab-btn {{ $activeTab === 'messages' ? 'active' : '' }}" wire:click="setTab('messages')">বার্তা @if($unreadCount > 0)<span class="cnt">{{ $unreadCount }}</span>@endif</button>
             <button type="button" class="tab-btn {{ $activeTab === 'notices' ? 'active' : '' }}" wire:click="setTab('notices')">নোটিশ</button>
             <button type="button" class="tab-btn {{ $activeTab === 'leave' ? 'active' : '' }}" wire:click="setTab('leave')">ছুটির আবেদন</button>
@@ -162,6 +163,36 @@
                         </div>
                     </div>
                 @endif
+            @endif
+
+            {{-- ================= হোমওয়ার্ক ================= --}}
+            @if ($activeTab === 'homework')
+                <div class="table-card">
+                    <table>
+                        <thead><tr><th>শিরোনাম</th><th>বিষয়/শিক্ষক</th><th>জমার শেষ তারিখ</th><th>অবস্থা</th></tr></thead>
+                        <tbody>
+                            @forelse ($homeworks as $row)
+                                <tr wire:key="hw-{{ $row['homework']->id }}">
+                                    <td style="font-weight:600;">
+                                        {{ $row['homework']->title }}
+                                        @if ($row['homework']->description)
+                                            <div class="sub" style="margin:4px 0 0;font-weight:400;">{{ \Illuminate\Support\Str::limit($row['homework']->description, 100) }}</div>
+                                        @endif
+                                    </td>
+                                    <td>{{ $row['homework']->subject?->name ?? '—' }} @if($row['homework']->teacher) — {{ $row['homework']->teacher->name }} @endif</td>
+                                    <td>{{ $row['homework']->due_date->format('d M, Y') }}</td>
+                                    <td>
+                                        <span class="pill {{ match($row['status']) { 'done' => 'active', 'partial' => 'day', 'not_done' => 'due', default => 'inactive' } }}">
+                                            {{ match($row['status']) { 'done' => 'সম্পন্ন হয়েছে', 'partial' => 'আংশিক সম্পন্ন', 'not_done' => 'সম্পন্ন হয়নি', default => 'এখনো যাচাই করা হয়নি' } }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="4" style="text-align:center;color:var(--ink-soft);padding:30px 0;">কোনো হোমওয়ার্ক নেই</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             @endif
 
             {{-- ================= বার্তা ================= --}}

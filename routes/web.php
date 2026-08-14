@@ -164,6 +164,7 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/notification-gateway-settings', \App\Livewire\NotificationGatewaySettings::class)->name('notification-gateway.index');
     Route::get('/settings-page', \App\Livewire\InstitutionSettingsForm::class)->name('settings.index');
     Route::get('/routine-page', \App\Livewire\RoutineBoard::class)->name('routine.index');
+    Route::get('/live-class-monitor', \App\Livewire\LiveClassMonitor::class)->name('live-class-monitor.index');
 
     Route::get('/portal/guardian', \App\Livewire\GuardianPortal::class)->name('portal.guardian');
     Route::get('/portal/teacher', \App\Livewire\TeacherPortal::class)->name('portal.teacher');

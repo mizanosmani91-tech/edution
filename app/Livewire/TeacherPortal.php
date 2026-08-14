@@ -8,6 +8,7 @@ use App\Models\LeaveRequest;
 use App\Models\RoutinePeriod;
 use App\Models\StaffAttendance;
 use App\Models\Teacher;
+use App\Support\RoutineWeek;
 use Illuminate\Support\Carbon;
 use Livewire\Component;
 
@@ -181,7 +182,7 @@ class TeacherPortal extends Component
 
         $todayRoutine = RoutinePeriod::with('subject')
             ->where('teacher_id', $teacherId)
-            ->where('day_of_week', now()->dayOfWeekIso)
+            ->where('day_of_week', RoutineWeek::todayNumber())
             ->orderBy('period_number')
             ->get();
 

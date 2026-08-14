@@ -8,6 +8,7 @@ use App\Models\Section;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Support\Concerns\GuardsPrerequisites;
+use App\Support\RoutineWeek;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
@@ -31,6 +32,8 @@ class RoutineBoard extends Component
         if (! $this->guardPrerequisite(Teacher::exists(), 'teachers.hire', 'রুটিনে শিক্ষক বসানোর আগে অন্তত একজন শিক্ষক নিয়োগ দিন।')) {
             return;
         }
+
+        $this->activeDay = RoutineWeek::todayNumber();
     }
 
     public ?string $classId = null;

@@ -6,6 +6,8 @@ use App\Models\Attendance;
 use App\Models\Conversation;
 use App\Models\ConversationParticipant;
 use App\Models\FeeCollection;
+use App\Models\Homework;
+use App\Models\HomeworkCompletion;
 use App\Models\LeaveRequest;
 use App\Models\Notice;
 use App\Models\RoutinePeriod;
@@ -226,6 +228,7 @@ class GuardianPortal extends Component
         $headmasterUser = null;
         $headmasterName = null;
         $notices = collect();
+        $homeworks = collect();
 
         if ($child) {
             $last30Days = Attendance::where('student_id', $child->id)
@@ -293,6 +296,27 @@ class GuardianPortal extends Component
                 ->latest('publish_at')
                 ->limit(20)
                 ->get();
+
+            // এই সন্তানের ক্লাস/সেকশনের হোমওয়ার্ক + এই সন্তানের জন্য
+            // চেক করা হয়েছে কিনা (থাকলে) — একসাথে জোড়া লাগিয়ে পাঠানো হচ্ছে
+            $homeworkRows = Homework::with(['subject', 'teacher'])
+                ->where('class_id', $child->class_id)
+                ->where(function ($q) use ($child) {
+                    $q->whereNull('section_id')->orWhere('section_id', $child->section_id);
+                })
+                ->latest('assigned_date')
+                ->limit(20)
+                ->get();
+
+            $completions = HomeworkCompletion::where('student_id', $child->id)
+                ->whereIn('homework_id', $homeworkRows->pluck('id'))
+                ->get()
+                ->keyBy('homework_id');
+
+            $homeworks = $homeworkRows->map(fn ($h) => [
+                'homework' => $h,
+                'status' => $completions->get($h->id)?->status,
+            ]);
         }
 
         // অপঠিত মেসেজের সংখ্যা (overview badge এর জন্য)
@@ -317,6 +341,7 @@ class GuardianPortal extends Component
             'headmasterName' => $headmasterName,
             'headmasterUser' => $headmasterUser,
             'notices' => $notices,
+            'homeworks' => $homeworks,
             'unreadCount' => $unreadCount,
         ])->layout('components.layouts.app', ['title' => 'অভিভাবক পোর্টাল']);
     }

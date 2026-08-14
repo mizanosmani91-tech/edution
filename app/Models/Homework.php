@@ -43,4 +43,9 @@ class Homework extends Model
     {
         return $this->belongsTo(Teacher::class);
     }
+
+    public function completions()
+    {
+        return $this->hasMany(HomeworkCompletion::class);
+    }
 }
