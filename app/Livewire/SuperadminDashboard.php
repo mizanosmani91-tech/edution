@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\DemoAccessRequest;
 use App\Models\Institution;
 use App\Models\InstitutionPayment;
 use App\Models\PlatformNotice;
@@ -436,6 +437,29 @@ class SuperadminDashboard extends Component
         $this->dispatch('toast', message: 'নতুন সুপার এডমিন যোগ করা হয়েছে — সাময়িক পাসওয়ার্ড উপরে দেখানো হয়েছে');
     }
 
+    // ================= ডেমো এক্সেস (শিক্ষক/অভিভাবক) =================
+
+    public function unlockDemoAccess(string $id, int $minutes): void
+    {
+        $req = DemoAccessRequest::findOrFail($id);
+
+        $req->update([
+            'status' => 'approved',
+            'unlocked_until' => now()->addMinutes($minutes),
+            'approved_by' => auth()->id(),
+            'approved_at' => now(),
+        ]);
+
+        $roleLabel = $req->role === 'teacher' ? 'শিক্ষক' : 'অভিভাবক';
+        $this->dispatch('toast', message: "{$roleLabel} ডেমো এক্সেস {$minutes} মিনিটের জন্য আনলক করা হয়েছে");
+    }
+
+    public function rejectDemoAccess(string $id): void
+    {
+        DemoAccessRequest::findOrFail($id)->update(['status' => 'rejected']);
+        $this->dispatch('toast', message: 'রিকোয়েস্ট প্রত্যাখ্যান করা হয়েছে');
+    }
+
     // ================= Render =================
 
     public function render()
@@ -488,6 +512,14 @@ class SuperadminDashboard extends Component
             case 'trash':
                 $data['trashedInstitutions'] = Institution::onlyTrashed()->latest('deleted_at')->get();
                 break;
+
+            case 'demo-access':
+                $data['demoRequests'] = DemoAccessRequest::with('lead')
+                    ->whereIn('role', ['teacher', 'guardian'])
+                    ->latest()
+                    ->limit(50)
+                    ->get();
+                break;
         }
 
         return view('livewire.superadmin-dashboard', $data)->layout('components.layouts.superadmin');
@@ -538,6 +570,7 @@ class SuperadminDashboard extends Component
             'pendingPayments' => InstitutionPayment::where('status', 'pending')->count(),
             'pendingInstitutions' => Institution::query()->where('status', 'pending')->count(),
             'trashedInstitutions' => Institution::onlyTrashed()->count(),
+            'pendingDemoRequests' => DemoAccessRequest::whereIn('role', ['teacher', 'guardian'])->where('status', 'pending')->count(),
         ];
     }
 

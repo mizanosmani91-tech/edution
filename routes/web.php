@@ -56,6 +56,15 @@ Route::get('/login', function () {
     return view('auth.login', ['institution' => $institution]);
 })->name('login');
 Route::post('/login', [LoginController::class, 'store']);
+
+// ⚠️ পাবলিক ডেমো — সফট রেজিস্ট্রেশন + অভিভাবক/শিক্ষক ডেমো এক্সেস রিকোয়েস্ট।
+// প্লেইন controller, guest-facing, সবগুলোতে throttle (abuse ঠেকাতে)।
+Route::post('/demo/register', [\App\Http\Controllers\DemoAccessController::class, 'register'])
+    ->middleware('throttle:10,1')->name('demo.register');
+Route::get('/demo/status', [\App\Http\Controllers\DemoAccessController::class, 'status'])
+    ->middleware('throttle:30,1')->name('demo.status');
+Route::post('/demo/request-access', [\App\Http\Controllers\DemoAccessController::class, 'requestAccess'])
+    ->middleware('throttle:10,1')->name('demo.request-access');
 Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
 
 // ⚠️ প্লেইন controller + fetch() (Livewire না) — কারণ Livewire-এর shared

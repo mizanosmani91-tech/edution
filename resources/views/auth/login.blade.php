@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>লগইন — {{ $institution->name ?? 'EDUTION' }}</title>
     @if ($institution && $institution->favicon_path)
         <link rel="icon" href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($institution->favicon_path) }}">
@@ -37,12 +38,57 @@
     @endif
 </head>
 <body class="flex min-h-screen items-center justify-center bg-[radial-gradient(1200px_700px_at_15%_10%,#EFE7D3_0%,transparent_60%),radial-gradient(1000px_600px_at_90%_90%,#E7DEC5_0%,transparent_55%),#E5DCC5] p-4"
-      x-data="{ role: 'admin', roles: {
-          admin: { color: '#C9A227', title: 'এডমিন হিসেবে লগইন করুন', sub: 'প্রতিষ্ঠানের সার্বিক নিয়ন্ত্রণ ও পরিচালনার জন্য প্রবেশ করুন।', idLabel: 'এডমিন আইডি অথবা ইমেইল', demoEmail: '{{ \Database\Seeders\DemoSeeder::EMAIL }}', demoPassword: '{{ \Database\Seeders\DemoSeeder::PASSWORD }}' },
-          teacher: { color: '#35528F', title: 'শিক্ষক/স্টাফ হিসেবে লগইন করুন', sub: 'ক্লাস, হাজিরা ও ফলাফল ব্যবস্থাপনায় প্রবেশ করুন।', idLabel: 'স্টাফ ইমেইল', demoEmail: '{{ \Database\Seeders\DemoSeeder::TEACHER_EMAIL }}', demoPassword: '{{ \Database\Seeders\DemoSeeder::STAFF_PASSWORD }}' },
-          guardian: { color: '#2F6E52', title: 'অভিভাবক হিসেবে লগইন করুন', sub: 'সন্তানের হাজিরা, ফলাফল ও নোটিশ দেখতে প্রবেশ করুন।', idLabel: 'অভিভাবক ইমেইল', demoEmail: '{{ \Database\Seeders\DemoSeeder::GUARDIAN_EMAIL }}', demoPassword: '{{ \Database\Seeders\DemoSeeder::STAFF_PASSWORD }}' },
-          student: { color: '#A65A2E', title: 'শিক্ষার্থী হিসেবে লগইন করুন', sub: 'রুটিন, ফলাফল ও লার্নিং ম্যাটেরিয়াল দেখতে প্রবেশ করুন।', idLabel: 'শিক্ষার্থী ইমেইল', demoEmail: null, demoPassword: null }
-      } }">
+      x-data="{
+          role: 'admin',
+          roles: {
+              admin: { color: '#C9A227', title: 'এডমিন হিসেবে লগইন করুন', sub: 'প্রতিষ্ঠানের সার্বিক নিয়ন্ত্রণ ও পরিচালনার জন্য প্রবেশ করুন।', idLabel: 'এডমিন আইডি অথবা ইমেইল', demoRole: 'admin', demoEmail: '{{ \Database\Seeders\DemoSeeder::EMAIL }}', demoPassword: '{{ \Database\Seeders\DemoSeeder::PASSWORD }}' },
+              teacher: { color: '#35528F', title: 'শিক্ষক/স্টাফ হিসেবে লগইন করুন', sub: 'ক্লাস, হাজিরা ও ফলাফল ব্যবস্থাপনায় প্রবেশ করুন।', idLabel: 'স্টাফ ইমেইল', demoRole: 'teacher', demoEmail: '{{ \Database\Seeders\DemoSeeder::TEACHER_EMAIL }}', demoPassword: '{{ \Database\Seeders\DemoSeeder::STAFF_PASSWORD }}' },
+              guardian: { color: '#2F6E52', title: 'অভিভাবক হিসেবে লগইন করুন', sub: 'সন্তানের হাজিরা, ফলাফল ও নোটিশ দেখতে প্রবেশ করুন।', idLabel: 'অভিভাবক ইমেইল', demoRole: 'guardian', demoEmail: '{{ \Database\Seeders\DemoSeeder::GUARDIAN_EMAIL }}', demoPassword: '{{ \Database\Seeders\DemoSeeder::STAFF_PASSWORD }}' },
+              student: { color: '#A65A2E', title: 'শিক্ষার্থী হিসেবে লগইন করুন', sub: 'রুটিন, ফলাফল ও লার্নিং ম্যাটেরিয়াল দেখতে প্রবেশ করুন।', idLabel: 'শিক্ষার্থী ইমেইল', demoRole: null, demoEmail: null, demoPassword: null }
+          },
+          demoToken: localStorage.getItem('edution_demo_token'),
+          demoStatus: null,
+          regBusy: false,
+          reg: { name: '', phone: '', institution_name: '' },
+          init() {
+              if (this.demoToken) { this.refreshStatus(); }
+          },
+          csrf() { return document.querySelector('meta[name="csrf-token"]').content; },
+          async register() {
+              if (!this.reg.name || !this.reg.phone) return;
+              this.regBusy = true;
+              try {
+                  const res = await fetch('{{ route('demo.register') }}', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': this.csrf() },
+                      body: JSON.stringify(this.reg),
+                  });
+                  const data = await res.json();
+                  this.demoToken = data.token;
+                  localStorage.setItem('edution_demo_token', data.token);
+                  await this.refreshStatus();
+              } finally {
+                  this.regBusy = false;
+              }
+          },
+          async refreshStatus() {
+              if (!this.demoToken) return;
+              const res = await fetch('{{ route('demo.status') }}?token=' + this.demoToken);
+              this.demoStatus = await res.json();
+          },
+          async requestAccess(r) {
+              await fetch('{{ route('demo.request-access') }}', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': this.csrf() },
+                  body: JSON.stringify({ token: this.demoToken, role: r }),
+              });
+              await this.refreshStatus();
+          },
+          minutesLeft(iso) {
+              if (!iso) return 0;
+              return Math.max(0, Math.ceil((new Date(iso) - new Date()) / 60000));
+          },
+      }">
 
     <div class="grid w-full max-w-[1080px] overflow-hidden rounded-[22px] bg-[var(--color-paper)] shadow-[0_30px_60px_-20px_rgba(60,30,20,.35)] md:grid-cols-[0.86fr_28px_1.14fr]">
 
@@ -119,26 +165,98 @@
             </div>
 
             @if (!$institution)
-                <div class="mb-5 rounded-lg border border-[var(--color-gold)]/50 bg-[var(--color-gold)]/10 px-4 py-3.5 text-sm" x-show="roles[role].demoEmail" x-cloak>
-                    <p class="mb-2 font-semibold text-[var(--color-ink)]" x-text="{admin:'এডমিন ডেমো দিয়ে ঘুরে দেখুন',teacher:'শিক্ষক ডেমো দিয়ে ঘুরে দেখুন',guardian:'অভিভাবক ডেমো দিয়ে ঘুরে দেখুন'}[role]">লাইভ ডেমো দিয়ে ঘুরে দেখুন</p>
-                    <div class="flex flex-col gap-1.5">
-                        <div class="flex items-center justify-between gap-2 rounded-md bg-white px-3 py-1.5">
-                            <span class="text-[var(--color-ink-muted)]">ইমেইল</span>
-                            <span class="flex items-center gap-2 font-medium text-[var(--color-ink)]">
-                                <span id="demo-email" x-text="roles[role].demoEmail">{{ \Database\Seeders\DemoSeeder::EMAIL }}</span>
-                                <button type="button" @click="navigator.clipboard.writeText(roles[role].demoEmail); $el.textContent='কপি হয়েছে'; setTimeout(() => $el.textContent='কপি', 1500)"
-                                    class="rounded border border-[var(--color-line)] px-2 py-0.5 text-[11px] text-[var(--color-ink-muted)] hover:bg-[var(--color-paper-deep)]">কপি</button>
-                            </span>
+                <div class="mb-5 rounded-lg border border-[var(--color-gold)]/50 bg-[var(--color-gold)]/10 px-4 py-3.5 text-sm" x-show="role !== 'student'" x-cloak>
+
+                    {{-- ১) এখনো রেজিস্ট্রেশন করেনি --}}
+                    <template x-if="!demoToken">
+                        <div>
+                            <p class="mb-2 font-semibold text-[var(--color-ink)]">লাইভ ডেমো দেখতে ছোট্ট একটা তথ্য দিন</p>
+                            <div class="flex flex-col gap-1.5">
+                                <input type="text" x-model="reg.name" placeholder="আপনার নাম" class="rounded-md border border-[var(--color-line)] bg-white px-3 py-1.5 text-[13px] outline-none">
+                                <input type="text" x-model="reg.phone" placeholder="মোবাইল নম্বর" class="rounded-md border border-[var(--color-line)] bg-white px-3 py-1.5 text-[13px] outline-none">
+                                <input type="text" x-model="reg.institution_name" placeholder="প্রতিষ্ঠানের নাম (ঐচ্ছিক)" class="rounded-md border border-[var(--color-line)] bg-white px-3 py-1.5 text-[13px] outline-none">
+                                <button type="button" @click="register()" :disabled="regBusy || !reg.name || !reg.phone"
+                                    class="mt-1 rounded-md px-3 py-2 text-[13px] font-semibold text-white disabled:opacity-50" style="background:var(--color-maroon);">
+                                    <span x-text="regBusy ? 'অপেক্ষা করুন...' : 'ডেমো দেখতে চাই'"></span>
+                                </button>
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between gap-2 rounded-md bg-white px-3 py-1.5">
-                            <span class="text-[var(--color-ink-muted)]">পাসওয়ার্ড</span>
-                            <span class="flex items-center gap-2 font-medium text-[var(--color-ink)]">
-                                <span id="demo-password" x-text="roles[role].demoPassword">{{ \Database\Seeders\DemoSeeder::PASSWORD }}</span>
-                                <button type="button" @click="navigator.clipboard.writeText(roles[role].demoPassword); $el.textContent='কপি হয়েছে'; setTimeout(() => $el.textContent='কপি', 1500)"
-                                    class="rounded border border-[var(--color-line)] px-2 py-0.5 text-[11px] text-[var(--color-ink-muted)] hover:bg-[var(--color-paper-deep)]">কপি</button>
-                            </span>
+                    </template>
+
+                    {{-- ২) রেজিস্ট্রেশন করা আছে --}}
+                    <template x-if="demoToken && demoStatus">
+                        <div>
+                            {{-- এডমিন: সবসময় সাথে সাথে দেখা যায় --}}
+                            <template x-if="role === 'admin'">
+                                <div>
+                                    <p class="mb-2 font-semibold text-[var(--color-ink)]">এডমিন ডেমো দিয়ে ঘুরে দেখুন</p>
+                                    <div class="flex flex-col gap-1.5">
+                                        <div class="flex items-center justify-between gap-2 rounded-md bg-white px-3 py-1.5">
+                                            <span class="text-[var(--color-ink-muted)]">ইমেইল</span>
+                                            <span class="flex items-center gap-2 font-medium text-[var(--color-ink)]">
+                                                <span x-text="roles.admin.demoEmail"></span>
+                                                <button type="button" @click="navigator.clipboard.writeText(roles.admin.demoEmail); $el.textContent='কপি হয়েছে'; setTimeout(() => $el.textContent='কপি', 1500)"
+                                                    class="rounded border border-[var(--color-line)] px-2 py-0.5 text-[11px] text-[var(--color-ink-muted)] hover:bg-[var(--color-paper-deep)]">কপি</button>
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center justify-between gap-2 rounded-md bg-white px-3 py-1.5">
+                                            <span class="text-[var(--color-ink-muted)]">পাসওয়ার্ড</span>
+                                            <span class="flex items-center gap-2 font-medium text-[var(--color-ink)]">
+                                                <span x-text="roles.admin.demoPassword"></span>
+                                                <button type="button" @click="navigator.clipboard.writeText(roles.admin.demoPassword); $el.textContent='কপি হয়েছে'; setTimeout(() => $el.textContent='কপি', 1500)"
+                                                    class="rounded border border-[var(--color-line)] px-2 py-0.5 text-[11px] text-[var(--color-ink-muted)] hover:bg-[var(--color-paper-deep)]">কপি</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            {{-- শিক্ষক/অভিভাবক: আনলক আছে কিনা দেখে ভিন্ন অবস্থা দেখাবে --}}
+                            <template x-if="role === 'teacher' || role === 'guardian'">
+                                <div>
+                                    <template x-if="demoStatus[role] && demoStatus[role].globallyUnlockedUntil">
+                                        <div>
+                                            <p class="mb-2 font-semibold text-[var(--color-ink)]">
+                                                আনলক করা আছে — <span x-text="minutesLeft(demoStatus[role].globallyUnlockedUntil)"></span> মিনিট বাকি
+                                            </p>
+                                            <div class="flex flex-col gap-1.5">
+                                                <div class="flex items-center justify-between gap-2 rounded-md bg-white px-3 py-1.5">
+                                                    <span class="text-[var(--color-ink-muted)]">ইমেইল</span>
+                                                    <span class="flex items-center gap-2 font-medium text-[var(--color-ink)]">
+                                                        <span x-text="roles[role].demoEmail"></span>
+                                                        <button type="button" @click="navigator.clipboard.writeText(roles[role].demoEmail); $el.textContent='কপি হয়েছে'; setTimeout(() => $el.textContent='কপি', 1500)"
+                                                            class="rounded border border-[var(--color-line)] px-2 py-0.5 text-[11px] text-[var(--color-ink-muted)] hover:bg-[var(--color-paper-deep)]">কপি</button>
+                                                    </span>
+                                                </div>
+                                                <div class="flex items-center justify-between gap-2 rounded-md bg-white px-3 py-1.5">
+                                                    <span class="text-[var(--color-ink-muted)]">পাসওয়ার্ড</span>
+                                                    <span class="flex items-center gap-2 font-medium text-[var(--color-ink)]">
+                                                        <span x-text="roles[role].demoPassword"></span>
+                                                        <button type="button" @click="navigator.clipboard.writeText(roles[role].demoPassword); $el.textContent='কপি হয়েছে'; setTimeout(() => $el.textContent='কপি', 1500)"
+                                                            class="rounded border border-[var(--color-line)] px-2 py-0.5 text-[11px] text-[var(--color-ink-muted)] hover:bg-[var(--color-paper-deep)]">কপি</button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+
+                                    <template x-if="!(demoStatus[role] && demoStatus[role].globallyUnlockedUntil) && demoStatus[role] && demoStatus[role].myStatus === 'pending'">
+                                        <div>
+                                            <p class="mb-2 font-medium text-[var(--color-ink)]">আপনার অনুরোধ পেয়েছি — আমরা শীঘ্রই কল করে যাচাই করে আনলক করে দেবো।</p>
+                                            <button type="button" @click="refreshStatus()" class="rounded-md border border-[var(--color-line)] bg-white px-3 py-1.5 text-[12.5px] text-[var(--color-ink-muted)]">আবার চেক করুন</button>
+                                        </div>
+                                    </template>
+
+                                    <template x-if="!(demoStatus[role] && demoStatus[role].globallyUnlockedUntil) && (!demoStatus[role] || demoStatus[role].myStatus !== 'pending')">
+                                        <div>
+                                            <p class="mb-2 font-medium text-[var(--color-ink)]">এই পোর্টাল দেখতে হলে আগে রিকোয়েস্ট করুন — আমরা কল দিয়ে যাচাই করে সময়সীমার জন্য আনলক করে দেবো।</p>
+                                            <button type="button" @click="requestAccess(role)" class="rounded-md px-3 py-2 text-[13px] font-semibold text-white" :style="'background:' + roles[role].color">এক্সেস রিকোয়েস্ট করুন</button>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
                         </div>
-                    </div>
+                    </template>
                 </div>
             @endif
 

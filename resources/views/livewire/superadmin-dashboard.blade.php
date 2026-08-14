@@ -15,6 +15,7 @@
       <div class="nav-item {{ $activeSection === 'notices' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('notices')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h13l3 4-3 4H4z"/><path d="M6 13v6"/></svg></span><span class="lbl">নোটিশ ও ঘোষণা</span></button></div>
       <div class="nav-item {{ $activeSection === 'support' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('support')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 15a5 5 0 0 0 5-5V8a5 5 0 0 0-10 0v2a5 5 0 0 0 5 5Z"/><path d="M8 21h8M12 15v6"/></svg></span><span class="lbl">সাপোর্ট টিকেট</span>@if($stats['openTickets'] > 0)<span class="cnt">{{ $stats['openTickets'] }}</span>@endif</button></div>
       <div class="nav-item {{ $activeSection === 'trash' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('trash')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></span><span class="lbl">রিসাইকেল বিন</span>@if($stats['trashedInstitutions'] > 0)<span class="cnt">{{ $stats['trashedInstitutions'] }}</span>@endif</button></div>
+      <div class="nav-item {{ $activeSection === 'demo-access' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('demo-access')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 15v-3.5M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg></span><span class="lbl">ডেমো এক্সেস</span>@if($stats['pendingDemoRequests'] > 0)<span class="cnt">{{ $stats['pendingDemoRequests'] }}</span>@endif</button></div>
       <div class="nav-item {{ $activeSection === 'settings' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('settings')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a7.7 7.7 0 0 0 0-3l1.9-1.4-2-3.4-2.2.8a7.6 7.6 0 0 0-2.6-1.5L14 2.5h-4l-.5 2.5a7.6 7.6 0 0 0-2.6 1.5l-2.2-.8-2 3.4L4.6 10.5a7.7 7.7 0 0 0 0 3L2.7 14.9l2 3.4 2.2-.8c.77.66 1.65 1.17 2.6 1.5l.5 2.5h4l.5-2.5a7.6 7.6 0 0 0 2.6-1.5l2.2.8 2-3.4-1.9-1.4Z"/></svg></span><span class="lbl">সেটিংস</span></button></div>
     </nav>
     <div class="sidebar-foot"><button class="collapse-btn" @click="collapsed = !collapsed" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 6l-6 6 6 6"/></svg><span>সাইডবার সংকুচিত করুন</span></button></div>
@@ -23,7 +24,7 @@
   <main class="main">
     <div class="topbar">
       <button class="menu-toggle" @click="mobileOpen = !mobileOpen" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-      <div class="breadcrumb"><div class="path">সুপার এডমিন</div><h1>{{ ['overview'=>'ওভারভিউ','applications'=>'নতুন আবেদন','institutions'=>'প্রতিষ্ঠানসমূহ','billing'=>'প্যাকেজ ও বিলিং','notices'=>'নোটিশ ও ঘোষণা','support'=>'সাপোর্ট টিকেট','trash'=>'রিসাইকেল বিন','settings'=>'সেটিংস'][$activeSection] ?? '' }}</h1></div>
+      <div class="breadcrumb"><div class="path">সুপার এডমিন</div><h1>{{ ['overview'=>'ওভারভিউ','applications'=>'নতুন আবেদন','institutions'=>'প্রতিষ্ঠানসমূহ','billing'=>'প্যাকেজ ও বিলিং','notices'=>'নোটিশ ও ঘোষণা','support'=>'সাপোর্ট টিকেট','trash'=>'রিসাইকেল বিন','demo-access'=>'ডেমো এক্সেস','settings'=>'সেটিংস'][$activeSection] ?? '' }}</h1></div>
       <div class="topbar-actions">
         <button class="icon-btn" wire:click="setSection('applications')" type="button" title="নতুন প্রতিষ্ঠান আবেদন">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 1 0-12 0c0 5-2 6-2 6h16s-2-1-2-6"/><path d="M9.5 20a2.5 2.5 0 0 0 5 0"/></svg>
@@ -398,6 +399,44 @@
                 </tr>
               @empty
                 <tr><td colspan="4" style="text-align:center;color:var(--ink-soft);padding:24px;">রিসাইকেল বিন খালি</td></tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
+      @endif
+
+      @if ($activeSection === 'demo-access')
+        <div class="page-head"><div><h2>ডেমো এক্সেস রিকোয়েস্ট</h2><p>পাবলিক ডেমোতে কেউ শিক্ষক/অভিভাবক পোর্টাল দেখতে চাইলে এখানে আসবে — কল দিয়ে যাচাই করে সময়সীমা দিয়ে আনলক করুন</p></div></div>
+
+        <div class="card">
+          <table>
+            <thead><tr><th>নাম/ফোন</th><th>প্রতিষ্ঠান</th><th>কোন পোর্টাল</th><th>স্ট্যাটাস</th><th>কার্যক্রম</th></tr></thead>
+            <tbody>
+              @forelse ($demoRequests as $req)
+                <tr wire:key="dar-{{ $req->id }}">
+                  <td><b>{{ $req->lead->name }}</b><div class="sub" style="font-size:11.5px;">{{ $req->lead->phone }}</div></td>
+                  <td>{{ $req->lead->institution_name ?? '—' }}</td>
+                  <td>{{ $req->role === 'teacher' ? 'শিক্ষক পোর্টাল' : 'অভিভাবক পোর্টাল' }}</td>
+                  <td>
+                    @if ($req->isCurrentlyUnlocked())
+                      <span class="pill active">আনলক আছে — {{ $req->unlocked_until->diffForHumans() }}</span>
+                    @elseif ($req->status === 'approved')
+                      <span class="pill inactive">মেয়াদ শেষ</span>
+                    @elseif ($req->status === 'rejected')
+                      <span class="pill due">প্রত্যাখ্যাত</span>
+                    @else
+                      <span class="pill day">অপেক্ষমাণ</span>
+                    @endif
+                  </td>
+                  <td style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <button class="btn-ghost" wire:click="unlockDemoAccess('{{ $req->id }}', 5)" type="button">৫ মিনিট</button>
+                    <button class="btn-ghost" wire:click="unlockDemoAccess('{{ $req->id }}', 10)" type="button">১০ মিনিট</button>
+                    <button class="btn-ghost" onclick="let m = prompt('কত মিনিটের জন্য আনলক করবেন?', '30'); if (m && parseInt(m) > 0) { @this.call('unlockDemoAccess', '{{ $req->id }}', parseInt(m)); }" type="button">কাস্টম</button>
+                    <button class="btn-ghost" style="border-color:var(--bad);color:var(--bad);" wire:click="rejectDemoAccess('{{ $req->id }}')" type="button">বাতিল</button>
+                  </td>
+                </tr>
+              @empty
+                <tr><td colspan="5" style="text-align:center;color:var(--ink-soft);padding:24px;">কোনো ডেমো এক্সেস রিকোয়েস্ট নেই</td></tr>
               @endforelse
             </tbody>
           </table>

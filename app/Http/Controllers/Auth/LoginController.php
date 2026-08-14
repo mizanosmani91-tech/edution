@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\DemoAccessRequest;
 use App\Models\Institution;
 use App\Models\User;
 use Database\Seeders\DemoSeeder;
@@ -74,6 +75,20 @@ class LoginController extends Controller
             RateLimiter::hit($throttleKey);
             throw ValidationException::withMessages([
                 'email' => 'ইমেইল বা পাসওয়ার্ড সঠিক না।',
+            ]);
+        }
+
+        // ⚠️ পাবলিক ডেমোতে শিক্ষক/অভিভাবক লগইন ফিক্সড, শেয়ার্ড ক্রেডেনশিয়াল
+        // দিয়ে — যে কেউ ইমেইল-পাসওয়ার্ড পেয়ে গেলেই ঢুকে যেতে পারতো, তাই
+        // সুপার এডমিন কল দিয়ে সময়সীমার (৫/১০/কাস্টম মিনিট) জন্য আনলক না
+        // করা পর্যন্ত এই দুই role এর জন্য এই ডেমো ইনস্টিটিউশনে লগইন ব্লক।
+        if ($institution->slug === DemoSeeder::SLUG
+            && in_array($user->role, ['teacher', 'guardian'], true)
+            && ! DemoAccessRequest::isRoleUnlocked($user->role)) {
+            Auth::logout();
+            RateLimiter::hit($throttleKey);
+            throw ValidationException::withMessages([
+                'email' => 'এই মুহূর্তে '.($user->role === 'teacher' ? 'শিক্ষক' : 'অভিভাবক').' ডেমো এক্সেস আনলক করা নেই। edution.xyz থেকে এক্সেস রিকোয়েস্ট করুন — আমরা কল দিয়ে যাচাই করে আনলক করে দেবো।',
             ]);
         }
 
