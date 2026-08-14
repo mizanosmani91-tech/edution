@@ -12,6 +12,8 @@
 <body>
 <div class="app" id="app" x-data="{ collapsed: false, mobileOpen: false }" :class="{ collapsed: collapsed, 'mobile-open': mobileOpen }">
 
+    <div class="mobile-backdrop" @click="mobileOpen = false"></div>
+
     {{-- ============ SIDEBAR ============ --}}
     <aside class="sidebar">
         <div class="sidebar-head">
