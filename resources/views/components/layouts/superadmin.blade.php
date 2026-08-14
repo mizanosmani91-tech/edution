@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js" defer></script>
 @livewireStyles
 <style>
   :root{
@@ -39,13 +38,13 @@
   .sidebar-brand .inst{ font-size:10.5px; color:rgba(237,231,218,.5); margin-top:2px; letter-spacing:.04em; }
   .nav-scroll{ flex:1; overflow-y:auto; overflow-x:hidden; padding:14px 10px 10px; }
   .nav-item{ margin-bottom:2px; }
-  .nav-btn{ width:100%; display:flex; align-items:center; gap:11px; padding:11px 11px; background:none; border:0; cursor:pointer; border-radius:10px; color:rgba(237,231,218,.72); font-size:13.7px; font-weight:500; text-align:right; position:relative; transition:background .15s ease, color .15s ease; }
+  .nav-btn{ width:100%; display:flex; align-items:center; gap:11px; padding:11px 11px; background:none; border:0; cursor:pointer; border-radius:10px; color:rgba(237,231,218,.72); font-size:13.7px; font-weight:500; text-align:left; position:relative; transition:background .15s ease, color .15s ease; }
   .nav-btn .ic{ width:18px;height:18px; flex-shrink:0; display:flex; }
-  .nav-btn .lbl{ flex:1; text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .nav-btn .lbl{ flex:1; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .nav-btn .cnt{ font-size:10.5px; font-weight:700; background:rgba(210,96,74,.25); color:#E0A797; padding:2px 7px; border-radius:20px; }
   .nav-btn:hover{ background:rgba(255,255,255,.05); color:#fff; }
   .nav-item.active .nav-btn{ background:rgba(201,162,39,.14); color:var(--gold-light); }
-  .nav-item.active .nav-btn::before{ content:""; position:absolute; right:-10px; top:8px; bottom:8px; width:3px; background:var(--gold); border-radius:3px 0 0 3px; }
+  .nav-item.active .nav-btn::before{ content:""; position:absolute; left:-10px; top:8px; bottom:8px; width:3px; background:var(--gold); border-radius:0 3px 3px 0; }
   .sidebar-foot{ flex-shrink:0; border-top:1px solid var(--panel-line); padding:12px; }
   .collapse-btn{ width:100%; display:flex; align-items:center; gap:10px; background:none;border:0;cursor:pointer; color:rgba(237,231,218,.6); padding:9px 10px; border-radius:9px; font-size:12.5px; }
   .collapse-btn:hover{ background:rgba(255,255,255,.06); color:#fff; }
