@@ -23,12 +23,14 @@ class InstitutionSetting extends Model
         'qawmi_grading',
         'theme_primary_color',
         'theme_accent_color',
+        'dashboard_widgets',
     ];
 
     protected $casts = [
         'has_departments' => 'boolean',
         'consecutive_period_blocking' => 'boolean',
         'qawmi_grading' => 'boolean',
+        'dashboard_widgets' => 'array',
     ];
 
     public function institution()
