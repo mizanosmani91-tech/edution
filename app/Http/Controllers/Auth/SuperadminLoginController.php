@@ -42,7 +42,7 @@ class SuperadminLoginController extends Controller
             ->whereNull('institution_id')
             ->first();
 
-        if (!$user || !Auth::attempt(['id' => $user->id, 'password' => $credentials['password']])) {
+        if (!$user || !Auth::attempt(['id' => $user->id, 'password' => $credentials['password']], $request->boolean('remember'))) {
             RateLimiter::hit($throttleKey);
             throw ValidationException::withMessages([
                 'email' => 'ইমেইল বা পাসওয়ার্ড সঠিক না।',

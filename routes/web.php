@@ -4,6 +4,20 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
+// ⚠️ panel.edution.xyz domain-scoped রুট সবার আগে রেজিস্টার করা জরুরি —
+// Laravel domain-restricted রুটকে বেশি স্পেসিফিক ধরে অগ্রাধিকার দেয় না,
+// শুধু রেজিস্ট্রেশন অর্ডার অনুযায়ী প্রথম ম্যাচ জেতে। এটা নিচে থাকলে
+// panel.edution.xyz/login ও ভুলভাবে সাধারণ (নন-ডোমেইন) /login রুটে চলে যেত।
+Route::domain('panel.edution.xyz')->group(function () {
+    Route::get('/login', [\App\Http\Controllers\Auth\SuperadminLoginController::class, 'create'])->name('superadmin.login');
+    Route::post('/login', [\App\Http\Controllers\Auth\SuperadminLoginController::class, 'store'])->name('superadmin.login.store');
+});
+
+Route::middleware(['auth', 'superadmin'])->domain('panel.edution.xyz')->group(function () {
+    Route::get('/', \App\Livewire\SuperadminInstitutionsList::class)->name('superadmin.institutions');
+});
+
+
 Route::get('/', fn () => view('landing'))->name('landing');
 Route::get('/register', [\App\Http\Controllers\Auth\RegistrationController::class, 'create'])->name('register');
 Route::post('/register', [\App\Http\Controllers\Auth\RegistrationController::class, 'store'])->name('register.store');
@@ -138,11 +152,3 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/coming-soon/{title}', [\App\Http\Controllers\ComingSoonController::class, 'show'])->name('stub');
 });
 
-Route::domain('panel.edution.xyz')->group(function () {
-    Route::get('/login', [\App\Http\Controllers\Auth\SuperadminLoginController::class, 'create'])->name('superadmin.login');
-    Route::post('/login', [\App\Http\Controllers\Auth\SuperadminLoginController::class, 'store'])->name('superadmin.login.store');
-});
-
-Route::middleware(['auth', 'superadmin'])->domain('panel.edution.xyz')->group(function () {
-    Route::get('/', \App\Livewire\SuperadminInstitutionsList::class)->name('superadmin.institutions');
-});
