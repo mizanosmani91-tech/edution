@@ -48,6 +48,8 @@ Route::post('/register/send-otp', [\App\Http\Controllers\Auth\OtpController::cla
     ->middleware('throttle:5,1')->name('register.otp.send');
 Route::post('/register/verify-otp', [\App\Http\Controllers\Auth\OtpController::class, 'verify'])
     ->middleware('throttle:10,1')->name('register.otp.verify');
+Route::get('/register/check-slug', [\App\Http\Controllers\Auth\RegistrationController::class, 'checkSlug'])
+    ->middleware('throttle:30,1')->name('register.check-slug');
 
 Route::get('/login', function () {
     $institution = \App\Models\Institution::resolveFromSubdomain(request()->getHost());

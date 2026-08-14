@@ -13,6 +13,39 @@ use Illuminate\Support\Str;
 
 class RegistrationController extends Controller
 {
+    /**
+     * ⚠️ এই নামগুলো subdomain হিসেবে ব্যবহার করা যাবে না — প্ল্যাটফর্মের
+     * নিজস্ব সাবডোমেইন (panel, www) বা সাধারণ বিভ্রান্তিকর নাম।
+     */
+    protected const RESERVED_SLUGS = [
+        'www', 'panel', 'app', 'api', 'admin', 'edution', 'mail', 'ftp',
+        'smtp', 'staging', 'test', 'assets', 'static', 'cdn', 'support',
+        'help', 'blog', 'docs', 'status', 'demo',
+    ];
+
+    public function checkSlug(Request $request)
+    {
+        $validated = $request->validate(['slug' => ['required', 'string', 'max:63']]);
+
+        $slug = Str::slug($validated['slug']);
+
+        if ($slug === '') {
+            return response()->json(['available' => false, 'message' => 'অবৈধ সাবডোমেইন।']);
+        }
+
+        if (in_array($slug, self::RESERVED_SLUGS, true)) {
+            return response()->json(['available' => false, 'message' => 'এই নামটি ব্যবহার করা যাবে না, অন্য নাম চেষ্টা করুন।']);
+        }
+
+        $taken = Institution::where('slug', $slug)->exists();
+
+        return response()->json([
+            'available' => ! $taken,
+            'slug' => $slug,
+            'message' => $taken ? 'এই সাবডোমেইনটি ইতিমধ্যে ব্যবহৃত হচ্ছে।' : 'এই সাবডোমেইনটি খালি আছে।',
+        ]);
+    }
+
     public function create(Request $request)
     {
         return view('auth.register', [

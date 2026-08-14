@@ -106,6 +106,7 @@
   .subdomain-shell .suffix{ background:var(--paper-deep); padding:11px 13px; font-size:13px; color:var(--ink-muted); white-space:nowrap; }
   .avail-msg{ display:flex; align-items:center; gap:6px; font-size:12px; margin-top:8px; color:var(--ink-muted); }
   .avail-msg.ok{ color:var(--good); }
+  .avail-msg.bad{ color:var(--bad); }
   .avail-msg svg{ width:14px;height:14px; }
 
   .secret-box{ display:flex; gap:10px; background:rgba(201,162,39,.09); border:1px solid rgba(201,162,39,.3); border-radius:12px; padding:14px 16px; font-size:12.5px; color:#7A5E10; margin-bottom:20px; }
@@ -396,6 +397,50 @@
   const phoneVerifiedInput = document.getElementById('phoneVerifiedInput');
   const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
   let cooldownTimer = null;
+
+  // ── সাবডোমেইন এভেইলেবিলিটি চেক (debounced) ──
+  const subdomainInput = document.getElementById('subdomainInput');
+  const availMsg = document.getElementById('availMsg');
+  const originalAvailMsg = availMsg ? availMsg.innerHTML : '';
+  let slugCheckTimer = null;
+  let slugCheckSeq = 0;
+
+  function setAvailMsg(state, text) {
+    if (!availMsg) return;
+    availMsg.classList.remove('ok', 'bad');
+    if (state) availMsg.classList.add(state);
+    availMsg.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/></svg>' + text;
+  }
+
+  if (subdomainInput) {
+    subdomainInput.addEventListener('input', () => {
+      const value = subdomainInput.value.trim();
+      clearTimeout(slugCheckTimer);
+
+      if (!value) {
+        availMsg.innerHTML = originalAvailMsg;
+        availMsg.classList.remove('ok', 'bad');
+        return;
+      }
+
+      setAvailMsg(null, 'চেক করা হচ্ছে...');
+      const seq = ++slugCheckSeq;
+
+      slugCheckTimer = setTimeout(async () => {
+        try {
+          const res = await fetch("{{ route('register.check-slug') }}?slug=" + encodeURIComponent(value), {
+            headers: { 'Accept': 'application/json' },
+          });
+          const data = await res.json();
+          if (seq !== slugCheckSeq) return; // পুরনো রেসপন্স, বাতিল
+          setAvailMsg(data.available ? 'ok' : 'bad', data.message || (data.available ? 'এই সাবডোমেইনটি খালি আছে।' : 'এই সাবডোমেইনটি ইতিমধ্যে ব্যবহৃত হচ্ছে।'));
+        } catch (e) {
+          if (seq !== slugCheckSeq) return;
+          setAvailMsg(null, 'যাচাই করা যায়নি, আবার চেষ্টা করুন।');
+        }
+      }, 450);
+    });
+  }
 
   function setOtpStatus(msg, ok){
     if (!otpStatus) return;
