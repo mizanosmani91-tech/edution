@@ -41,6 +41,7 @@ class SuperadminDashboard extends Component
 
     // ── Manage-institution modal ──
     public ?string $manageInstitutionId = null;
+    public string $deleteConfirmText = '';
     public bool $manageActive = true;
     public string $managePlan = 'basic';
     public ?int $manageLimit = null;
@@ -199,6 +200,35 @@ class SuperadminDashboard extends Component
     public function closeManageModal(): void
     {
         $this->manageInstitutionId = null;
+        $this->deleteConfirmText = '';
+    }
+
+    /**
+     * ⚠️ Type-to-confirm ডিলিট — ভুলে ক্লিক করে অন্য প্রতিষ্ঠান ডিলিট হয়ে
+     * যাওয়া ঠেকাতে, প্রতিষ্ঠানের স্লাগ হুবুহু টাইপ না করলে বাটন কাজ করবে না।
+     * DB migration-এ সব চাইল্ড টেবিলে cascadeOnDelete() সেট করা আছে, তাই
+     * institution row ডিলিট হলেই ছাত্র/শিক্ষক/হাজিরা/ফি — সব সংশ্লিষ্ট ডেটা
+     * স্বয়ংক্রিয়ভাবে ডিলিট হয়ে যাবে (recoverable না, তাই এত সতর্কতা)।
+     */
+    public function deleteInstitution(): void
+    {
+        if (!$this->manageInstitutionId) {
+            return;
+        }
+
+        $institution = Institution::query()->findOrFail($this->manageInstitutionId);
+
+        if ($this->deleteConfirmText !== $institution->slug) {
+            $this->dispatch('toast', message: 'নিশ্চিতকরণের জন্য প্রতিষ্ঠানের স্লাগ হুবুহু টাইপ করুন');
+            return;
+        }
+
+        $name = $institution->name;
+        $institution->delete();
+
+        $this->manageInstitutionId = null;
+        $this->deleteConfirmText = '';
+        $this->dispatch('toast', message: ""{$name}" স্থায়ীভাবে ডিলিট করা হয়েছে");
     }
 
     public function suspendFromModal(): void

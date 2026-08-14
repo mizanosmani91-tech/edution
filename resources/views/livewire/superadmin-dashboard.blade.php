@@ -478,6 +478,24 @@
               </div>
             </div>
 
+            <div class="modal-sec" style="border:1.5px solid rgba(166,65,46,.3);border-radius:12px;padding:14px 16px;background:rgba(166,65,46,.04);">
+              <h4 style="color:var(--bad);">⚠ বিপজ্জনক অঞ্চল</h4>
+              <p style="font-size:12.5px;color:var(--ink-muted);margin:4px 0 10px;line-height:1.7;">
+                এই প্রতিষ্ঠান স্থায়ীভাবে ডিলিট হয়ে যাবে — এর সকল শিক্ষার্থী, শিক্ষক, হাজিরা, ফি, পরীক্ষা — সব ডেটাসহ। এটা ফেরানো যাবে না। ভুল করে অন্য প্রতিষ্ঠান ডিলিট এড়াতে নিচে স্লাগ (<b>{{ $manageInst->slug }}</b>) হুবুহু টাইপ করুন।
+              </p>
+              <input type="text" wire:model="deleteConfirmText" placeholder="{{ $manageInst->slug }}" style="width:100%;margin-bottom:10px;">
+              <button
+                class="btn-ghost"
+                style="border-color:var(--bad);color:var(--bad);"
+                wire:click="deleteInstitution"
+                wire:confirm="আপনি নিশ্চিত? "{{ $manageInst->name }}" এবং এর সকল ডেটা স্থায়ীভাবে মুছে যাবে।"
+                type="button"
+                {{ $deleteConfirmText !== $manageInst->slug ? 'disabled' : '' }}
+              >
+                স্থায়ীভাবে ডিলিট করুন
+              </button>
+            </div>
+
           </div>
           <div class="modal-foot">
             <button class="danger-link" wire:click="suspendFromModal" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/></svg>অ্যাকাউন্ট বন্ধ করুন</button>
