@@ -7,6 +7,7 @@ use App\Models\SchoolClass;
 use App\Models\Section;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Support\Concerns\GuardsPrerequisites;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
@@ -17,6 +18,21 @@ use Livewire\Component;
  */
 class RoutineBoard extends Component
 {
+    use GuardsPrerequisites;
+
+    public function mount(): void
+    {
+        if (! $this->guardPrerequisite(SchoolClass::exists(), 'academic.classes', 'রুটিন তৈরি করার আগে অন্তত একটি ক্লাস যোগ করুন।')) {
+            return;
+        }
+        if (! $this->guardPrerequisite(Subject::exists(), 'academic.subjects', 'রুটিনে বিষয় বসানোর আগে অন্তত একটি বিষয় যোগ করুন।')) {
+            return;
+        }
+        if (! $this->guardPrerequisite(Teacher::exists(), 'teachers.hire', 'রুটিনে শিক্ষক বসানোর আগে অন্তত একজন শিক্ষক নিয়োগ দিন।')) {
+            return;
+        }
+    }
+
     public ?string $classId = null;
     public ?string $sectionId = null;
     public int $activeDay = 1; // 1=শনি ধরে নেওয়া হলো (institution কনভেনশন অনুযায়ী বদলাতে পারেন)

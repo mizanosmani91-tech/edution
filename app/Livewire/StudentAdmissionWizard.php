@@ -7,12 +7,24 @@ use App\Models\SchoolClass;
 use App\Models\Section;
 use App\Models\Student;
 use App\Models\User;
+use App\Support\Concerns\GuardsPrerequisites;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
 class StudentAdmissionWizard extends Component
 {
+    use GuardsPrerequisites;
+
+    public function mount(): void
+    {
+        $this->guardPrerequisite(
+            SchoolClass::exists(),
+            'academic.classes',
+            'শিক্ষার্থী ভর্তি করানোর আগে অন্তত একটি ক্লাস যোগ করুন।'
+        );
+    }
+
     public int $currentStep = 1;
     public int $totalSteps = 5;
 

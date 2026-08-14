@@ -7,11 +7,14 @@ use App\Models\ExamSubject;
 use App\Models\SchoolClass;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Support\Concerns\GuardsPrerequisites;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class ExamScheduleManager extends Component
 {
+    use GuardsPrerequisites;
+
     public bool $showExamModal = false;
     public ?string $editingExamId = null;
 
@@ -104,6 +107,13 @@ class ExamScheduleManager extends Component
 
     public function openSubjectModal(): void
     {
+        if (! $this->guardPrerequisite(SchoolClass::exists(), 'academic.classes', 'পরীক্ষায় বিষয় যোগ করার আগে অন্তত একটি ক্লাস যোগ করুন।')) {
+            return;
+        }
+        if (! $this->guardPrerequisite(Subject::exists(), 'academic.subjects', 'পরীক্ষায় বিষয় যোগ করার আগে অন্তত একটি বিষয় যোগ করুন।')) {
+            return;
+        }
+
         $this->reset(['editingSubjectRowId', 'subjectId', 'classId', 'teacherId', 'examDate', 'startTime', 'endTime', 'room']);
         $this->fullMarks = '100';
         $this->passMarks = '33';

@@ -337,6 +337,12 @@
         </div>
 
         <div class="content">
+            @if (session('guard_notice'))
+                <div class="info-box" style="margin-bottom:16px;background:#FFF4E5;border-color:#F0B429;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+                    {{ session('guard_notice') }}
+                </div>
+            @endif
             {{ $slot }}
         </div>
     </main>

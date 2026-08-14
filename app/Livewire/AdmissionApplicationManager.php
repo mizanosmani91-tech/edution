@@ -6,6 +6,7 @@ use App\Models\AdmissionApplication;
 use App\Models\Institution;
 use App\Models\SchoolClass;
 use App\Models\Student;
+use App\Support\Concerns\GuardsPrerequisites;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -13,6 +14,8 @@ use Livewire\WithPagination;
 
 class AdmissionApplicationManager extends Component
 {
+    use GuardsPrerequisites;
+
     use WithPagination;
 
     public string $view = 'all'; // all / test / waiting
@@ -108,7 +111,17 @@ class AdmissionApplicationManager extends Component
     {
         $app = AdmissionApplication::findOrFail($id);
 
-        if ($app->converted_student_id || ! $app->applying_class_id) {
+        if ($app->converted_student_id) {
+            return;
+        }
+
+        if (! $app->applying_class_id) {
+            if (! $this->guardPrerequisite(SchoolClass::exists(), 'academic.classes', 'শিক্ষার্থীতে রূপান্তর করার আগে অন্তত একটি ক্লাস যোগ করুন।')) {
+                return;
+            }
+
+            $this->dispatch('toast', message: 'এই আবেদনে কোনো ক্লাস নির্বাচন করা নেই — আগে আবেদনটি এডিট করে একটি ক্লাস বেছে দিন।');
+
             return;
         }
 
