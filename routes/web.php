@@ -50,9 +50,16 @@ Route::get('/login', function () {
 Route::post('/login', [LoginController::class, 'store']);
 Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
 
-// ⚠️ SMS OTP ভিত্তিক সেলফ-সার্ভিস পাসওয়ার্ড রিসেট — throttle দিয়ে abuse ঠেকানো হলো
-Route::get('/forgot-password', \App\Livewire\ForgotPassword::class)
-    ->middleware('throttle:10,1')->name('password.forgot');
+// ⚠️ প্লেইন controller + fetch() (Livewire না) — কারণ Livewire-এর shared
+// /livewire/update রুটে 'auth' middleware বাধ্যতামূলক, কিন্তু এই ফ্লো
+// ব্যবহার করে লগইন-ই না করা ইউজার (ঠিক registration OTP-র মতো কারণে)।
+Route::get('/forgot-password', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'create'])->name('password.forgot');
+Route::post('/forgot-password/send-code', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendCode'])
+    ->middleware('throttle:5,1')->name('password.forgot.send');
+Route::post('/forgot-password/send-sms-backup', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendSmsBackup'])
+    ->middleware('throttle:5,1')->name('password.forgot.sms');
+Route::post('/forgot-password/reset', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'reset'])
+    ->middleware('throttle:10,1')->name('password.forgot.reset');
 
 Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/password/change', \App\Livewire\ForcePasswordChange::class)->name('password.force-change');
