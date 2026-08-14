@@ -79,8 +79,11 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/income-expense-report-page', \App\Livewire\IncomeExpenseReport::class)->name('income-expense-report.index');
     Route::get('/books-page', \App\Livewire\BookManager::class)->name('books.index');
     Route::get('/book-issues-page', \App\Livewire\BookIssueManager::class)->name('book-issues.index');
+    Route::get('/book-fines-page', \App\Livewire\BookIssueManager::class)->name('book-fines.index')->defaults('tab', 'overdue');
     Route::get('/transport-page', \App\Livewire\TransportManager::class)->name('transport.index');
+    Route::get('/transport-assignment-page', \App\Livewire\TransportManager::class)->name('transport-assignment.index')->defaults('tab', 'assignments');
     Route::get('/hostel-page', \App\Livewire\HostelManager::class)->name('hostel.index');
+    Route::get('/hostel-fees-page', \App\Livewire\HostelManager::class)->name('hostel-fees.index')->defaults('tab', 'fees');
     Route::get('/complaints-page', \App\Livewire\ComplaintBox::class)->name('complaints.index');
     Route::get('/student-promotion', \App\Livewire\StudentPromotion::class)->name('student-promotion.index');
     Route::get('/certificate/transfer', \App\Livewire\CertificateGenerator::class)->name('certificates.transfer')->defaults('type', 'transfer');
@@ -110,6 +113,7 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/marksheet/class', [\App\Http\Controllers\MarksheetController::class, 'classMarksheet'])->name('marksheet.class');
     Route::get('/marksheet/student/{student}', [\App\Http\Controllers\MarksheetController::class, 'studentMarksheet'])->name('marksheet.student');
     Route::get('/admit-cards/class', [\App\Http\Controllers\AdmitCardController::class, 'classAdmitCards'])->name('admit-cards.class');
+    Route::get('/report-cards', \App\Livewire\ReportCardCenter::class)->name('report-cards.index');
 
     Route::get('/export/students', [\App\Http\Controllers\ExportController::class, 'students'])->name('export.students');
     Route::get('/export/attendance', [\App\Http\Controllers\ExportController::class, 'attendance'])->name('export.attendance');

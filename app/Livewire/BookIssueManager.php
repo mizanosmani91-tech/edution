@@ -12,6 +12,11 @@ class BookIssueManager extends Component
 {
     public string $tab = 'issued'; // issued / overdue / returned
 
+    public function mount(string $tab = 'issued'): void
+    {
+        $this->tab = $tab;
+    }
+
     public bool $showModal = false;
 
     #[Validate('required|exists:books,id')]

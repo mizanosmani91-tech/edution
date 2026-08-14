@@ -12,6 +12,11 @@ class TransportManager extends Component
 {
     public string $tab = 'routes'; // routes / assignments
 
+    public function mount(string $tab = 'routes'): void
+    {
+        $this->tab = $tab;
+    }
+
     public bool $showRouteModal = false;
     public ?string $editingRouteId = null;
 

@@ -108,7 +108,7 @@
             </div>
 
             {{-- হাজিরা --}}
-            <div class="nav-module {{ $activeIf('attendance.*','staff-attendance.*','attendance-report.*') }}" x-data="{ open: {{ request()->routeIs(['attendance.*','staff-attendance.*','attendance-report.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('attendance.*','staff-attendance.*','attendance-report.*','leave-requests.*') }}" x-data="{ open: {{ request()->routeIs(['attendance.*','staff-attendance.*','attendance-report.*','leave-requests.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12 2.3 2.3L16 9.7"/></svg></span>
                     <span class="lbl">হাজিরা</span>
@@ -117,13 +117,13 @@
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('attendance.index') }}" class="sub-item {{ request()->routeIs('attendance.*') ? 'active' : '' }}">শিক্ষার্থী হাজিরা</a>
                     <a href="{{ route('staff-attendance.index') }}" class="sub-item {{ request()->routeIs('staff-attendance.*') ? 'active' : '' }}">স্টাফ হাজিরা</a>
-                    <a href="{{ route('leave-requests.index') }}" class="sub-item">ছুটির আবেদন</a>
+                    <a href="{{ route('leave-requests.index') }}" class="sub-item {{ request()->routeIs('leave-requests.*') ? 'active' : '' }}">ছুটির আবেদন</a>
                     <a href="{{ route('attendance-report.index') }}" class="sub-item {{ request()->routeIs('attendance-report.*') ? 'active' : '' }}">হাজিরা রিপোর্ট</a>
                 </div></div></div>
             </div>
 
             {{-- পরীক্ষা ও ফলাফল --}}
-            <div class="nav-module {{ $activeIf('exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*') }}" x-data="{ open: {{ request()->routeIs(['exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*') }}" x-data="{ open: {{ request()->routeIs(['exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3h6l1 3H8l1-3Z"/><rect x="5" y="6" width="14" height="15" rx="2"/><path d="M9 12h6M9 16h6"/></svg></span>
                     <span class="lbl">পরীক্ষা ও ফলাফল</span>
@@ -135,8 +135,8 @@
                     <a href="{{ $stub('Result Weighting') }}" class="sub-item">Result Weighting</a>
                     <a href="{{ route('merit-list.index') }}" class="sub-item {{ request()->routeIs('merit-list.*') ? 'active' : '' }}">GPA/গ্রেড ক্যালকুলেশন</a>
                     <a href="{{ route('merit-list.index') }}" class="sub-item {{ request()->routeIs('merit-list.*') ? 'active' : '' }}">Merit List/Tabulation</a>
-                    <a href="{{ route('marksheet.class') }}" class="sub-item">রিপোর্ট কার্ড/মার্কশিট</a>
-                    <a href="{{ route('admit-cards.class') }}" class="sub-item">প্রবেশপত্র (Admit Card)</a>
+                    <a href="{{ route('report-cards.index') }}" class="sub-item {{ request()->routeIs('report-cards.*') ? 'active' : '' }}">রিপোর্ট কার্ড/মার্কশিট</a>
+                    <a href="{{ route('report-cards.index') }}" class="sub-item {{ request()->routeIs('report-cards.*') ? 'active' : '' }}">প্রবেশপত্র (Admit Card)</a>
                     <a href="{{ route('qawmi-grading.index') }}" class="sub-item {{ request()->routeIs('qawmi-grading.*') ? 'active' : '' }}">কওমি গ্রেডিং</a>
                 </div></div></div>
             </div>
@@ -160,7 +160,7 @@
             </div>
 
             {{-- লাইব্রেরি --}}
-            <div class="nav-module {{ $activeIf('books.*','book-issues.*') }}" x-data="{ open: {{ request()->routeIs(['books.*','book-issues.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('books.*','book-issues.*','book-fines.*') }}" x-data="{ open: {{ request()->routeIs(['books.*','book-issues.*','book-fines.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h6a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4V4Z"/><path d="M20 4h-6a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6V4Z"/></svg></span>
                     <span class="lbl">লাইব্রেরি</span>
@@ -169,12 +169,12 @@
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('books.index') }}" class="sub-item {{ request()->routeIs('books.*') ? 'active' : '' }}">বই তালিকা</a>
                     <a href="{{ route('book-issues.index') }}" class="sub-item {{ request()->routeIs('book-issues.*') ? 'active' : '' }}">ইস্যু/রিটার্ন</a>
-                    <a href="{{ route('book-issues.index') }}" class="sub-item">জরিমানা</a>
+                    <a href="{{ route('book-fines.index') }}" class="sub-item {{ request()->routeIs('book-fines.*') ? 'active' : '' }}">জরিমানা</a>
                 </div></div></div>
             </div>
 
             {{-- পরিবহন --}}
-            <div class="nav-module {{ $activeIf('transport.*') }}" x-data="{ open: {{ request()->routeIs(['transport.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('transport.*','transport-assignment.*') }}" x-data="{ open: {{ request()->routeIs(['transport.*','transport-assignment.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="9" width="18" height="8" rx="2"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg></span>
                     <span class="lbl">পরিবহন</span>
@@ -182,12 +182,12 @@
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('transport.index') }}" class="sub-item {{ request()->routeIs('transport.*') ? 'active' : '' }}">রুট ও গাড়ি</a>
-                    <a href="{{ route('transport.index') }}" class="sub-item">ছাত্র-পরিবহন সংযুক্তি</a>
+                    <a href="{{ route('transport-assignment.index') }}" class="sub-item {{ request()->routeIs('transport-assignment.*') ? 'active' : '' }}">ছাত্র-পরিবহন সংযুক্তি</a>
                 </div></div></div>
             </div>
 
             {{-- হোস্টেল --}}
-            <div class="nav-module {{ $activeIf('hostel.*') }}" x-data="{ open: {{ request()->routeIs(['hostel.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('hostel.*','hostel-fees.*') }}" x-data="{ open: {{ request()->routeIs(['hostel.*','hostel-fees.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg></span>
                     <span class="lbl">হোস্টেল</span>
@@ -195,7 +195,7 @@
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('hostel.index') }}" class="sub-item {{ request()->routeIs('hostel.*') ? 'active' : '' }}">রুম/সিট বরাদ্দ</a>
-                    <a href="{{ route('hostel.index') }}" class="sub-item">হোস্টেল ফি</a>
+                    <a href="{{ route('hostel-fees.index') }}" class="sub-item {{ request()->routeIs('hostel-fees.*') ? 'active' : '' }}">হোস্টেল ফি</a>
                 </div></div></div>
             </div>
 

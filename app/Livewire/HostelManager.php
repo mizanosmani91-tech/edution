@@ -12,6 +12,11 @@ class HostelManager extends Component
 {
     public string $tab = 'rooms'; // rooms / fees
 
+    public function mount(string $tab = 'rooms'): void
+    {
+        $this->tab = $tab;
+    }
+
     public bool $showRoomModal = false;
     public ?string $editingRoomId = null;
 
