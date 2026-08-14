@@ -29,6 +29,13 @@ class Institution extends Model
         'institution_type',
         'plan',
         'student_count_estimate',
+        'eiin',
+        'division',
+        'district',
+        'founding_year',
+        'admin_name',
+        'admin_designation',
+        'preferred_subdomain',
     ];
 
     protected $casts = [

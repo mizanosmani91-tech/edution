@@ -21,14 +21,22 @@ class RegistrationController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'institution_type' => ['required', 'in:school,madrasa,kindergarten'],
-            'email' => ['required', 'email', 'max:255'],
-            'phone' => ['required', 'string', 'max:20'],
-            'address' => ['nullable', 'string', 'max:500'],
+            'eiin' => ['nullable', 'string', 'max:50'],
+            'division' => ['required', 'string', 'max:100'],
+            'district' => ['required', 'string', 'max:100'],
+            'founding_year' => ['nullable', 'string', 'max:10'],
+            'address' => ['required', 'string', 'max:500'],
             'student_count_estimate' => ['nullable', 'string', 'max:50'],
+            'admin_name' => ['required', 'string', 'max:255'],
+            'admin_designation' => ['required', 'string', 'max:100'],
+            'phone' => ['required', 'string', 'max:20'],
+            'email' => ['required', 'email', 'max:255'],
             'plan' => ['required', 'in:basic,standard,premium'],
+            'preferred_subdomain' => ['nullable', 'string', 'max:63', 'regex:/^[a-z0-9-]+$/'],
+            'terms' => ['accepted'],
         ]);
 
-        $baseSlug = Str::slug($validated['name']);
+        $baseSlug = $validated['preferred_subdomain'] ?? Str::slug($validated['name']);
         $slug = $baseSlug;
         $counter = 1;
         while (Institution::where('slug', $slug)->exists()) {
@@ -38,16 +46,25 @@ class RegistrationController extends Controller
         Institution::create([
             'name' => $validated['name'],
             'slug' => $slug,
+            'preferred_subdomain' => $validated['preferred_subdomain'] ?? null,
             'institution_type' => $validated['institution_type'],
+            'eiin' => $validated['eiin'] ?? null,
+            'division' => $validated['division'] ?? null,
+            'district' => $validated['district'],
+            'founding_year' => $validated['founding_year'] ?? null,
             'status' => 'pending',
             'plan' => $validated['plan'],
             'phone' => $validated['phone'],
-            'address' => $validated['address'] ?? null,
+            'address' => $validated['address'],
             'student_count_estimate' => $validated['student_count_estimate'] ?? null,
+            'admin_name' => $validated['admin_name'],
+            'admin_designation' => $validated['admin_designation'],
             'registration_email' => $validated['email'],
         ]);
 
-        return redirect()->route('register')->with('success',
-            "ধন্যবাদ! আপনার আবেদন জমা হয়েছে। যাচাইয়ের পর আমরা আপনাকে ফোনে/ইমেইলে একটি সিক্রেট কোড পাঠাব — সেটি ও রেজিস্ট্রেশনের ইমেইল দিয়ে আপনি \"{$slug}\".edution.xyz থেকে লগইন করতে পারবেন।");
+        return redirect()->route('register')->with('success', true)
+            ->with('successSlug', $slug)
+            ->with('successEmail', $validated['email'])
+            ->with('successPlan', $validated['plan']);
     }
 }
