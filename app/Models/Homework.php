@@ -10,6 +10,10 @@ class Homework extends Model
 {
     use BelongsToTenant, UuidPrimaryKey;
 
+    // ⚠️ Eloquent এর ডিফল্ট প্লুরাল অনুমান 'homework' (ইংরেজিতে uncountable noun),
+    // কিন্তু মাইগ্রেশনে টেবিলের নাম 'homeworks' — তাই এক্সপ্লিসিট override বাধ্যতামূলক।
+    protected $table = 'homeworks';
+
     protected $fillable = [
         'institution_id', 'title', 'description', 'class_id', 'section_id',
         'subject_id', 'teacher_id', 'assigned_date', 'due_date', 'attachment_path',
