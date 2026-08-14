@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
     <meta charset="utf-8">
-    <title>ফি রশিদ — বিদ্যাপঞ্জি</title>
+    <title>ফি রশিদ — EDUTION</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -40,8 +40,8 @@
     <div class="sheet">
         <div class="head">
             <div>
-                <h1>{{ $fee->institution->name ?? 'বিদ্যাপঞ্জি' }}</h1>
-                <p>পরিচালিত হয় বিদ্যাপঞ্জি এডুকেশন ম্যানেজমেন্ট সিস্টেমের মাধ্যমে</p>
+                <h1>{{ $fee->institution->name ?? 'EDUTION' }}</h1>
+                <p>পরিচালিত হয় EDUTION এডুকেশন ম্যানেজমেন্ট সিস্টেমের মাধ্যমে</p>
             </div>
             <span class="badge">{{ $fee->status === 'paid' ? 'পরিশোধিত' : ($fee->status === 'partial' ? 'আংশিক পরিশোধিত' : 'বকেয়া') }}</span>
         </div>

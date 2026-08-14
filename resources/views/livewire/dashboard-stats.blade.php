@@ -130,7 +130,7 @@
                 <div class="ledger-row">
                     <div class="date-badge"><div class="d">{{ now()->translatedFormat('d') }}</div><div class="m">{{ now()->translatedFormat('M') }}</div></div>
                     <div class="ledger-body">
-                        <div class="t">বিদ্যাপঞ্জি-তে স্বাগতম</div>
+                        <div class="t">EDUTION-তে স্বাগতম</div>
                         <div class="m">আপনার প্রতিষ্ঠানের ডেটা এন্ট্রি শুরু করুন</div>
                         <span class="tag general">সাধারণ</span>
                     </div>

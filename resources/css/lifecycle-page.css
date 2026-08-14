@@ -1,4 +1,4 @@
-/* বিদ্যাপঞ্জি — Student Lifecycle module (Certificates, Discipline, Health, Alumni) scoped styles */
+/* EDUTION — Student Lifecycle module (Certificates, Discipline, Health, Alumni) scoped styles */
 
 .lifecycle-page .lc-grid{display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start;}
 @media (max-width:1080px){.lifecycle-page .lc-grid{grid-template-columns:1fr;}.lifecycle-page .picker-card{position:static;}}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>লগইন — বিদ্যাপঞ্জি</title>
+    <title>লগইন — EDUTION</title>
     @vite(['resources/css/app.css'])
 </head>
 <body class="flex min-h-screen items-center justify-center bg-[radial-gradient(1200px_700px_at_15%_10%,#EFE7D3_0%,transparent_60%),radial-gradient(1000px_600px_at_90%_90%,#E7DEC5_0%,transparent_55%),#E5DCC5] p-4"
@@ -25,7 +25,7 @@
                 </svg>
             </div>
             <p class="relative z-10 mb-2 text-[11px] font-semibold uppercase tracking-[.28em] text-[rgba(231,199,103,.72)]">EDUCATION MANAGEMENT</p>
-            <h1 class="font-serif-bn relative z-10 mb-3 text-[44px] leading-tight text-[var(--color-gold-light)]">বিদ্যাপঞ্জি</h1>
+            <h1 class="font-serif-bn relative z-10 mb-3 text-[44px] leading-tight text-[var(--color-gold-light)]">EDUTION</h1>
             <p class="relative z-10 mb-8 max-w-[34ch] text-[15.5px] leading-7 text-[rgba(248,243,230,.82)]">
                 @if ($institution)
                     <strong>{{ $institution->name }}</strong>-এর ডিজিটাল হাজিরা খাতায় স্বাগতম — ভর্তি থেকে ফলাফল, সবকিছু এক জায়গায়।
@@ -47,7 +47,7 @@
                 @endforeach
             </div>
 
-            <p class="relative z-10 mt-5 text-[12.5px] text-[rgba(231,199,103,.55)]">৫০০+ প্রতিষ্ঠান প্রতিদিন বিদ্যাপঞ্জি ব্যবহার করছে</p>
+            <p class="relative z-10 mt-5 text-[12.5px] text-[rgba(231,199,103,.55)]">৫০০+ প্রতিষ্ঠান প্রতিদিন EDUTION ব্যবহার করছে</p>
         </div>
 
         {{-- SPINE — বইয়ের বাঁধাইয়ের মতো ডট --}}

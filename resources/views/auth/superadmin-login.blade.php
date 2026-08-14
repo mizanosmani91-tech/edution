@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Superadmin — বিদ্যাপঞ্জি</title>
+    <title>Superadmin — EDUTION</title>
     @vite(['resources/css/app.css'])
 </head>
 <body class="flex min-h-screen items-center justify-center bg-[radial-gradient(120%_140%_at_8%_0%,#6E2136_0%,var(--color-maroon)_45%,var(--color-maroon-deep)_100%)] p-4">
@@ -12,7 +12,7 @@
             <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-[var(--color-maroon)]">
                 <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-maroon)" stroke-width="1.6" class="h-6 w-6"><path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/><path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/></svg>
             </div>
-            <p class="font-serif-bn text-xl text-[var(--color-maroon)]">বিদ্যাপঞ্জি</p>
+            <p class="font-serif-bn text-xl text-[var(--color-maroon)]">EDUTION</p>
             <p class="text-xs uppercase tracking-widest text-[var(--color-ink-muted)]">Superadmin Panel</p>
         </div>
 

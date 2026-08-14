@@ -64,8 +64,8 @@
                     <div class="cert-sheet">
                         <div class="cert-no">নম্বরঃ {{ $generated->certificate_no }}</div>
                         <div class="cert-head">
-                            <h1>{{ auth()->user()->institution?->name ?? 'বিদ্যাপঞ্জি' }}</h1>
-                            <p>পরিচালিত হয় বিদ্যাপঞ্জি এডুকেশন ম্যানেজমেন্ট সিস্টেমের মাধ্যমে</p>
+                            <h1>{{ auth()->user()->institution?->name ?? 'EDUTION' }}</h1>
+                            <p>পরিচালিত হয় EDUTION এডুকেশন ম্যানেজমেন্ট সিস্টেমের মাধ্যমে</p>
                         </div>
                         <div class="cert-title">{{ $type === 'character' ? 'চারিত্রিক সনদপত্র' : 'ছাড়পত্র (Transfer Certificate)' }}</div>
                         <div class="cert-body">

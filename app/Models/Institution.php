@@ -26,6 +26,9 @@ class Institution extends Model
         'address',
         'logo_path',
         'registration_email',
+        'institution_type',
+        'plan',
+        'student_count_estimate',
     ];
 
     protected $casts = [

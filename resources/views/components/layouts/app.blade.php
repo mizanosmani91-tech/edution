@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'বিদ্যাপঞ্জি') }}</title>
+    <title>{{ config('app.name', 'EDUTION') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -19,7 +19,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="#E7C767" stroke-width="1.6"><path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/><path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/></svg>
             </div>
             <div class="sidebar-brand">
-                <div class="name">বিদ্যাপঞ্জি</div>
+                <div class="name">EDUTION</div>
                 <div class="inst">{{ auth()->user()->institution?->name ?? '' }}</div>
             </div>
         </div>

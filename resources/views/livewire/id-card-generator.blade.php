@@ -52,7 +52,7 @@
                         <div class="idc-top">
                             <div class="idc-school">
                                 <div class="idc-school-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/><path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/></svg></div>
-                                <div><div class="nm">{{ auth()->user()->institution?->name ?? 'বিদ্যাপঞ্জি' }}</div><div class="tag">STUDENT IDENTITY CARD</div></div>
+                                <div><div class="nm">{{ auth()->user()->institution?->name ?? 'EDUTION' }}</div><div class="tag">STUDENT IDENTITY CARD</div></div>
                             </div>
                         </div>
                         <div class="idc-photo-wrap">
@@ -76,14 +76,14 @@
                         </div>
                         <div class="idc-footer">
                             <span class="validity">মেয়াদ: {{ now()->addYear()->translatedFormat('F, Y') }}</span>
-                            <span class="id-code">বিদ্যাপঞ্জি</span>
+                            <span class="id-code">EDUTION</span>
                         </div>
                     </div>
 
                     {{-- BACK --}}
                     <div class="id-card back">
                         <div class="idc-back-inner">
-                            <div class="idc-back-title">{{ auth()->user()->institution?->name ?? 'বিদ্যাপঞ্জি' }}</div>
+                            <div class="idc-back-title">{{ auth()->user()->institution?->name ?? 'EDUTION' }}</div>
                             <div class="idc-back-rows">
                                 <div class="row"><span class="k">জন্ম তারিখ</span><span class="v">{{ $selected->date_of_birth ? \Carbon\Carbon::parse($selected->date_of_birth)->format('d M, Y') : '—' }}</span></div>
                                 <div class="row"><span class="k">রক্তের গ্রুপ</span><span class="v">{{ $selected->blood_group ?? '—' }}</span></div>

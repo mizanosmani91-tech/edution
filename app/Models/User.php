@@ -38,6 +38,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'role',        // admin / teacher / guardian / student / superadmin
         'teacher_id',  // role='teacher' হলে সেট থাকবে (নিজের teacher রেকর্ডের লিংক)
         'student_id',  // role='student' হলে সেট থাকবে
+        'must_change_password',
     ];
 
     protected $hidden = [
