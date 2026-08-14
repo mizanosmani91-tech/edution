@@ -53,4 +53,14 @@ class ExamResultWeighting extends Model
     {
         return $this->belongsTo(Exam::class, 'source_exam_id');
     }
+
+    public function schoolClass()
+    {
+        return $this->belongsTo(SchoolClass::class, 'class_id');
+    }
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class, 'subject_id');
+    }
 }

@@ -38,7 +38,7 @@
             @endphp
 
             {{-- একাডেমিক --}}
-            <div class="nav-module {{ $activeIf('academic.*','routine.*') }}" x-data="{ open: {{ request()->routeIs(['academic.*','routine.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*') }}" x-data="{ open: {{ request()->routeIs(['academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2 2 0 0 1 6 4h13v14H6a2 2 0 0 0-2 2V5.5Z"/><path d="M19 18v3"/></svg></span>
                     <span class="lbl">একাডেমিক</span>
@@ -49,10 +49,10 @@
                     <a href="{{ route('academic.departments') }}" class="sub-item {{ request()->routeIs('academic.departments') ? 'active' : '' }}">বিভাগ</a>
                     <a href="{{ route('academic.subjects') }}" class="sub-item {{ request()->routeIs('academic.subjects') ? 'active' : '' }}">বিষয় ও সিলেবাস</a>
                     <a href="{{ route('routine.index') }}" class="sub-item {{ request()->routeIs('routine.*') ? 'active' : '' }}">ক্লাস রুটিন</a>
-                    <a href="{{ $stub('একাডেমিক সেশন') }}" class="sub-item">একাডেমিক সেশন</a>
-                    <a href="{{ $stub('হোমওয়ার্ক') }}" class="sub-item">হোমওয়ার্ক/অ্যাসাইনমেন্ট</a>
-                    <a href="{{ $stub('লেসন প্ল্যান') }}" class="sub-item">লেসন প্ল্যান</a>
-                    <a href="{{ $stub('প্রশ্ন ব্যাংক') }}" class="sub-item">প্রশ্ন ব্যাংক</a>
+                    <a href="{{ route('academic-sessions.index') }}" class="sub-item {{ request()->routeIs('academic-sessions.*') ? 'active' : '' }}">একাডেমিক সেশন</a>
+                    <a href="{{ route('homework.index') }}" class="sub-item {{ request()->routeIs('homework.*') ? 'active' : '' }}">হোমওয়ার্ক/অ্যাসাইনমেন্ট</a>
+                    <a href="{{ route('lesson-plans.index') }}" class="sub-item {{ request()->routeIs('lesson-plans.*') ? 'active' : '' }}">লেসন প্ল্যান</a>
+                    <a href="{{ route('question-bank.index') }}" class="sub-item {{ request()->routeIs('question-bank.*') ? 'active' : '' }}">প্রশ্ন ব্যাংক</a>
                 </div></div></div>
             </div>
 
@@ -123,7 +123,7 @@
             </div>
 
             {{-- পরীক্ষা ও ফলাফল --}}
-            <div class="nav-module {{ $activeIf('exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results') }}" x-data="{ open: {{ request()->routeIs(['exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*') }}" x-data="{ open: {{ request()->routeIs(['exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3h6l1 3H8l1-3Z"/><rect x="5" y="6" width="14" height="15" rx="2"/><path d="M9 12h6M9 16h6"/></svg></span>
                     <span class="lbl">পরীক্ষা ও ফলাফল</span>
@@ -132,7 +132,7 @@
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('exam-schedule.index') }}" class="sub-item {{ request()->routeIs('exam-schedule.*') ? 'active' : '' }}">পরীক্ষার সময়সূচি</a>
                     <a href="{{ route('marks-entry.index') }}" class="sub-item {{ request()->routeIs('marks-entry.*') ? 'active' : '' }}">মার্কস এন্ট্রি</a>
-                    <a href="{{ $stub('Result Weighting') }}" class="sub-item">Result Weighting</a>
+                    <a href="{{ route('result-weighting.index') }}" class="sub-item {{ request()->routeIs('result-weighting.*') ? 'active' : '' }}">Result Weighting</a>
                     <a href="{{ route('merit-list.index') }}" class="sub-item {{ request()->routeIs('merit-list.*') ? 'active' : '' }}">GPA/গ্রেড ক্যালকুলেশন</a>
                     <a href="{{ route('merit-list.index') }}" class="sub-item {{ request()->routeIs('merit-list.*') ? 'active' : '' }}">Merit List/Tabulation</a>
                     <a href="{{ route('report-cards.index') }}" class="sub-item {{ request()->routeIs('report-cards.*') ? 'active' : '' }}">রিপোর্ট কার্ড/মার্কশিট</a>
@@ -142,7 +142,7 @@
             </div>
 
             {{-- ফি/অর্থ --}}
-            <div class="nav-module {{ $activeIf('fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees') }}" x-data="{ open: {{ request()->routeIs(['fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees','scholarships.*') }}" x-data="{ open: {{ request()->routeIs(['fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees','scholarships.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/><circle cx="16.5" cy="15" r="1.4"/></svg></span>
                     <span class="lbl">ফি/অর্থ</span>
@@ -153,7 +153,7 @@
                     <a href="{{ route('fees.index') }}" class="sub-item {{ request()->routeIs('fees.*') ? 'active' : '' }}">ফি সংগ্রহ</a>
                     <a href="{{ route('payment-gateway.index') }}" class="sub-item {{ request()->routeIs('payment-gateway.*') ? 'active' : '' }}">অনলাইন পেমেন্ট গেটওয়ে</a>
                     <a href="{{ route('fees.index') }}" class="sub-item">বকেয়া তালিকা</a>
-                    <a href="{{ $stub('বৃত্তি ও মওকুফ') }}" class="sub-item">বৃত্তি/মওকুফ</a>
+                    <a href="{{ route('scholarships.index') }}" class="sub-item {{ request()->routeIs('scholarships.*') ? 'active' : '' }}">বৃত্তি/মওকুফ</a>
                     <a href="{{ route('expenses.index') }}" class="sub-item {{ request()->routeIs('expenses.*') ? 'active' : '' }}">খরচ/ব্যয় ট্র্যাকিং</a>
                     <a href="{{ route('income-expense-report.index') }}" class="sub-item {{ request()->routeIs('income-expense-report.*') ? 'active' : '' }}">আয়-ব্যয় রিপোর্ট</a>
                 </div></div></div>
