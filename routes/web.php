@@ -18,7 +18,18 @@ Route::middleware(['auth', 'superadmin'])->domain('panel.edution.xyz')->group(fu
 });
 
 
-Route::get('/', fn () => view('landing'))->name('landing');
+// ⚠️ প্রতিষ্ঠানের নিজস্ব সাবডোমেইনে (যেমন annazah.edution.xyz) রুট পেজে
+// সাধারণ landing page না দেখিয়ে সরাসরি সেই প্রতিষ্ঠানের লগইন পেজ দেখানো হয়।
+// মূল ডোমেইন (edution.xyz/www) বা অচেনা সাবডোমেইনে যথারীতি landing page।
+Route::get('/', function () {
+    $institution = \App\Models\Institution::resolveFromSubdomain(request()->getHost());
+
+    if ($institution) {
+        return view('auth.login', ['institution' => $institution]);
+    }
+
+    return view('landing');
+})->name('landing');
 Route::get('/register', [\App\Http\Controllers\Auth\RegistrationController::class, 'create'])->name('register');
 Route::post('/register', [\App\Http\Controllers\Auth\RegistrationController::class, 'store'])->name('register.store');
 
