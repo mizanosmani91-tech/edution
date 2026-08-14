@@ -137,9 +137,17 @@ class Institution extends Model
      * UI-তে সব জায়গায় (student form, teacher assign, exam setup) এই একটা
      * মেথড চেক করেই department dropdown দেখাবেন কিনা ঠিক করবেন।
      */
+    /**
+     * ⚠️ আগে এটা settings-এর একটা আলাদা ম্যানুয়াল টগল ছিল (has_departments)
+     * যেটা admin ভুলে চালু না করলে বিভাগ ফিচার আসলেই কাজ করত না, অথচ
+     * বিভাগ আগে থেকেই তৈরি করে রাখা যেত (কোনো guard ছিল না) — বিভ্রান্তিকর।
+     * এখন এটা স্বয়ংক্রিয়: প্রতিষ্ঠানে অন্তত ১টা বিভাগ তৈরি হলেই সব জায়গায়
+     * (ক্লাস ফর্মে বিভাগ ড্রপডাউন, বিভাগ-অনুযায়ী ফিল্টার ইত্যাদি) নিজে থেকেই
+     * চালু হয়ে যায় — কোনো টগল মনে রাখা লাগে না।
+     */
     public function hasDepartments(): bool
     {
-        return (bool) $this->settings?->has_departments;
+        return \App\Models\Department::exists();
     }
 
     /**

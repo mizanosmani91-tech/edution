@@ -13,7 +13,6 @@ class InstitutionSettingsForm extends Component
     public string $institutionAddress = '';
 
     // ফিচার টগল
-    public bool $hasDepartments = false;
     public bool $consecutivePeriodBlocking = true;
 
     // ব্র্যান্ডিং
@@ -38,7 +37,6 @@ class InstitutionSettingsForm extends Component
         $this->institutionPhone = $institution->phone ?? '';
         $this->institutionAddress = $institution->address ?? '';
 
-        $this->hasDepartments = (bool) ($settings->has_departments ?? false);
         $this->consecutivePeriodBlocking = (bool) ($settings->consecutive_period_blocking ?? true);
         $this->themePrimaryColor = $settings->theme_primary_color ?? '#5C1A2B';
         $this->themeAccentColor = $settings->theme_accent_color ?? '#C9A227';
@@ -73,7 +71,6 @@ class InstitutionSettingsForm extends Component
         InstitutionSetting::updateOrCreate(
             ['institution_id' => auth()->user()->institution_id],
             [
-                'has_departments' => $this->hasDepartments,
                 'consecutive_period_blocking' => $this->consecutivePeriodBlocking,
                 'theme_primary_color' => $this->themePrimaryColor,
                 'theme_accent_color' => $this->themeAccentColor,

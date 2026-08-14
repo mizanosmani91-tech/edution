@@ -29,7 +29,16 @@ class ClassSectionManager extends Component
 
     public function saveClass(): void
     {
-        $this->validate(['className' => 'required|string|max:255']);
+        // ⚠️ প্রতিষ্ঠানে অন্তত ১টা বিভাগ থাকলে নতুন ক্লাসে বিভাগ নির্বাচন
+        // বাধ্যতামূলক — নাহলে কিছু ক্লাস বিভাগসহ, কিছু বিভাগ ছাড়া তৈরি হয়ে
+        // অসামঞ্জস্যপূর্ণ ডেটা তৈরি হতো (মাদরাসায় সাধারণ/হিফয বিভাগ থাকলে
+        // প্রতিটা ক্লাস কোনো না কোনো বিভাগের হওয়া উচিত)।
+        $this->validate([
+            'className' => 'required|string|max:255',
+            'classDepartmentId' => Department::exists() ? 'required' : 'nullable',
+        ], [
+            'classDepartmentId.required' => 'বিভাগ নির্বাচন করুন (এই প্রতিষ্ঠানে বিভাগ চালু আছে)।',
+        ]);
 
         SchoolClass::create([
             'name' => $this->className,
@@ -38,6 +47,15 @@ class ClassSectionManager extends Component
         ]);
 
         $this->showClassModal = false;
+    }
+
+    /**
+     * পুরোনো ক্লাস (বিভাগ চালু হওয়ার আগে তৈরি হওয়া, department_id null) —
+     * এগুলোতে দ্রুত বিভাগ বসিয়ে দেওয়ার জন্য ইনলাইন কুইক-অ্যাকশন।
+     */
+    public function quickAssignDepartment(string $classId, string $departmentId): void
+    {
+        SchoolClass::findOrFail($classId)->update(['department_id' => $departmentId ?: null]);
     }
 
     public function deleteClass(string $id): void

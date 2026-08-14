@@ -13,7 +13,7 @@
     @if (!$hasDepartments)
         <div class="info-box">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-            বিভাগ (Department) ফিচার এখন বন্ধ আছে। সেটিংস থেকে চালু করলে প্রতিটা ক্লাসের সাথে বিভাগ যুক্ত করা যাবে।
+            এই প্রতিষ্ঠানে এখনো কোনো বিভাগ নেই। <a href="{{ route('academic.departments') }}" style="color:var(--color-maroon);text-decoration:underline;">বিভাগ যোগ করলে</a> (যেমন সাধারণ/হিফয) প্রতিটা ক্লাসের সাথে বিভাগ যুক্ত করার অপশন এখানে আসবে।
         </div>
     @endif
 
@@ -24,6 +24,16 @@
                     <div class="cname">{{ $class->full_label }}</div>
                     @if ($class->department)
                         <div class="cdept">বিভাগ: {{ $class->department->name }}</div>
+                    @elseif ($hasDepartments)
+                        <div class="cdept" style="color:var(--bad);display:flex;align-items:center;gap:6px;">
+                            ⚠ বিভাগ নির্ধারণ করা হয়নি
+                            <select onchange="if(this.value) @this.call('quickAssignDepartment', '{{ $class->id }}', this.value)" style="padding:2px 6px;font-size:11.5px;border-radius:6px;border:1px solid var(--line);">
+                                <option value="">বিভাগ বাছুন</option>
+                                @foreach ($departments as $dept)
+                                    <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     @endif
                 </div>
                 <div class="class-card-actions">
@@ -75,13 +85,14 @@
 
                 @if ($hasDepartments)
                     <div class="field">
-                        <label>বিভাগ <span class="opt">(ঐচ্ছিক)</span></label>
+                        <label>বিভাগ <span class="req">*</span></label>
                         <select wire:model="classDepartmentId">
-                            <option value="">কোনো বিভাগ না</option>
+                            <option value="">বিভাগ নির্বাচন করুন</option>
                             @foreach ($departments as $dept)
                                 <option value="{{ $dept->id }}">{{ $dept->name }}</option>
                             @endforeach
                         </select>
+                        @error('classDepartmentId') <p class="hint" style="color:var(--bad)">{{ $message }}</p> @enderror
                     </div>
                 @endif
 
