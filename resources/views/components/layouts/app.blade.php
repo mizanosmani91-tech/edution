@@ -57,7 +57,7 @@
             </div>
 
             {{-- ভর্তি --}}
-            <div class="nav-module" x-data="{ open: false }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('students.admission','admission-applications.*','seat-management.*','entrance-test.*','admission-waiting.*') }}" x-data="{ open: {{ request()->routeIs(['students.admission','admission-applications.*','seat-management.*','entrance-test.*','admission-waiting.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.3"/><path d="M3 20c1-3.6 3.4-5.4 6-5.4s5 1.8 6 5.4"/><path d="M17 8h4M19 6v4"/></svg></span>
                     <span class="lbl">ভর্তি</span>
@@ -65,10 +65,10 @@
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('students.admission') }}" class="sub-item {{ request()->routeIs('students.admission') ? 'active' : '' }}">অনলাইন ভর্তি ফর্ম</a>
-                    <a href="{{ $stub('ভর্তি আবেদন তালিকা') }}" class="sub-item">ভর্তি আবেদন তালিকা</a>
-                    <a href="{{ $stub('আসন ব্যবস্থাপনা') }}" class="sub-item">আসন ব্যবস্থাপনা</a>
-                    <a href="{{ $stub('ভর্তি পরীক্ষা') }}" class="sub-item">ভর্তি পরীক্ষা/ইন্টারভিউ</a>
-                    <a href="{{ $stub('Waiting List') }}" class="sub-item">Waiting List</a>
+                    <a href="{{ route('admission-applications.index') }}" class="sub-item {{ request()->routeIs('admission-applications.*') ? 'active' : '' }}">ভর্তি আবেদন তালিকা</a>
+                    <a href="{{ route('seat-management.index') }}" class="sub-item {{ request()->routeIs('seat-management.*') ? 'active' : '' }}">আসন ব্যবস্থাপনা</a>
+                    <a href="{{ route('entrance-test.index') }}" class="sub-item {{ request()->routeIs('entrance-test.*') ? 'active' : '' }}">ভর্তি পরীক্ষা/ইন্টারভিউ</a>
+                    <a href="{{ route('admission-waiting.index') }}" class="sub-item {{ request()->routeIs('admission-waiting.*') ? 'active' : '' }}">Waiting List</a>
                 </div></div></div>
             </div>
 

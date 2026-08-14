@@ -94,6 +94,10 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/marks-entry', \App\Livewire\MarksEntry::class)->name('marks-entry.index');
     Route::get('/merit-list', \App\Livewire\MeritList::class)->name('merit-list.index')->defaults('mode', 'standard');
     Route::get('/qawmi-grading', \App\Livewire\MeritList::class)->name('qawmi-grading.index')->defaults('mode', 'qawmi');
+    Route::get('/admission-applications', \App\Livewire\AdmissionApplicationManager::class)->name('admission-applications.index')->defaults('view', 'all');
+    Route::get('/seat-management', \App\Livewire\SeatManagement::class)->name('seat-management.index');
+    Route::get('/entrance-test', \App\Livewire\AdmissionApplicationManager::class)->name('entrance-test.index')->defaults('view', 'test');
+    Route::get('/admission-waiting-list', \App\Livewire\AdmissionApplicationManager::class)->name('admission-waiting.index')->defaults('view', 'waiting');
     Route::get('/settings-page', \App\Livewire\InstitutionSettingsForm::class)->name('settings.index');
     Route::get('/routine-page', \App\Livewire\RoutineBoard::class)->name('routine.index');
 
