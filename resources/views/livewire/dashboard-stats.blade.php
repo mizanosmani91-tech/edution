@@ -142,7 +142,7 @@
             <div class="card-head"><div><h3>ফি বকেয়া — শীর্ষ তালিকা</h3></div></div>
 
             {{-- ডেস্কটপ টেবিল --}}
-            <table>
+            <table class="swap-table">
                 <thead><tr><th>শিক্ষার্থী</th><th>বকেয়া</th></tr></thead>
                 <tbody>
                     @forelse ($topDefaulters as $row)
@@ -165,7 +165,7 @@
             </table>
 
             {{-- মোবাইল কার্ড --}}
-            <div class="card-list">
+            <div class="card-list swap-list">
                 @forelse ($topDefaulters as $row)
                     <div class="row" style="display:flex;align-items:center;justify-content:space-between;">
                         <div class="stud">

@@ -168,8 +168,15 @@ tbody tr:last-child td{border-bottom:0;}
   .content{padding:18px 16px 90px;}
   .topbar{padding:14px 16px;}
   .kpi-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
-  table{display:none;}
-  .card-list{display:flex;}
+  /* বেশিরভাগ পেজে .card-list markup নেই — তাই ডিফল্টে টেবিলকে লুকানোর বদলে
+     horizontally scrollable করে দেওয়া হচ্ছে (ভাঙা/অদৃশ্য টেবিলের চেয়ে ভালো)।
+     যেসব পেজে ইচ্ছাকৃতভাবে মোবাইল কার্ড-ভিউ বানানো আছে (dashboard-stats),
+     সেখানে table.swap-table + .card-list.swap-list ক্লাস দিয়ে পুরনো
+     hide/show আচরণ বজায় রাখা হয়েছে। */
+  table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;}
+  table.swap-table{display:none;}
+  .card-list{display:none;}
+  .card-list.swap-list{display:flex;}
   .profile-chip .who{display:none;}
 }
 
