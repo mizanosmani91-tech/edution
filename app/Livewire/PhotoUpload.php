@@ -39,12 +39,15 @@ class PhotoUpload extends Component
         $modelClass = $this->model;
         $record = $modelClass::findOrFail($this->modelId);
 
-        $oldPath = $record->photo_path ?? $record->logo_path ?? null;
-        $uploads->delete($oldPath);
+        $column = match (true) {
+            str_contains($this->category, 'favicon') => 'favicon_path',
+            str_contains($this->category, 'logo') => 'logo_path',
+            default => 'photo_path',
+        };
+
+        $uploads->delete($record->{$column} ?? null);
 
         $path = $uploads->store($this->photo, $this->category);
-
-        $column = str_contains($this->category, 'logo') ? 'logo_path' : 'photo_path';
         $record->update([$column => $path]);
 
         $this->currentUrl = $uploads->url($path);

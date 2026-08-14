@@ -3,7 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>লগইন — EDUTION</title>
+    <title>লগইন — {{ $institution->name ?? 'EDUTION' }}</title>
+    @if ($institution && $institution->favicon_path)
+        <link rel="icon" href="{{ \Illuminate\Support\Facades\Storage::url($institution->favicon_path) }}">
+    @endif
     @vite(['resources/css/app.css'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
 </head>
@@ -19,14 +22,18 @@
 
         {{-- কভার (বাম) --}}
         <div class="relative hidden flex-col overflow-hidden bg-[radial-gradient(120%_140%_at_8%_0%,#6E2136_0%,var(--color-maroon)_45%,var(--color-maroon-deep)_100%)] p-10 text-[var(--color-gold-light)] md:flex">
-            <div class="relative z-10 mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-[rgba(231,199,103,.65)]">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#E7C767" stroke-width="1.6" class="h-7 w-7">
-                    <path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/>
-                    <path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/>
-                </svg>
+            <div class="relative z-10 mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-[rgba(231,199,103,.65)] overflow-hidden bg-[rgba(231,199,103,.08)]">
+                @if ($institution && $institution->logo_path)
+                    <img src="{{ \Illuminate\Support\Facades\Storage::url($institution->logo_path) }}" alt="{{ $institution->name }}" class="h-full w-full object-cover">
+                @else
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#E7C767" stroke-width="1.6" class="h-7 w-7">
+                        <path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/>
+                        <path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/>
+                    </svg>
+                @endif
             </div>
-            <p class="relative z-10 mb-2 text-[11px] font-semibold uppercase tracking-[.28em] text-[rgba(231,199,103,.72)]">EDUCATION MANAGEMENT</p>
-            <h1 class="font-serif-bn relative z-10 mb-3 text-[44px] leading-tight text-[var(--color-gold-light)]">EDUTION</h1>
+            <p class="relative z-10 mb-2 text-[11px] font-semibold uppercase tracking-[.28em] text-[rgba(231,199,103,.72)]">{{ $institution ? 'EDUTION দ্বারা পরিচালিত' : 'EDUCATION MANAGEMENT' }}</p>
+            <h1 class="font-serif-bn relative z-10 mb-3 text-[36px] leading-tight text-[var(--color-gold-light)]">{{ $institution->name ?? 'EDUTION' }}</h1>
             <p class="relative z-10 mb-8 max-w-[34ch] text-[15.5px] leading-7 text-[rgba(248,243,230,.82)]">
                 @if ($institution)
                     <strong>{{ $institution->name }}</strong>-এর ডিজিটাল হাজিরা খাতায় স্বাগতম — ভর্তি থেকে ফলাফল, সবকিছু এক জায়গায়।
@@ -48,7 +55,13 @@
                 @endforeach
             </div>
 
-            <p class="relative z-10 mt-5 text-[12.5px] text-[rgba(231,199,103,.55)]">৫০০+ প্রতিষ্ঠান প্রতিদিন EDUTION ব্যবহার করছে</p>
+            <p class="relative z-10 mt-5 text-[12.5px] text-[rgba(231,199,103,.55)]">
+                @if ($institution)
+                    Powered by EDUTION
+                @else
+                    ৫০০+ প্রতিষ্ঠান প্রতিদিন EDUTION ব্যবহার করছে
+                @endif
+            </p>
         </div>
 
         {{-- SPINE — বইয়ের বাঁধাইয়ের মতো ডট --}}

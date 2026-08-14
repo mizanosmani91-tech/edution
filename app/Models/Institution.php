@@ -25,6 +25,7 @@ class Institution extends Model
         'phone',
         'address',
         'logo_path',
+        'favicon_path',
         'registration_email',
         'institution_type',
         'plan',

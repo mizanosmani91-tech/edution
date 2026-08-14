@@ -63,6 +63,34 @@
         </div>
     </div>
 
+    {{-- লোগো ও ফেভিকন --}}
+    <div class="settings-section">
+        <h3>লোগো ও ফেভিকন</h3>
+        <p class="sub">লোগো ড্যাশবোর্ডের সাইডবারে ও লগইন পেজে দেখাবে, ফেভিকন ব্রাউজার ট্যাবের আইকনে ব্যবহৃত হবে</p>
+        <div style="display:flex; gap:40px; flex-wrap:wrap;">
+            <div>
+                <p style="font-size:12.5px; font-weight:700; margin-bottom:8px;">লোগো</p>
+                <livewire:photo-upload
+                    model="App\Models\Institution"
+                    :model-id="auth()->user()->institution_id"
+                    category="institution-logos"
+                    :current-url="auth()->user()->institution->logo_path ? \Illuminate\Support\Facades\Storage::url(auth()->user()->institution->logo_path) : null"
+                    key="institution-logo-upload"
+                />
+            </div>
+            <div>
+                <p style="font-size:12.5px; font-weight:700; margin-bottom:8px;">ফেভিকন</p>
+                <livewire:photo-upload
+                    model="App\Models\Institution"
+                    :model-id="auth()->user()->institution_id"
+                    category="institution-favicons"
+                    :current-url="auth()->user()->institution->favicon_path ? \Illuminate\Support\Facades\Storage::url(auth()->user()->institution->favicon_path) : null"
+                    key="institution-favicon-upload"
+                />
+            </div>
+        </div>
+    </div>
+
     {{-- ব্র্যান্ডিং --}}
     <div class="settings-section">
         <h3>ব্র্যান্ড কালার</h3>

@@ -3,7 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ ($title ?? 'ড্যাশবোর্ড') }} — EDUTION</title>
+    <title>{{ ($title ?? 'ড্যাশবোর্ড') }} — {{ auth()->user()->institution?->name ?? 'EDUTION' }}</title>
+    @if (auth()->user()->institution?->favicon_path)
+        <link rel="icon" href="{{ \Illuminate\Support\Facades\Storage::url(auth()->user()->institution->favicon_path) }}">
+    @endif
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -17,8 +20,12 @@
     {{-- ============ SIDEBAR ============ --}}
     <aside class="sidebar">
         <div class="sidebar-head">
-            <div class="sidebar-emblem">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#E7C767" stroke-width="1.6"><path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/><path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/></svg>
+            <div class="sidebar-emblem" style="overflow:hidden;">
+                @if (auth()->user()->institution?->logo_path)
+                    <img src="{{ \Illuminate\Support\Facades\Storage::url(auth()->user()->institution->logo_path) }}" alt="{{ auth()->user()->institution->name }}" style="height:100%;width:100%;object-fit:cover;">
+                @else
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#E7C767" stroke-width="1.6"><path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/><path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/></svg>
+                @endif
             </div>
             <div class="sidebar-brand">
                 <div class="name">EDUTION</div>
