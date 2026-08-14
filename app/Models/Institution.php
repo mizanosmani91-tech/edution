@@ -36,11 +36,38 @@ class Institution extends Model
         'admin_name',
         'admin_designation',
         'preferred_subdomain',
+        'enabled_modules',
+        'student_limit_override',
     ];
 
     protected $casts = [
         'trial_ends_at' => 'datetime',
+        'enabled_modules' => 'array',
     ];
+
+    // superadmin "প্রতিষ্ঠান পরিচালনা" মোডালে যেসব মডিউল টগল করা যায় —
+    // key => বাংলা লেবেল। enabled_modules কলামে null মানে সব ডিফল্টভাবে চালু।
+    public const TOGGLEABLE_MODULES = [
+        'academic' => 'একাডেমিক',
+        'attendance' => 'হাজিরা',
+        'admission' => 'ভর্তি',
+        'students' => 'শিক্ষার্থী',
+        'staff' => 'শিক্ষক ও স্টাফ',
+        'finance' => 'অর্থ ব্যবস্থাপনা',
+        'communication' => 'যোগাযোগ',
+        'library' => 'লাইব্রেরি',
+        'transport' => 'পরিবহন',
+        'reports' => 'রিপোর্ট',
+    ];
+
+    public function isModuleEnabled(string $key): bool
+    {
+        if ($this->enabled_modules === null) {
+            return true; // ডিফল্ট: সব চালু, কেউ ইচ্ছা করে বন্ধ না করলে
+        }
+
+        return (bool) ($this->enabled_modules[$key] ?? false);
+    }
 
     public function users()
     {

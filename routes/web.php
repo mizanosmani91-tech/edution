@@ -14,7 +14,7 @@ Route::domain('panel.edution.xyz')->group(function () {
 });
 
 Route::middleware(['auth', 'superadmin'])->domain('panel.edution.xyz')->group(function () {
-    Route::get('/', \App\Livewire\SuperadminInstitutionsList::class)->name('superadmin.institutions');
+    Route::get('/', \App\Livewire\SuperadminDashboard::class)->name('superadmin.institutions');
 });
 
 
@@ -116,6 +116,7 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/hostel-page', \App\Livewire\HostelManager::class)->name('hostel.index');
     Route::get('/hostel-fees-page', \App\Livewire\HostelManager::class)->name('hostel-fees.index')->defaults('tab', 'fees');
     Route::get('/complaints-page', \App\Livewire\ComplaintBox::class)->name('complaints.index');
+    Route::get('/support-tickets', \App\Livewire\TenantSupportTickets::class)->name('support-tickets.index');
     Route::get('/student-promotion', \App\Livewire\StudentPromotion::class)->name('student-promotion.index');
     Route::get('/certificate/transfer', \App\Livewire\CertificateGenerator::class)->name('certificates.transfer')->defaults('type', 'transfer');
     Route::get('/certificate/character', \App\Livewire\CertificateGenerator::class)->name('certificates.character')->defaults('type', 'character');
