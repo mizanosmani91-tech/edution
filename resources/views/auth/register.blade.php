@@ -167,7 +167,7 @@
         <div class="success-box">
             <div class="row"><span class="k">প্রতিষ্ঠানের ঠিকানা (সম্ভাব্য)</span><span class="v">{{ session('successSlug') }}.edution.xyz</span></div>
             <div class="row"><span class="k">এডমিন ইমেইল</span><span class="v">{{ session('successEmail') }}</span></div>
-            <div class="row"><span class="k">প্ল্যান</span><span class="v">{{ ['basic' => 'বেসিক', 'standard' => 'স্ট্যান্ডার্ড', 'premium' => 'প্রিমিয়াম'][session('successPlan')] ?? session('successPlan') }}</span></div>
+            <div class="row"><span class="k">বিলিং ধরন</span><span class="v">{{ ['postpaid' => 'পোস্টপেইড', 'prepaid' => 'প্রিপেইড'][session('successBillingType')] ?? session('successBillingType') }}</span></div>
             <div class="row"><span class="k">অবস্থা</span><span class="v">যাচাইয়ের অপেক্ষায়</span></div>
         </div>
 
@@ -283,29 +283,23 @@
                 </div>
             </div>
 
-            {{-- STEP 3: প্ল্যান --}}
+            {{-- STEP 3: বিলিং ধরন --}}
             <div class="step-pane" data-pane="3">
-                <div class="pane-head"><h2>প্ল্যান নির্বাচন করুন</h2><p>যেকোনো সময় প্ল্যান পরিবর্তন করা যাবে। অনুমোদনের পর ১৪ দিনের ট্রায়ালে সব ফিচার উন্মুক্ত থাকবে।</p></div>
+                <div class="pane-head"><h2>বিলিং ধরন বেছে নিন</h2><p>যেকোনো সময় বদলানো যাবে। অনুমোদনের পর ১৪ দিনের ট্রায়ালে সব ফিচার উন্মুক্ত থাকবে, কোনো পেমেন্ট ছাড়াই।</p></div>
 
-                <input type="hidden" name="plan" id="planInput" value="{{ old('plan', $selectedPlan ?? 'standard') }}">
-
-                <div class="billing-toggle">
-                    <button type="button" class="active" data-cycle="monthly">মাসিক</button>
-                    <button type="button" data-cycle="yearly"><span class="save">২০% ছাড়</span>বার্ষিক</button>
-                </div>
+                <input type="hidden" name="billing_type" id="billingTypeInput" value="{{ old('billing_type', $selectedBillingType ?? 'postpaid') }}">
 
                 <div class="plan-grid" id="planGrid">
                     @foreach ([
-                        'basic' => ['বেসিক', 'ছোট প্রতিষ্ঠানের জন্য', '৳১,৫০০', '৳১,২০০', ['২০০ জন পর্যন্ত শিক্ষার্থী', 'মূল মডিউলসমূহ'], null],
-                        'standard' => ['স্ট্যান্ডার্ড', 'মাঝারি প্রতিষ্ঠানের জন্য', '৳৩,৫০০', '৳২,৮০০', ['১,০০০ জন পর্যন্ত শিক্ষার্থী', 'সকল মডিউল + এসএমএস'], 'জনপ্রিয়'],
-                        'premium' => ['প্রিমিয়াম', 'বড় প্রতিষ্ঠানের জন্য', '৳৬,৫০০', '৳৫,২০০', ['সীমাহীন শিক্ষার্থী', 'একাধিক শাখা + API'], null],
-                    ] as $key => [$title, $desc, $monthly, $yearly, $feats, $badge])
-                        <div class="plan-card {{ old('plan', $selectedPlan ?? 'standard') === $key ? 'active' : '' }}" data-plan="{{ $key }}">
+                        'postpaid' => ['পোস্টপেইড', 'মাসিক, ছাত্রসংখ্যা অনুযায়ী টায়ার', '৳৪৯৯ থেকে শুরু', ['১-২০০ ছাত্র = ৳৪৯৯/মাস', '২০১-৫০০ ছাত্র = ৳৯৯৯/মাস', '৫০১-১,০০০ ছাত্র = ৳১,৯৯৯/মাস', '১৫ দিন গ্রেস পিরিয়ড'], 'জনপ্রিয়'],
+                        'prepaid' => ['প্রিপেইড', 'আগে ব্যালেন্স লোড, ছাত্র প্রতি হিসাব', '৳৫/শিক্ষার্থী/মাস', ['যত ছাত্র তত বিল, কোনো কমিটমেন্ট নেই', 'ছোট মক্তব/মাদ্রাসার জন্য সাশ্রয়ী', 'ব্যালেন্স কম হলে সতর্কবার্তা'], null],
+                    ] as $key => [$title, $desc, $price, $feats, $badge])
+                        <div class="plan-card {{ old('billing_type', $selectedBillingType ?? 'postpaid') === $key ? 'active' : '' }}" data-plan="{{ $key }}">
                             @if ($badge)<div class="plan-badge">{{ $badge }}</div>@endif
                             <div class="plan-radio"></div>
                             <h3>{{ $title }}</h3>
                             <div class="desc">{{ $desc }}</div>
-                            <div class="plan-price" data-monthly="{{ $monthly }}" data-yearly="{{ $yearly }}">{{ $monthly }}<span>/মাস</span></div>
+                            <div class="plan-price">{{ $price }}</div>
                             <ul class="plan-feats">
                                 @foreach ($feats as $f)
                                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>{{ $f }}</li>
@@ -314,7 +308,7 @@
                         </div>
                     @endforeach
                 </div>
-                <div class="hint">অনুমোদনের পর ১৪ দিনের ফ্রি ট্রায়াল শেষ হলে নির্বাচিত প্ল্যান অনুযায়ী বিলিং শুরু হবে — এখনই কোনো পেমেন্ট লাগবে না।</div>
+                <div class="hint">অনুমোদনের পর ১৪ দিনের ফ্রি ট্রায়াল শেষ হলে নির্বাচিত ধরন অনুযায়ী বিলিং শুরু হবে — এখনই কোনো পেমেন্ট লাগবে না। ৫০০+ ছাত্রের জন্য কাস্টম প্রাইসিং লাগলে অনুমোদনের পর আমাদের সাথে যোগাযোগ করতে পারবেন।</div>
             </div>
 
             {{-- STEP 4: চূড়ান্ত করুন --}}
@@ -359,7 +353,7 @@
 
 <script>
   const totalSteps = 4;
-  let current = {{ $errors->has('institution_type') || $errors->has('name') || $errors->has('division') || $errors->has('district') || $errors->has('address') ? 1 : ($errors->has('admin_name') || $errors->has('admin_designation') || $errors->has('phone') || $errors->has('email') ? 2 : ($errors->has('plan') ? 3 : ($errors->has('preferred_subdomain') || $errors->has('terms') ? 4 : 1))) }};
+  let current = {{ $errors->has('institution_type') || $errors->has('name') || $errors->has('division') || $errors->has('district') || $errors->has('address') ? 1 : ($errors->has('admin_name') || $errors->has('admin_designation') || $errors->has('phone') || $errors->has('email') ? 2 : ($errors->has('billing_type') ? 3 : ($errors->has('preferred_subdomain') || $errors->has('terms') ? 4 : 1))) }};
   const stepPills = document.querySelectorAll('.step-pill');
   const stepLines = document.querySelectorAll('.step-line');
   const panes = document.querySelectorAll('.step-pane');
@@ -556,23 +550,11 @@
       });
     });
 
-    document.querySelectorAll('.billing-toggle button').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        document.querySelectorAll('.billing-toggle button').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        const cycle = btn.dataset.cycle;
-        document.querySelectorAll('.plan-price').forEach(el=>{
-          const price = cycle === 'yearly' ? el.dataset.yearly : el.dataset.monthly;
-          el.innerHTML = price + '<span>/মাস</span>';
-        });
-      });
-    });
-
     document.querySelectorAll('.plan-card').forEach(card=>{
       card.addEventListener('click', ()=>{
         document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('active'));
         card.classList.add('active');
-        document.getElementById('planInput').value = card.dataset.plan;
+        document.getElementById('billingTypeInput').value = card.dataset.plan;
       });
     });
 

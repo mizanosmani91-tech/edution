@@ -371,56 +371,67 @@
   <div class="wrap center">
     <div class="eyebrow">মূল্য পরিকল্পনা</div>
     <h2 class="sec-title">সহজ, স্বচ্ছ মূল্য নির্ধারণ</h2>
-    <p class="sec-sub">প্রতিষ্ঠানের আকার অনুযায়ী প্ল্যান বেছে নিন। যেকোনো সময় আপগ্রেড করা যাবে।</p>
+    <p class="sec-sub">প্রতিষ্ঠানের ছাত্রসংখ্যা ও চাহিদা অনুযায়ী পোস্টপেইড বা প্রিপেইড — যেকোনো একটা বেছে নিন। যেকোনো সময় বদলানো যাবে।</p>
     <div class="billing-toggle">
-      <button class="active" data-cycle="monthly">মাসিক</button>
-      <button data-cycle="yearly"><span class="save">২০% ছাড়</span>বার্ষিক</button>
+      <button class="active" data-mode="postpaid">পোস্টপেইড (মাসিক)</button>
+      <button data-mode="prepaid">প্রিপেইড (ব্যালেন্স)</button>
     </div>
   </div>
-  <div class="wrap price-grid">
+
+  <div class="wrap price-grid" data-panel="postpaid">
     <div class="price-card">
-      <h3>বেসিক</h3>
-      <div class="desc">ছোট প্রতিষ্ঠান ও কিন্ডারগার্টেনের জন্য</div>
-      <div class="price-amt" data-monthly="৳১,৫০০" data-yearly="৳১,২০০">৳১,৫০০<span>/মাস</span></div>
-      <div class="price-old" style="visibility:hidden;">৳১,৮০০</div>
+      <h3>ছোট প্রতিষ্ঠান</h3>
+      <div class="desc">১–২০০ জন শিক্ষার্থী পর্যন্ত</div>
+      <div class="price-amt">৳৪৯৯<span>/মাস</span></div>
       <ul class="price-feats">
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>২০০ জন পর্যন্ত শিক্ষার্থী</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>একাডেমিক ও হাজিরা মডিউল</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>ভর্তি ও ফি ব্যবস্থাপনা</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>ইমেইল সাপোর্ট</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>সকল মডিউল অন্তর্ভুক্ত</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>SMS ও ইমেইল নোটিফিকেশন</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>১৫ দিন গ্রেস পিরিয়ড</li>
       </ul>
-      <a href="{{ route('register') }}?plan=basic" class="btn-ghost">শুরু করুন</a>
+      <a href="{{ route('register') }}?billing_type=postpaid" class="btn-ghost">শুরু করুন</a>
     </div>
 
     <div class="price-card popular">
       <div class="popular-badge">সর্বাধিক জনপ্রিয়</div>
-      <h3>স্ট্যান্ডার্ড</h3>
-      <div class="desc">মাঝারি স্কুল ও মাদরাসার জন্য</div>
-      <div class="price-amt" data-monthly="৳৩,৫০০" data-yearly="৳২,৮০০">৳৩,৫০০<span>/মাস</span></div>
-      <div class="price-old" style="visibility:hidden;">৳৪,২০০</div>
+      <h3>মাঝারি প্রতিষ্ঠান</h3>
+      <div class="desc">২০১–৫০০ জন শিক্ষার্থী পর্যন্ত</div>
+      <div class="price-amt">৳৯৯৯<span>/মাস</span></div>
       <ul class="price-feats">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>১,০০০ জন পর্যন্ত শিক্ষার্থী</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>৫০০ জন পর্যন্ত শিক্ষার্থী</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>সকল মডিউল সহ আবাসন ও পরিবহন</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>এসএমএস নোটিফিকেশন</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>রিপোর্ট ও এনালিটিক্স</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>প্রায়োরিটি ফোন সাপোর্ট</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>অভিভাবক ও শিক্ষক পোর্টাল</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>প্রায়োরিটি সাপোর্ট</li>
       </ul>
-      <a href="{{ route('register') }}?plan=standard" class="btn-primary">শুরু করুন</a>
+      <a href="{{ route('register') }}?billing_type=postpaid" class="btn-primary">শুরু করুন</a>
     </div>
 
     <div class="price-card">
-      <h3>প্রিমিয়াম</h3>
-      <div class="desc">বড় প্রতিষ্ঠান ও একাধিক শাখার জন্য</div>
-      <div class="price-amt" data-monthly="৳৬,৫০০" data-yearly="৳৫,২০০">৳৬,৫০০<span>/মাস</span></div>
-      <div class="price-old" style="visibility:hidden;">৳৭,৮০০</div>
+      <h3>বড় প্রতিষ্ঠান</h3>
+      <div class="desc">৫০১–১,০০০ জন শিক্ষার্থী পর্যন্ত</div>
+      <div class="price-amt">৳১,৯৯৯<span>/মাস</span></div>
       <ul class="price-feats">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>সীমাহীন শিক্ষার্থী</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>১,০০০ জন পর্যন্ত শিক্ষার্থী</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>একাধিক শাখা ব্যবস্থাপনা</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>কাস্টম ডোমেইন ও ব্র্যান্ডিং</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>API অ্যাক্সেস</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>ডেডিকেটেড অ্যাকাউন্ট ম্যানেজার</li>
       </ul>
-      <a href="{{ route('register') }}?plan=premium" class="btn-ghost">যোগাযোগ করুন</a>
+      <a href="{{ route('register') }}?billing_type=postpaid" class="btn-ghost">শুরু করুন</a>
+    </div>
+  </div>
+
+  <div class="wrap price-grid" data-panel="prepaid" style="display:none;">
+    <div class="price-card" style="grid-column:1/-1;max-width:460px;margin:0 auto;">
+      <h3>প্রিপেইড ওয়ালেট</h3>
+      <div class="desc">যেকোনো আকারের প্রতিষ্ঠানের জন্য — যত ছাত্র, তত খরচ</div>
+      <div class="price-amt">৳৫<span>/শিক্ষার্থী/মাস</span></div>
+      <ul class="price-feats">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>আগে ব্যালেন্স লোড করুন, প্রতি মাসে স্বয়ংক্রিয় কর্তন</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>কোনো মাসিক কমিটমেন্ট নেই — যত ছাত্র তত বিল</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>ছোট মক্তব/নূরানী মাদ্রাসার জন্য সবচেয়ে সাশ্রয়ী</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>ব্যালেন্স কম হলে SMS/ইমেইল সতর্কবার্তা</li>
+      </ul>
+      <a href="{{ route('register') }}?billing_type=prepaid" class="btn-primary">শুরু করুন</a>
     </div>
   </div>
 </section>
@@ -519,13 +530,9 @@
     btn.addEventListener('click', ()=>{
       document.querySelectorAll('.billing-toggle button').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
-      const cycle = btn.dataset.cycle;
-      document.querySelectorAll('.price-amt').forEach(el=>{
-        const price = cycle === 'yearly' ? el.dataset.yearly : el.dataset.monthly;
-        el.innerHTML = price + '<span>/মাস</span>';
-      });
-      document.querySelectorAll('.price-old').forEach(el=>{
-        el.style.visibility = cycle === 'yearly' ? 'visible' : 'hidden';
+      const mode = btn.dataset.mode;
+      document.querySelectorAll('.price-grid[data-panel]').forEach(el=>{
+        el.style.display = el.dataset.panel === mode ? '' : 'none';
       });
     });
   });

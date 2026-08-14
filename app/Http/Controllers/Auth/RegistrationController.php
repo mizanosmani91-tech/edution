@@ -49,7 +49,7 @@ class RegistrationController extends Controller
     public function create(Request $request)
     {
         return view('auth.register', [
-            'selectedPlan' => $request->query('plan', 'standard'),
+            'selectedBillingType' => $request->query('billing_type', 'postpaid'),
         ]);
     }
 
@@ -68,7 +68,7 @@ class RegistrationController extends Controller
             'admin_designation' => ['required', 'string', 'max:100'],
             'phone' => ['required', 'string', 'max:20'],
             'email' => ['required', 'email', 'max:255'],
-            'plan' => ['required', 'in:basic,standard,premium'],
+            'billing_type' => ['required', 'in:postpaid,prepaid'],
             'preferred_subdomain' => ['nullable', 'string', 'max:63', 'regex:/^[a-z0-9-]+$/'],
             'terms' => ['accepted'],
         ]);
@@ -98,7 +98,7 @@ class RegistrationController extends Controller
             'district' => $validated['district'],
             'founding_year' => $validated['founding_year'] ?? null,
             'status' => 'pending',
-            'plan' => $validated['plan'],
+            'billing_type' => $validated['billing_type'],
             'phone' => $validated['phone'],
             'address' => $validated['address'],
             'student_count_estimate' => $validated['student_count_estimate'] ?? null,
@@ -119,6 +119,6 @@ class RegistrationController extends Controller
         return redirect()->route('register')->with('success', true)
             ->with('successSlug', $slug)
             ->with('successEmail', $validated['email'])
-            ->with('successPlan', $validated['plan']);
+            ->with('successBillingType', $validated['billing_type']);
     }
 }
