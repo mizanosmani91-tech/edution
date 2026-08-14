@@ -20,6 +20,7 @@ class InstitutionSetting extends Model
         'institution_id',
         'has_departments',
         'consecutive_period_blocking',
+        'qawmi_grading',
         'theme_primary_color',
         'theme_accent_color',
     ];
@@ -27,6 +28,7 @@ class InstitutionSetting extends Model
     protected $casts = [
         'has_departments' => 'boolean',
         'consecutive_period_blocking' => 'boolean',
+        'qawmi_grading' => 'boolean',
     ];
 
     public function institution()

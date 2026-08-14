@@ -123,21 +123,21 @@
             </div>
 
             {{-- পরীক্ষা ও ফলাফল --}}
-            <div class="nav-module" x-data="{ open: false }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*') }}" x-data="{ open: {{ request()->routeIs(['exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3h6l1 3H8l1-3Z"/><rect x="5" y="6" width="14" height="15" rx="2"/><path d="M9 12h6M9 16h6"/></svg></span>
                     <span class="lbl">পরীক্ষা ও ফলাফল</span>
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
-                    <a href="{{ $stub('পরীক্ষার সময়সূচি') }}" class="sub-item">পরীক্ষার সময়সূচি</a>
-                    <a href="{{ $stub('মার্কস এন্ট্রি') }}" class="sub-item">মার্কস এন্ট্রি</a>
+                    <a href="{{ route('exam-schedule.index') }}" class="sub-item {{ request()->routeIs('exam-schedule.*') ? 'active' : '' }}">পরীক্ষার সময়সূচি</a>
+                    <a href="{{ route('marks-entry.index') }}" class="sub-item {{ request()->routeIs('marks-entry.*') ? 'active' : '' }}">মার্কস এন্ট্রি</a>
                     <a href="{{ $stub('Result Weighting') }}" class="sub-item">Result Weighting</a>
-                    <a href="{{ $stub('GPA গ্রেড') }}" class="sub-item">GPA/গ্রেড ক্যালকুলেশন</a>
-                    <a href="{{ $stub('Merit List') }}" class="sub-item">Merit List/Tabulation</a>
+                    <a href="{{ route('merit-list.index') }}" class="sub-item {{ request()->routeIs('merit-list.*') ? 'active' : '' }}">GPA/গ্রেড ক্যালকুলেশন</a>
+                    <a href="{{ route('merit-list.index') }}" class="sub-item {{ request()->routeIs('merit-list.*') ? 'active' : '' }}">Merit List/Tabulation</a>
                     <a href="{{ route('marksheet.class') }}" class="sub-item">রিপোর্ট কার্ড/মার্কশিট</a>
                     <a href="{{ route('admit-cards.class') }}" class="sub-item">প্রবেশপত্র (Admit Card)</a>
-                    <a href="{{ $stub('কওমি গ্রেডিং') }}" class="sub-item">কওমি গ্রেডিং</a>
+                    <a href="{{ route('qawmi-grading.index') }}" class="sub-item {{ request()->routeIs('qawmi-grading.*') ? 'active' : '' }}">কওমি গ্রেডিং</a>
                 </div></div></div>
             </div>
 

@@ -90,6 +90,10 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
     Route::get('/alumni', \App\Livewire\AlumniDirectory::class)->name('alumni.index');
     Route::get('/payroll', \App\Livewire\PayrollManager::class)->name('payroll.index');
     Route::get('/performance-review', \App\Livewire\PerformanceReviewManager::class)->name('performance.index');
+    Route::get('/exam-schedule', \App\Livewire\ExamScheduleManager::class)->name('exam-schedule.index');
+    Route::get('/marks-entry', \App\Livewire\MarksEntry::class)->name('marks-entry.index');
+    Route::get('/merit-list', \App\Livewire\MeritList::class)->name('merit-list.index')->defaults('mode', 'standard');
+    Route::get('/qawmi-grading', \App\Livewire\MeritList::class)->name('qawmi-grading.index')->defaults('mode', 'qawmi');
     Route::get('/settings-page', \App\Livewire\InstitutionSettingsForm::class)->name('settings.index');
     Route::get('/routine-page', \App\Livewire\RoutineBoard::class)->name('routine.index');
 

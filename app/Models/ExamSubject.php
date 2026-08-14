@@ -29,11 +29,24 @@ class ExamSubject extends Model
         'teacher_id',
         'full_marks',
         'pass_marks',
+        'exam_date',
+        'start_time',
+        'end_time',
+        'room',
+    ];
+
+    protected $casts = [
+        'exam_date' => 'date',
     ];
 
     public function exam()
     {
         return $this->belongsTo(Exam::class);
+    }
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
     }
 
     public function schoolClass()
