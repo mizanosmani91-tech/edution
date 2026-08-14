@@ -20,7 +20,7 @@
   <main class="main">
     <div class="topbar">
       <button class="menu-toggle" @click="mobileOpen = !mobileOpen" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-      <div class="breadcrumb"><div class="path">সুপার এডমিন</div><h1>{{ ['overview'=>'ওভারভিউ','institutions'=>'প্রতিষ্ঠানসমূহ','billing'=>'প্যাকেজ ও বিলিং','notices'=>'নোটিশ ও ঘোষণা','support'=>'সাপোর্ট টিকেট','settings'=>'সেটিংস'][$activeSection] }}</h1></div>
+      <div class="breadcrumb"><div class="path">সুপার এডমিন</div><h1>{{ ['overview'=>'ওভারভিউ','applications'=>'নতুন আবেদন','institutions'=>'প্রতিষ্ঠানসমূহ','billing'=>'প্যাকেজ ও বিলিং','notices'=>'নোটিশ ও ঘোষণা','support'=>'সাপোর্ট টিকেট','settings'=>'সেটিংস'][$activeSection] ?? '' }}</h1></div>
       <div class="topbar-actions">
         <button class="icon-btn" wire:click="setSection('applications')" type="button" title="নতুন প্রতিষ্ঠান আবেদন">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 1 0-12 0c0 5-2 6-2 6h16s-2-1-2-6"/><path d="M9.5 20a2.5 2.5 0 0 0 5 0"/></svg>
