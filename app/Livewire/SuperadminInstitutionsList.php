@@ -76,8 +76,16 @@ class SuperadminInstitutionsList extends Component
             ->latest()
             ->get();
 
+        // ⚠️ superadmin route-এ tenant context বাইন্ড থাকে না (EnsureSuperAdmin
+        // middleware শুধু RLS-এর জন্য Postgres session var সেট করে, Laravel
+        // container-এ 'tenant.institution_id' বাইন্ড করে না) — তাই students
+        // রিলেশনের count নিতে গেলে BelongsToTenant-এর global scope
+        // fail-closed RuntimeException ছোঁড়ে। এখানে ইচ্ছাকৃতভাবে সব
+        // institution জুড়ে count দরকার, তাই explicit bypass।
         $activeInstitutions = Institution::query()
-            ->withCount('students')
+            ->withCount(['students' => function ($query) {
+                $query->withoutGlobalScope('tenant');
+            }])
             ->where('status', '!=', 'pending')
             ->orderByDesc('created_at')
             ->get();
