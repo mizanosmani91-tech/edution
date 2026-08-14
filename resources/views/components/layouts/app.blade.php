@@ -38,7 +38,7 @@
             @endphp
 
             {{-- একাডেমিক --}}
-            <div class="nav-module {{ $activeIf('students.*','teachers.*','routine.*') }}" x-data="{ open: {{ request()->routeIs(['students.*','teachers.*','routine.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('academic.*','routine.*') }}" x-data="{ open: {{ request()->routeIs(['academic.*','routine.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2 2 0 0 1 6 4h13v14H6a2 2 0 0 0-2 2V5.5Z"/><path d="M19 18v3"/></svg></span>
                     <span class="lbl">একাডেমিক</span>
@@ -160,7 +160,7 @@
             </div>
 
             {{-- লাইব্রেরি --}}
-            <div class="nav-module" x-data="{ open: false }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('books.*','book-issues.*') }}" x-data="{ open: {{ request()->routeIs(['books.*','book-issues.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h6a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4V4Z"/><path d="M20 4h-6a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6V4Z"/></svg></span>
                     <span class="lbl">লাইব্রেরি</span>
@@ -174,7 +174,7 @@
             </div>
 
             {{-- পরিবহন --}}
-            <div class="nav-module" x-data="{ open: false }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('transport.*') }}" x-data="{ open: {{ request()->routeIs(['transport.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="9" width="18" height="8" rx="2"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg></span>
                     <span class="lbl">পরিবহন</span>
@@ -187,7 +187,7 @@
             </div>
 
             {{-- হোস্টেল --}}
-            <div class="nav-module" x-data="{ open: false }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('hostel.*') }}" x-data="{ open: {{ request()->routeIs(['hostel.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg></span>
                     <span class="lbl">হোস্টেল</span>
@@ -216,30 +216,30 @@
             </div>
 
             {{-- পোর্টাল --}}
-            <div class="nav-module" x-data="{ open: false }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('portal.*') }}" x-data="{ open: {{ request()->routeIs(['portal.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg></span>
                     <span class="lbl">পোর্টাল</span>
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
-                    <a href="{{ route('portal.guardian') }}" class="sub-item">অভিভাবক পোর্টাল</a>
-                    <a href="{{ route('portal.student') }}" class="sub-item">শিক্ষার্থী পোর্টাল</a>
-                    <a href="{{ route('portal.teacher') }}" class="sub-item">শিক্ষক পোর্টাল</a>
+                    <a href="{{ route('portal.guardian') }}" class="sub-item {{ request()->routeIs('portal.guardian') ? 'active' : '' }}">অভিভাবক পোর্টাল</a>
+                    <a href="{{ route('portal.student') }}" class="sub-item {{ request()->routeIs('portal.student') ? 'active' : '' }}">শিক্ষার্থী পোর্টাল</a>
+                    <a href="{{ route('portal.teacher') }}" class="sub-item {{ request()->routeIs('portal.teacher') ? 'active' : '' }}">শিক্ষক পোর্টাল</a>
                 </div></div></div>
             </div>
 
             {{-- রিপোর্ট --}}
-            <div class="nav-module" x-data="{ open: false }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('export.*') }}" x-data="{ open: {{ request()->routeIs(['export.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 19V5M4 19h16M8 15v-4m4 4V9m4 6v-8"/></svg></span>
                     <span class="lbl">রিপোর্ট</span>
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
-                    <a href="{{ route('export.students') }}" class="sub-item">শিক্ষার্থী রিপোর্ট (Export)</a>
-                    <a href="{{ route('export.attendance') }}" class="sub-item">হাজিরা রিপোর্ট (Export)</a>
-                    <a href="{{ route('export.fees') }}" class="sub-item">ফি রিপোর্ট (Export)</a>
+                    <a href="{{ route('export.students') }}" class="sub-item {{ request()->routeIs('export.students') ? 'active' : '' }}">শিক্ষার্থী রিপোর্ট (Export)</a>
+                    <a href="{{ route('export.attendance') }}" class="sub-item {{ request()->routeIs('export.attendance') ? 'active' : '' }}">হাজিরা রিপোর্ট (Export)</a>
+                    <a href="{{ route('export.fees') }}" class="sub-item {{ request()->routeIs('export.fees') ? 'active' : '' }}">ফি রিপোর্ট (Export)</a>
                 </div></div></div>
             </div>
 
