@@ -5,47 +5,8 @@ on:
     branches: [ main ]
   workflow_dispatch: {}
 
-permissions:
-  contents: write
-
 jobs:
-  update-lock:
-    runs-on: ubuntu-latest
-    outputs:
-      changed: ${{ steps.check.outputs.changed }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          tools: composer
-
-      # composer.json এ নতুন প্যাকেজ যোগ হলেও composer.lock এখানে (GitHub-এর
-      # PHP/composer থাকা runner-এ) নিয়মিত আপডেট হয়ে যায়, VPS-এ PHP/composer
-      # লাগে না — শুধু lock ফাইল রিজেনারেট করা হচ্ছে, প্যাকেজ ইনস্টল না
-      # (--no-install দ্রুততার জন্য)।
-      - name: Sync composer.lock with composer.json
-        run: composer update --lock --no-install --no-interaction
-
-      - name: Commit composer.lock if it changed
-        id: check
-        run: |
-          if ! git diff --quiet -- composer.lock; then
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add composer.lock
-            git commit -m "chore: sync composer.lock [skip ci]"
-            git push origin main
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          fi
-
   deploy:
-    needs: update-lock
     runs-on: ubuntu-latest
     steps:
       - name: Deploy over SSH
@@ -59,7 +20,7 @@ jobs:
             set -e
             cd ~/edution-laravel
             git pull origin main
-            composer install --no-dev --optimize-autoloader
+            composer install --no-dev --optimize-autoloader || composer update phpoffice/phpspreadsheet phpoffice/phpword --no-dev --with-dependencies --optimize-autoloader
             npm ci
             npm run build
             php artisan migrate --force
