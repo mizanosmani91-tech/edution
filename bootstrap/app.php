@@ -21,6 +21,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('edution:process-billing')->dailyAt('07:00');
     })
     ->withMiddleware(function (Middleware $middleware): void {
+        // ⚠️ সার্ভার Cloudflare + nginx + Apache প্রক্সি চেইনের পেছনে থাকায়
+        // Laravel কে বলে দিচ্ছি সব প্রক্সি থেকে আসা X-Forwarded-* হেডার
+        // বিশ্বাস করতে — নাহলে request()->isSecure() সবসময় false আসে,
+        // ফলে redirect/url হেল্পার ভুল করে http:// জেনারেট করে এবং
+        // Cloudflare এর "Always Use HTTPS" এর সাথে মিলে infinite redirect
+        // loop তৈরি করে।
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'tenant.context' => \App\Http\Middleware\SetTenantContext::class,
             'superadmin' => \App\Http\Middleware\EnsureSuperAdmin::class,
