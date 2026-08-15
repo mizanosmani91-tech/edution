@@ -15,6 +15,7 @@ use App\Models\WalletTransaction;
 use App\Services\BillingService;
 use App\Services\NotificationService;
 use App\Services\SmsOtpService;
+use App\Services\SystemHealthService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -456,6 +457,14 @@ class SuperadminDashboard extends Component
         $this->dispatch('toast', message: 'সেটিংস সংরক্ষণ করা হয়েছে');
     }
 
+    // ================= সিস্টেম হেলথ =================
+
+    public function clearSystemLog(): void
+    {
+        app(SystemHealthService::class)->clearLog();
+        $this->dispatch('toast', message: 'লগ ফাইল খালি করা হয়েছে');
+    }
+
     public function inviteSuperadmin(): void
     {
         $this->validate([
@@ -576,6 +585,14 @@ class SuperadminDashboard extends Component
                     ->limit(50)
                     ->get();
                 $data['demoLeads'] = \App\Models\DemoLead::with('accessRequests')->latest()->limit(200)->get();
+                break;
+
+            case 'system-health':
+                $health = app(SystemHealthService::class);
+                $data['recentErrors'] = $health->recentErrors();
+                $data['logSizeMb'] = $health->logSizeMb();
+                $data['diskUsagePercent'] = $health->diskUsagePercent();
+                $data['diskFreeGb'] = $health->diskFreeGb();
                 break;
         }
 

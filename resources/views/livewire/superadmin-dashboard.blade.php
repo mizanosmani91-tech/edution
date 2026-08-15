@@ -16,6 +16,7 @@
       <div class="nav-item {{ $activeSection === 'support' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('support')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 15a5 5 0 0 0 5-5V8a5 5 0 0 0-10 0v2a5 5 0 0 0 5 5Z"/><path d="M8 21h8M12 15v6"/></svg></span><span class="lbl">সাপোর্ট টিকেট</span>@if($stats['openTickets'] > 0)<span class="cnt">{{ $stats['openTickets'] }}</span>@endif</button></div>
       <div class="nav-item {{ $activeSection === 'trash' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('trash')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></span><span class="lbl">রিসাইকেল বিন</span>@if($stats['trashedInstitutions'] > 0)<span class="cnt">{{ $stats['trashedInstitutions'] }}</span>@endif</button></div>
       <div class="nav-item {{ $activeSection === 'demo-access' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('demo-access')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 15v-3.5M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg></span><span class="lbl">ডেমো এক্সেস</span>@if($stats['pendingDemoRequests'] > 0)<span class="cnt">{{ $stats['pendingDemoRequests'] }}</span>@endif</button></div>
+      <div class="nav-item {{ $activeSection === 'system-health' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('system-health')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><span class="lbl">সিস্টেম হেলথ</span></button></div>
       <div class="nav-item {{ $activeSection === 'settings' ? 'active' : '' }}"><button class="nav-btn" wire:click="setSection('settings')" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a7.7 7.7 0 0 0 0-3l1.9-1.4-2-3.4-2.2.8a7.6 7.6 0 0 0-2.6-1.5L14 2.5h-4l-.5 2.5a7.6 7.6 0 0 0-2.6 1.5l-2.2-.8-2 3.4L4.6 10.5a7.7 7.7 0 0 0 0 3L2.7 14.9l2 3.4 2.2-.8c.77.66 1.65 1.17 2.6 1.5l.5 2.5h4l.5-2.5a7.6 7.6 0 0 0 2.6-1.5l2.2.8 2-3.4-1.9-1.4Z"/></svg></span><span class="lbl">সেটিংস</span></button></div>
     </nav>
     <div class="sidebar-foot"><button class="collapse-btn" @click="collapsed = !collapsed" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 6l-6 6 6 6"/></svg><span>সাইডবার সংকুচিত করুন</span></button></div>
@@ -24,7 +25,7 @@
   <main class="main">
     <div class="topbar">
       <button class="menu-toggle" @click="mobileOpen = !mobileOpen" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-      <div class="breadcrumb"><div class="path">সুপার এডমিন</div><h1>{{ ['overview'=>'ওভারভিউ','applications'=>'নতুন আবেদন','institutions'=>'প্রতিষ্ঠানসমূহ','billing'=>'প্যাকেজ ও বিলিং','notices'=>'নোটিশ ও ঘোষণা','support'=>'সাপোর্ট টিকেট','trash'=>'রিসাইকেল বিন','demo-access'=>'ডেমো এক্সেস','settings'=>'সেটিংস'][$activeSection] ?? '' }}</h1></div>
+      <div class="breadcrumb"><div class="path">সুপার এডমিন</div><h1>{{ ['overview'=>'ওভারভিউ','applications'=>'নতুন আবেদন','institutions'=>'প্রতিষ্ঠানসমূহ','billing'=>'প্যাকেজ ও বিলিং','notices'=>'নোটিশ ও ঘোষণা','support'=>'সাপোর্ট টিকেট','trash'=>'রিসাইকেল বিন','demo-access'=>'ডেমো এক্সেস','system-health'=>'সিস্টেম হেলথ','settings'=>'সেটিংস'][$activeSection] ?? '' }}</h1></div>
       <div class="topbar-actions">
         <button class="icon-btn" wire:click="setSection('applications')" type="button" title="নতুন প্রতিষ্ঠান আবেদন">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 1 0-12 0c0 5-2 6-2 6h16s-2-1-2-6"/><path d="M9.5 20a2.5 2.5 0 0 0 5 0"/></svg>
@@ -521,6 +522,44 @@
               @endforelse
             </tbody>
           </table>
+        </div>
+      @endif
+
+      {{-- ============ SYSTEM HEALTH ============ --}}
+      @if ($activeSection === 'system-health')
+        <div class="page-head"><div><h2>সিস্টেম হেলথ</h2><p>সাম্প্রতিক এরর ও সার্ভার স্ট্যাটাস — SSH না করেই এখান থেকে দেখুন</p></div></div>
+
+        <div class="stat-strip">
+          <div class="stat-chip" style="--accent:{{ $diskUsagePercent >= 85 ? 'var(--bad)' : 'var(--good)' }}"><div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div><div><div class="sv">{{ $diskUsagePercent }}%</div><div class="sl">ডিস্ক ব্যবহৃত</div></div></div>
+          <div class="stat-chip" style="--accent:var(--info)"><div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div><div><div class="sv">{{ $diskFreeGb }} GB</div><div class="sl">ডিস্ক খালি</div></div></div>
+          <div class="stat-chip" style="--accent:{{ count($recentErrors) > 0 ? 'var(--bad)' : 'var(--good)' }}"><div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 9v4"/><circle cx="12" cy="16" r=".4" fill="currentColor"/><path d="M10.3 4.5 2.6 18a1.8 1.8 0 0 0 1.6 2.7h15.6a1.8 1.8 0 0 0 1.6-2.7L13.7 4.5a1.8 1.8 0 0 0-3.4 0Z"/></svg></div><div><div class="sv">{{ count($recentErrors) }}</div><div class="sl">সাম্প্রতিক এরর (সর্বোচ্চ ৩০টা)</div></div></div>
+          <div class="stat-chip" style="--accent:var(--gold)"><div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div><div><div class="sv">{{ $logSizeMb }} MB</div><div class="sl">লগ ফাইল সাইজ</div></div></div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:6px;">
+            <div>
+              <h3 style="margin:0;">সাম্প্রতিক এরর লগ</h3>
+              <p class="sub" style="margin:2px 0 0;">edution.xyz, panel.edution.xyz ও সব প্রতিষ্ঠানের সাবডোমেইন — একই laravel.log এ, নতুন থেকে পুরাতন ক্রমে</p>
+            </div>
+            <button class="btn-ghost" style="border-color:var(--bad);color:var(--bad);" onclick="if(confirm('লগ ফাইল খালি করবেন? এটা ফিরিয়ে আনা যাবে না।')) { @this.call('clearSystemLog'); }" type="button">লগ খালি করুন</button>
+          </div>
+
+          @forelse ($recentErrors as $i => $err)
+            <div style="border-bottom:1px dashed var(--line);padding:12px 0;">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span class="tag {{ in_array($err['level'], ['ERROR','CRITICAL','ALERT','EMERGENCY']) ? 'bad' : 'gold' }}">{{ $err['level'] }}</span>
+                <span style="font-size:11.5px;color:var(--ink-soft);">{{ $err['time'] }}</span>
+              </div>
+              <div style="font-size:13px;margin-top:6px;">{{ $err['message'] }}</div>
+              <details style="margin-top:6px;">
+                <summary style="cursor:pointer;font-size:11.5px;color:var(--ink-soft);">পুরো ডিটেইল দেখুন</summary>
+                <pre style="white-space:pre-wrap;word-break:break-all;font-size:11px;background:var(--paper-deep);padding:10px;border-radius:8px;margin-top:6px;max-height:260px;overflow:auto;">{{ $err['detail'] }}</pre>
+              </details>
+            </div>
+          @empty
+            <p style="color:var(--ink-soft);font-size:13px;padding:20px 0;">কোনো এরর পাওয়া যায়নি — সব ঠিকঠাক চলছে।</p>
+          @endforelse
         </div>
       @endif
 
