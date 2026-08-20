@@ -23,8 +23,28 @@ jobs:
             composer install --no-dev --optimize-autoloader || composer update phpoffice/phpspreadsheet phpoffice/phpword --no-dev --with-dependencies --optimize-autoloader
             npm ci
             npm run build
+
+            # ⚠️ সেফটি গেট: কোডে কোনো Blade/PHP সিনট্যাক্স এরর থাকলে এখানেই
+            # ডিপ্লয় থেমে যাবে (migrate/config-cache/route-cache কিছুই
+            # চলবে না) — লাইভ সাইট আগের কার্যকর ভার্সনেই থাকবে, আর
+            # সুপারএডমিনরা সাথে সাথে এসএমএস/ইমেইলে সঠিক কারণ জানতে পারবে।
+            php artisan edution:smoke-test
+
             php artisan migrate --force
             php artisan db:seed --force
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
+
+            # ⚠️ ডিপ্লয়ের ঠিক পরে লাইভ URL গুলো নিজেই চেক করে নিশ্চিত হচ্ছে
+            # সাইট আসলেই সাড়া দিচ্ছে (৫xx না)। ব্যর্থ হলে ডিপ্লয় ব্যর্থ
+            # দেখাবে, কিন্তু কোড ইতিমধ্যে লাইভ — তাই এই চেক ব্যর্থ হলে
+            # সিস্টেম হেলথ পেজ আর সার্ভার লগ সাথে সাথে চেক করা জরুরি।
+            for url in https://edution.xyz/ https://panel.edution.xyz/login; do
+              code=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+              echo "$url -> $code"
+              if [ "$code" -ge 500 ]; then
+                echo "❌ $url দিচ্ছে $code — ডিপ্লয়ের পর সাইট ভাঙা!"
+                exit 1
+              fi
+            done

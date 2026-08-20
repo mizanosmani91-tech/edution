@@ -52,4 +52,31 @@ return Application::configure(basePath: dirname(__DIR__))
             }
             return $request->expectsJson();
         });
+
+        // ⚠️ রিয়েল-টাইম এরর অ্যালার্ট: প্রোডাকশনে (production env) যেকোনো
+        // অপ্রত্যাশিত সার্ভার-সাইড এরর (৫xx) ঘটলে সাথে সাথে সুপারএডমিনদের
+        // এসএমএস+ইমেইলে সঠিক কারণ (ক্লাস, মেসেজ, ফাইল:লাইন) জানিয়ে দেয় —
+        // ৪xx (validation, 404, auth) বাদ দিয়ে, যাতে স্প্যাম না হয়।
+        $exceptions->reportable(function (\Throwable $e) {
+            if (! app()->environment('production')) {
+                return;
+            }
+
+            if ($e instanceof \Illuminate\Validation\ValidationException
+                || $e instanceof \Illuminate\Auth\AuthenticationException
+                || $e instanceof \Illuminate\Auth\Access\AuthorizationException
+                || $e instanceof \Illuminate\Session\TokenMismatchException) {
+                return;
+            }
+
+            if (method_exists($e, 'getStatusCode') && $e->getStatusCode() < 500) {
+                return;
+            }
+
+            try {
+                app(\App\Services\NotificationService::class)->systemErrorAlert($e);
+            } catch (\Throwable $inner) {
+                \Illuminate\Support\Facades\Log::warning('systemErrorAlert নিজেই ব্যর্থ হয়েছে: ' . $inner->getMessage());
+            }
+        });
     })->create();
