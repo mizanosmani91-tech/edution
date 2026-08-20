@@ -26,6 +26,7 @@
   ::-webkit-scrollbar{width:8px;height:8px;} ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:8px;}
   a{color:inherit;text-decoration:none;} button{font-family:inherit;}
 
+  .mobile-backdrop{ display:none; }
   .app{ display:grid; grid-template-columns:270px minmax(0,1fr); min-height:100vh; transition:grid-template-columns .22s ease; }
   .app.collapsed{ grid-template-columns:76px minmax(0,1fr); }
 
