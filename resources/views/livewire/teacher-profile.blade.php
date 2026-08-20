@@ -317,7 +317,7 @@
             }
             if (window.Chart) { draw(); } else {
                 const s = document.createElement('script');
-                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/chart.js/4.4.4/chart.umd.min.js';
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.1/chart.umd.min.js';
                 s.onload = draw;
                 document.head.appendChild(s);
             }
