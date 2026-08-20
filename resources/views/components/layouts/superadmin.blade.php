@@ -26,10 +26,10 @@
   ::-webkit-scrollbar{width:8px;height:8px;} ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:8px;}
   a{color:inherit;text-decoration:none;} button{font-family:inherit;}
 
-  .app{ display:grid; grid-template-columns:var(--sidebar-w) 1fr; min-height:100vh; transition:grid-template-columns .22s ease; }
-  .app.collapsed{ grid-template-columns:var(--sidebar-w-collapsed) 1fr; }
+  .app{ display:grid; grid-template-columns:270px minmax(0,1fr); min-height:100vh; transition:grid-template-columns .22s ease; }
+  .app.collapsed{ grid-template-columns:76px minmax(0,1fr); }
 
-  .sidebar{ background:linear-gradient(175deg, var(--ink-bg) 0%, var(--ink-bg-deep) 100%); color:#EDE7DA; display:flex; flex-direction:column; position:sticky; top:0; height:100vh; overflow:hidden; }
+  .sidebar{ background:linear-gradient(175deg, var(--ink-bg) 0%, var(--ink-bg-deep) 100%); color:#EDE7DA; display:flex; flex-direction:column; position:sticky; top:0; height:100vh; overflow:hidden; min-width:0; width:100%; }
   .sidebar-head{ display:flex; align-items:center; gap:11px; padding:20px 18px 16px; border-bottom:1px solid var(--panel-line); flex-shrink:0; }
   .sidebar-emblem{ width:36px;height:36px;border-radius:10px; background:rgba(201,162,39,.14); border:1.5px solid rgba(201,162,39,.4); display:flex;align-items:center;justify-content:center;flex-shrink:0; }
   .sidebar-emblem svg{width:18px;height:18px; color:var(--gold-light);}
@@ -55,7 +55,7 @@
   .app.collapsed .nav-btn{ justify-content:center; padding:11px; }
   .app.collapsed .collapse-btn{ justify-content:center; }
 
-  .main{ min-width:0; }
+  .main{ min-width:0; max-width:100%; overflow-x:hidden; }
   .topbar{ position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:14px; background:rgba(247,242,229,.92); backdrop-filter:blur(6px); border-bottom:1px solid var(--line); padding:15px 26px; }
   .menu-toggle{ display:none; background:#fff;border:1px solid var(--line);border-radius:9px; width:36px;height:36px;align-items:center;justify-content:center;cursor:pointer; }
   .breadcrumb{ flex:1; min-width:0; }
