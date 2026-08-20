@@ -47,13 +47,13 @@
             <p class="sub">শিক্ষার্থীসংখ্যা অনুযায়ী মাসিক টায়ার:</p>
             <table style="width:100%;font-size:13px;margin:8px 0 12px;">
                 <tbody>
-                    @php($prevBound = 1)
+                    @php $prevBound = 1; @endphp
                     @foreach ($tiers as $upperBound => $price)
                         <tr style="{{ $activeStudentCount >= $prevBound && $activeStudentCount <= $upperBound ? 'font-weight:700;color:var(--cover-maroon);' : '' }}">
                             <td style="padding:4px 0;">{{ $prevBound }}–{{ $upperBound }} শিক্ষার্থী</td>
                             <td style="padding:4px 0;">৳{{ number_format($price) }}/মাস</td>
                         </tr>
-                        @php($prevBound = $upperBound + 1)
+                        @php $prevBound = $upperBound + 1; @endphp
                     @endforeach
                     <tr><td style="padding:4px 0;">{{ $prevBound }}+ শিক্ষার্থী</td><td style="padding:4px 0;">কাস্টম — যোগাযোগ করুন</td></tr>
                 </tbody>

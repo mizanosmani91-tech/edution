@@ -364,7 +364,7 @@
             @endif
 
             @if (auth()->user()->role === 'admin' && !request()->routeIs('billing.*'))
-                @php($inst = auth()->user()->institution)
+                @php $inst = auth()->user()->institution; @endphp
                 @if ($inst && $inst->billing_suspended)
                     <div class="info-box" style="margin-bottom:16px;background:#FCE4E4;border-color:#D9534F;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>

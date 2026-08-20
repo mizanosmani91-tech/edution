@@ -29,7 +29,7 @@
       <div class="topbar-actions">
         <button class="icon-btn" wire:click="setSection('applications')" type="button" title="নতুন প্রতিষ্ঠান আবেদন">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 1 0-12 0c0 5-2 6-2 6h16s-2-1-2-6"/><path d="M9.5 20a2.5 2.5 0 0 0 5 0"/></svg>
-          @php($bellCount = $stats['pendingInstitutions'] + $stats['pendingPayments'])
+          @php $bellCount = $stats['pendingInstitutions'] + $stats['pendingPayments']; @endphp
           @if ($bellCount > 0)<span class="badge" style="position:absolute; top:-4px; right:-4px; background:var(--bad); color:#fff; font-size:9.5px; font-weight:700; width:16px;height:16px;border-radius:50%; display:flex;align-items:center;justify-content:center;">{{ $bellCount > 9 ? '9+' : $bellCount }}</span>@endif
         </button>
         <div class="profile-chip"><div class="avatar">{{ mb_substr(auth()->user()->name, 0, 1) }}</div><div class="who">{{ auth()->user()->name }}<div class="role">Platform Owner</div></div></div>
@@ -92,7 +92,7 @@
                       @if ($inst->isPrepaid())
                         <span class="tag gold">প্রিপেইড • ৳{{ number_format((float) $inst->prepaid_balance) }}</span>
                       @else
-                        @php($due = $billingSvc->postpaidDueAmount($inst))
+                        @php $due = $billingSvc->postpaidDueAmount($inst); @endphp
                         <span class="tag info">পোস্টপেইড • {{ $due ? '৳'.number_format($due) : 'কাস্টম' }}</span>
                       @endif
                     </td>
@@ -219,7 +219,7 @@
                       @if ($inst->isPrepaid())
                         <span class="tag gold">প্রিপেইড • ৳{{ number_format((float) $inst->prepaid_balance) }}</span>
                       @else
-                        @php($due = $billingSvc->postpaidDueAmount($inst))
+                        @php $due = $billingSvc->postpaidDueAmount($inst); @endphp
                         <span class="tag info">পোস্টপেইড • {{ $due ? '৳'.number_format($due) : 'কাস্টম' }}</span>
                       @endif
                     </td>
@@ -586,7 +586,7 @@
           </table>
           <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
             <div class="f-field"><label>নাম</label><input type="text" wire:model="inviteName" placeholder="পূর্ণ নাম"></div>
-            <div class="f-field"><label>ইমেইল</label><input type="email" wire:model="inviteEmail" placeholder="email@edution.xyz"></div>
+            <div class="f-field"><label>ইমেইল</label><input type="email" wire:model="inviteEmail" placeholder="email@@edution.xyz"></div>
             <div class="f-field"><label>মোবাইল (forgot-password SMS-এর জন্য)</label><input type="text" wire:model="invitePhone" placeholder="01XXXXXXXXX"></div>
             <button class="btn-primary" wire:click="inviteSuperadmin" type="button">যোগ করুন</button>
           </div>
@@ -612,7 +612,7 @@
 
   {{-- ============ INSTITUTION MANAGE MODAL ============ --}}
   @if ($manageInstitutionId)
-    @php($manageInst = \App\Models\Institution::find($manageInstitutionId))
+    @php $manageInst = \App\Models\Institution::find($manageInstitutionId); @endphp
     @if ($manageInst)
       <div class="modal-overlay open" wire:click.self="closeManageModal">
         <div class="modal">
@@ -711,7 +711,7 @@
 
   {{-- ============ স্থায়ী ডিলিট (PURGE) মোডাল ============ --}}
   @if ($purgeInstitutionId)
-    @php($purgeInst = \App\Models\Institution::onlyTrashed()->find($purgeInstitutionId))
+    @php $purgeInst = \App\Models\Institution::onlyTrashed()->find($purgeInstitutionId); @endphp
     @if ($purgeInst)
       <div class="modal-overlay open" wire:click.self="closePurgeModal">
         <div class="modal">
