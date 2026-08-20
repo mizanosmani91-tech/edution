@@ -6,6 +6,7 @@ use App\Models\Exam;
 use App\Models\SchoolClass;
 use App\Models\Student;
 use App\Services\ExamResultService;
+use App\Support\GradeCalculator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -97,5 +98,91 @@ class MarksheetController extends Controller
         ])->setPaper('a4', 'portrait');
 
         return $pdf->download("marksheet-{$student->student_id_no}-{$exam->name}.pdf");
+    }
+
+    /**
+     * ট্যাবুলেশন শীট — অফিসিয়াল রেকর্ডের জন্য, সব ছাত্রের সব বিষয়ের নম্বর
+     * এক গ্রিডে, সাথে মোট/শতকরা/গ্রেড/মেধাক্রম ও পরীক্ষা নিয়ন্ত্রক ও
+     * প্রধান শিক্ষকের স্বাক্ষরের জায়গা — ছাত্রকে দেওয়া মার্কশিট থেকে আলাদা,
+     * এটা প্রতিষ্ঠানের নিজস্ব রেকর্ড রাখার জন্য।
+     */
+    public function classTabulation(Request $request)
+    {
+        $validated = $request->validate([
+            'exam_id' => ['required', 'uuid', Rule::exists('exams', 'id')->where('institution_id', app('tenant.institution_id'))],
+            'class_id' => ['required', 'uuid', Rule::exists('classes', 'id')->where('institution_id', app('tenant.institution_id'))],
+        ]);
+
+        $exam = Exam::findOrFail($validated['exam_id']);
+        $class = SchoolClass::findOrFail($validated['class_id']);
+        $institution = auth()->user()->institution;
+
+        $rawMarks = $this->examResults->getEffectiveMarksForClass($exam->id, $class->id);
+        $marksByStudent = collect($rawMarks)->groupBy('student_id');
+
+        $examSubjects = \App\Models\ExamSubject::where('exam_id', $exam->id)
+            ->where('class_id', $class->id)
+            ->with('subject')
+            ->get();
+
+        $students = Student::where('class_id', $class->id)->where('status', 'active')->orderBy('name')->get();
+
+        $isQawmi = false; // ভবিষ্যতে চাইলে route param দিয়ে qawmi mode আলাদা করা যাবে
+
+        $rows = $students->map(function ($student) use ($marksByStudent, $isQawmi) {
+            $studentMarks = $marksByStudent->get($student->id, collect());
+            $obtained = 0.0;
+            $full = 0.0;
+            $hasAbsent = false;
+
+            foreach ($studentMarks as $m) {
+                $full += (float) ($m->full_marks ?? 0);
+                if ($m->is_absent) {
+                    $hasAbsent = true;
+                    continue;
+                }
+                $obtained += (float) ($m->marks_obtained ?? 0);
+            }
+
+            $percentage = $full > 0 ? round(($obtained / $full) * 100, 2) : 0;
+            $grade = GradeCalculator::grade($percentage, $isQawmi);
+
+            return [
+                'student' => $student,
+                'marks' => $studentMarks,
+                'total' => $obtained,
+                'totalMax' => $full,
+                'percentage' => $percentage,
+                'grade' => $grade['label'],
+                'gpa' => $grade['gpa'],
+                'is_pass' => $grade['pass'] && ! $hasAbsent,
+            ];
+        })->sortByDesc(fn ($r) => $r['is_pass'] ? $r['percentage'] : -1)->values();
+
+        // মেধাক্রম (position) — একই শতকরা হলে একই position শেয়ার করবে
+        $position = 0;
+        $lastPercentage = null;
+        $rows = $rows->map(function ($r) use (&$position, &$lastPercentage) {
+            if ($r['is_pass']) {
+                if ($lastPercentage === null || $r['percentage'] !== $lastPercentage) {
+                    $position++;
+                }
+                $lastPercentage = $r['percentage'];
+                $r['position'] = $position;
+            } else {
+                $r['position'] = null;
+            }
+            return $r;
+        });
+
+        $pdf = Pdf::loadView('pdf.class-tabulation', [
+            'exam' => $exam,
+            'class' => $class,
+            'institution' => $institution,
+            'examSubjects' => $examSubjects,
+            'rows' => $rows,
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download("tabulation-{$class->name}-{$exam->name}.pdf");
     }
 }

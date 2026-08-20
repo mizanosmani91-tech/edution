@@ -41,6 +41,34 @@
         </form>
     </div>
 
+    <div class="cert-form-card lifecycle-page" style="margin-bottom:16px;">
+        <h3 style="font-family:'Tiro Bangla',serif;font-size:16px;margin:0 0 14px;">ট্যাবুলেশন শীট (অফিসিয়াল রেকর্ড)</h3>
+        <p class="sub" style="margin:-8px 0 12px;">সব ছাত্রের সব বিষয়ের নম্বর এক গ্রিডে, মেধাক্রম ও স্বাক্ষরের জায়গাসহ — প্রতিষ্ঠানের নিজস্ব রেকর্ড রাখার জন্য (ছাত্রকে দেওয়ার জন্য না)</p>
+        <form method="GET" action="{{ route('marksheet.class-tabulation') }}" target="_blank">
+            <div class="info-grid" style="grid-template-columns:1fr 1fr;">
+                <div class="field">
+                    <label>পরীক্ষা <span class="req">*</span></label>
+                    <select name="exam_id" required>
+                        <option value="">নির্বাচন করুন</option>
+                        @foreach ($exams as $e)
+                            <option value="{{ $e->id }}">{{ $e->name }} ({{ $e->academic_year }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="field">
+                    <label>শ্রেণি <span class="req">*</span></label>
+                    <select name="class_id" required>
+                        <option value="">নির্বাচন করুন</option>
+                        @foreach ($classes as $c)
+                            <option value="{{ $c->id }}">{{ $c->full_label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <button class="btn-primary" type="submit">PDF ডাউনলোড করুন</button>
+        </form>
+    </div>
+
     <div class="cert-form-card lifecycle-page">
         <h3 style="font-family:'Tiro Bangla',serif;font-size:16px;margin:0 0 14px;">প্রবেশপত্র (Admit Card)</h3>
         <form method="GET" action="{{ route('admit-cards.class') }}" target="_blank">

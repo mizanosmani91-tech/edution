@@ -181,6 +181,9 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/portal/student', \App\Livewire\StudentPortal::class)->name('portal.student');
 
     Route::get('/marksheet/class', [\App\Http\Controllers\MarksheetController::class, 'classMarksheet'])->name('marksheet.class');
+    Route::get('/marksheet/class-tabulation', [\App\Http\Controllers\MarksheetController::class, 'classTabulation'])->name('marksheet.class-tabulation');
+    Route::get('/exam-seat-plan', \App\Livewire\ExamSeatPlanManager::class)->name('exam-seat-plan.index');
+    Route::get('/exam-seat-plan/print', [\App\Http\Controllers\ExamSeatPlanController::class, 'print'])->name('exam-seat-plan.print');
     Route::get('/marksheet/student/{student}', [\App\Http\Controllers\MarksheetController::class, 'studentMarksheet'])->name('marksheet.student');
     Route::get('/admit-cards/class', [\App\Http\Controllers\AdmitCardController::class, 'classAdmitCards'])->name('admit-cards.class');
     Route::get('/report-cards', \App\Livewire\ReportCardCenter::class)->name('report-cards.index');

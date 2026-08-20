@@ -170,7 +170,7 @@
             @endif
 
             {{-- পরীক্ষা ও ফলাফল --}}
-            <div class="nav-module {{ $activeIf('exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*') }}" x-data="{ open: {{ request()->routeIs(['exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*','exam-seat-plan.*') }}" x-data="{ open: {{ request()->routeIs(['exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*','exam-seat-plan.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3h6l1 3H8l1-3Z"/><rect x="5" y="6" width="14" height="15" rx="2"/><path d="M9 12h6M9 16h6"/></svg></span>
                     <span class="lbl">পরীক্ষা ও ফলাফল</span>
@@ -181,7 +181,8 @@
                     <a href="{{ route('marks-entry.index') }}" class="sub-item {{ request()->routeIs('marks-entry.*') ? 'active' : '' }}">মার্কস এন্ট্রি</a>
                     <a href="{{ route('result-weighting.index') }}" class="sub-item {{ request()->routeIs('result-weighting.*') ? 'active' : '' }}">Result Weighting</a>
                     <a href="{{ route('merit-list.index') }}" class="sub-item {{ request()->routeIs('merit-list.*') ? 'active' : '' }}">GPA/গ্রেড ক্যালকুলেশন</a>
-                    <a href="{{ route('merit-list.index') }}" class="sub-item {{ request()->routeIs('merit-list.*') ? 'active' : '' }}">Merit List/Tabulation</a>
+                    <a href="{{ route('exam-seat-plan.index') }}" class="sub-item {{ request()->routeIs('exam-seat-plan.*') ? 'active' : '' }}">সিট প্ল্যান</a>
+                    <a href="{{ route('report-cards.index') }}" class="sub-item {{ request()->routeIs('report-cards.*') ? 'active' : '' }}">ট্যাবুলেশন শীট</a>
                     <a href="{{ route('report-cards.index') }}" class="sub-item {{ request()->routeIs('report-cards.*') ? 'active' : '' }}">রিপোর্ট কার্ড/মার্কশিট</a>
                     <a href="{{ route('report-cards.index') }}" class="sub-item {{ request()->routeIs('report-cards.*') ? 'active' : '' }}">প্রবেশপত্র (Admit Card)</a>
                     <a href="{{ route('qawmi-grading.index') }}" class="sub-item {{ request()->routeIs('qawmi-grading.*') ? 'active' : '' }}">কওমি গ্রেডিং</a>
