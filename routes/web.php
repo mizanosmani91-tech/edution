@@ -32,6 +32,10 @@ Route::middleware(['auth', 'superadmin', 'password.change'])->domain('panel.edut
 // থেকে অ্যাক্সেসযোগ্য হতে হবে (লগইন পেজ থেকেও ইনস্টল করা যাবে বলে)
 Route::get('/manifest.webmanifest', [\App\Http\Controllers\PwaController::class, 'manifest'])->name('pwa.manifest');
 
+// প্রতিষ্ঠানের পাবলিক প্রোফাইল পেজ (লগইন ছাড়াই দেখা যায়) — Facebook/গুগলে
+// শেয়ার করার জন্য। মূল '/' রুট ইচ্ছাকৃতভাবে বদলানো হয়নি, এটা আলাদা path।
+Route::get('/school-profile', [\App\Http\Controllers\PublicSiteController::class, 'show'])->name('public-site.show');
+
 // ⚠️ প্রতিষ্ঠানের নিজস্ব সাবডোমেইনে (যেমন annazah.edution.xyz) রুট পেজে
 // সাধারণ landing page না দেখিয়ে সরাসরি সেই প্রতিষ্ঠানের লগইন পেজ দেখানো হয়।
 // মূল ডোমেইন (edution.xyz/www) বা অচেনা সাবডোমেইনে যথারীতি landing page।

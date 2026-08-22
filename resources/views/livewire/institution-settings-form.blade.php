@@ -13,6 +13,12 @@
         </div>
     @endif
 
+    {{-- পাবলিক ওয়েবসাইট লিংক --}}
+    <div class="alert-note" style="margin-bottom:16px;">
+        আপনার প্রতিষ্ঠানের একটা পাবলিক পেজ আছে (লগইন ছাড়াই যে কেউ দেখতে পারে — নোটিশ ও প্রতিষ্ঠানের তথ্যসহ), Facebook/গুগলে শেয়ার করার জন্য:
+        <br><a href="{{ url('/school-profile') }}" target="_blank" style="font-weight:700;">{{ request()->getHost() }}/school-profile</a>
+    </div>
+
     {{-- প্রতিষ্ঠান প্রোফাইল --}}
     <div class="settings-section">
         <h3>প্রতিষ্ঠান প্রোফাইল</h3>
