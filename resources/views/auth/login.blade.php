@@ -60,7 +60,7 @@
           init() {
               if (this.demoToken) { this.refreshStatus(); }
           },
-          csrf() { return document.querySelector('meta[name="csrf-token"]').content; },
+          csrf() { return document.querySelector('meta[name=csrf-token]').content; },
           async register() {
               if (!this.reg.name || !this.reg.phone) return;
               this.regBusy = true;
