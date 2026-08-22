@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#5C1A2B">
+<meta name="theme-color" content="#6C5CE7">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <script>
     if ('serviceWorker' in navigator) {
@@ -19,8 +19,8 @@
 <style>
   :root{
     --ink-bg:#17151A; --ink-bg-deep:#0E0D10;
-    --gold:#C9A227; --gold-light:#E7C767;
-    --panel:#221F26; --panel-line:rgba(231,199,103,.14);
+    --gold:#F59E0B; --gold-light:#FBBF24;
+    --panel:#221F26; --panel-line:rgba(251,191,36,.14);
     --text:#EDE7DA; --text-muted:#9A93A0; --text-soft:#6B6572;
     --good:#3E9C74; --bad:#D2604A;
   }
@@ -29,8 +29,8 @@
   body{
     min-height:100vh; font-family:'Hind Siliguri',sans-serif; color:var(--text);
     background:
-      radial-gradient(900px 500px at 15% 0%, rgba(201,162,39,.08), transparent 60%),
-      radial-gradient(700px 500px at 90% 100%, rgba(201,162,39,.05), transparent 55%),
+      radial-gradient(900px 500px at 15% 0%, rgba(245,158,11,.08), transparent 60%),
+      radial-gradient(700px 500px at 90% 100%, rgba(245,158,11,.05), transparent 55%),
       var(--ink-bg-deep);
     display:flex; align-items:center; justify-content:center; padding:28px 16px;
     position:relative; overflow:hidden;
@@ -52,8 +52,8 @@
   .badge-row{ display:flex; justify-content:center; margin-bottom:20px; }
   .shield{
     width:60px;height:60px;border-radius:16px;
-    background:linear-gradient(150deg, rgba(201,162,39,.18), rgba(201,162,39,.04));
-    border:1.5px solid rgba(201,162,39,.35);
+    background:linear-gradient(150deg, rgba(245,158,11,.18), rgba(245,158,11,.04));
+    border:1.5px solid rgba(245,158,11,.35);
     display:flex; align-items:center; justify-content:center;
   }
   .shield svg{ width:28px;height:28px; color:var(--gold-light); }
@@ -69,7 +69,7 @@
     background:rgba(255,255,255,.03); border:1.5px solid rgba(255,255,255,.08); border-radius:11px;
     padding:0 13px; transition:border-color .15s ease, box-shadow .15s ease;
   }
-  .input-shell:focus-within{ border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,162,39,.12); }
+  .input-shell:focus-within{ border-color:var(--gold); box-shadow:0 0 0 3px rgba(245,158,11,.12); }
   .input-shell svg{ width:16px;height:16px; color:var(--text-soft); flex-shrink:0; }
   .input-shell input{
     border:0; outline:0; background:transparent; width:100%;
@@ -89,7 +89,7 @@
     width:100%; border:0; border-radius:11px; padding:13px 16px;
     background:linear-gradient(180deg, var(--gold-light), var(--gold)); color:#241C08;
     font-family:'Hind Siliguri',sans-serif; font-weight:700; font-size:15px; cursor:pointer;
-    box-shadow:0 10px 22px -10px rgba(201,162,39,.5);
+    box-shadow:0 10px 22px -10px rgba(245,158,11,.5);
     display:flex; align-items:center; justify-content:center; gap:8px;
     transition:transform .12s ease;
   }

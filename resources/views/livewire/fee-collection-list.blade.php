@@ -11,7 +11,7 @@
     </div>
 
     @if ($pendingClaimsCount > 0)
-        <div class="info-box" style="background:rgba(201,162,39,.1);border-color:rgba(201,162,39,.35);margin-bottom:16px;">
+        <div class="info-box" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.35);margin-bottom:16px;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
             {{ $pendingClaimsCount }} টি অভিভাবক-জমাকৃত পেমেন্ট দাবি যাচাইয়ের অপেক্ষায় আছে — নিচের তালিকায় হলুদ ব্যাজ দেওয়া সারিগুলো দেখুন।
         </div>

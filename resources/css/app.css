@@ -15,24 +15,24 @@
     --font-sans: 'Hind Siliguri', ui-sans-serif, system-ui, sans-serif;
     --font-serif: 'Tiro Bangla', serif;
 
-    --color-maroon: #5C1A2B;
-    --color-maroon-deep: #3E1120;
-    --color-maroon-light: #6E2136;
-    --color-gold: #C9A227;
-    --color-gold-light: #E7C767;
-    --color-paper: #F7F2E5;
-    --color-paper-deep: #EFE7D3;
-    --color-ink: #2A2320;
-    --color-ink-muted: #7A7061;
-    --color-ink-soft: #AFA593;
-    --color-line: rgba(42,35,32,.09);
+    --color-maroon: #6C5CE7;
+    --color-maroon-deep: #4B3FC4;
+    --color-maroon-light: #8B7CF6;
+    --color-gold: #F59E0B;
+    --color-gold-light: #FBBF24;
+    --color-paper: #F7F8FC;
+    --color-paper-deep: #EEF1FA;
+    --color-ink: #1F2432;
+    --color-ink-muted: #6B7280;
+    --color-ink-soft: #9CA3AF;
+    --color-line: rgba(31,36,50,.08);
 
-    --color-role-admin: #C9A227;
-    --color-role-guardian: #2F6E52;
-    --color-role-teacher: #35528F;
-    --color-role-student: #A65A2E;
-    --color-good: #2F6E52;
-    --color-bad: #A6412E;
+    --color-role-admin: #6C5CE7;
+    --color-role-guardian: #10B981;
+    --color-role-teacher: #3B82F6;
+    --color-role-student: #EC4899;
+    --color-good: #10B981;
+    --color-bad: #EF4444;
 }
 
 body {
@@ -42,5 +42,7 @@ body {
 }
 
 .font-serif-bn {
-    font-family: 'Tiro Bangla', serif;
+    /* v2 থিমে হেডিং আর সেরিফ "খাতা" ফন্টে নয় — ক্লিন, আধুনিক সানস-সেরিফ */
+    font-family: 'Hind Siliguri', ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
 }

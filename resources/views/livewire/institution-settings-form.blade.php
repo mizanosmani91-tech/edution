@@ -7,7 +7,7 @@
     </div>
 
     @if ($saved)
-        <div class="info-box" style="background:rgba(47,110,82,.1);border-color:rgba(47,110,82,.3);color:var(--good);">
+        <div class="info-box" style="background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:var(--good);">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20 6 9 17l-5-5"/></svg>
             সেটিংস সফলভাবে সংরক্ষণ করা হয়েছে।
         </div>

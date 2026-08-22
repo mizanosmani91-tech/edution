@@ -326,7 +326,7 @@
 
             function initCharts() {
                 Chart.defaults.font.family = "'Hind Siliguri', sans-serif";
-                Chart.defaults.color = '#7A7061';
+                Chart.defaults.color = '#6B7280';
 
                 mk('studentAttendanceDonut', {
                     type: 'doughnut',
@@ -342,14 +342,14 @@
 
                 mk('classAttendanceBar', {
                     type: 'bar',
-                    data: { labels: chartData.classAttendance.map(r => r.label), datasets: [{ label: 'উপস্থিতি %', data: chartData.classAttendance.map(r => r.value), backgroundColor: '#C9A227', borderRadius: 6, maxBarThickness: 34 }] },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => 'উপস্থিতি: ' + ctx.parsed.y + '%' } } }, scales: { y: { min: 0, max: 100, grid: { color: 'rgba(42,35,32,.06)' }, ticks: { callback: v => v + '%' } }, x: { grid: { display: false } } } }
+                    data: { labels: chartData.classAttendance.map(r => r.label), datasets: [{ label: 'উপস্থিতি %', data: chartData.classAttendance.map(r => r.value), backgroundColor: '#6C5CE7', borderRadius: 6, maxBarThickness: 34 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => 'উপস্থিতি: ' + ctx.parsed.y + '%' } } }, scales: { y: { min: 0, max: 100, grid: { color: 'rgba(31,36,50,.06)' }, ticks: { callback: v => v + '%' } }, x: { grid: { display: false } } } }
                 });
 
                 mk('attendanceChart', {
                     type: 'line',
-                    data: { labels: chartData.trendLabels, datasets: [{ label: 'উপস্থিতি %', data: chartData.trendData, borderColor: '#5C1A2B', backgroundColor: 'rgba(92,26,43,.1)', tension: .4, fill: true, spanGaps: true, pointRadius: 2, borderWidth: 2.5 }] },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => 'উপস্থিতি: ' + ctx.parsed.y + '%' } } }, scales: { y: { min: 0, max: 100, grid: { color: 'rgba(42,35,32,.06)' }, ticks: { callback: v => v + '%' } }, x: { grid: { display: false } } } }
+                    data: { labels: chartData.trendLabels, datasets: [{ label: 'উপস্থিতি %', data: chartData.trendData, borderColor: '#6C5CE7', backgroundColor: 'rgba(108,92,231,.12)', tension: .4, fill: true, spanGaps: true, pointRadius: 2, borderWidth: 2.5 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => 'উপস্থিতি: ' + ctx.parsed.y + '%' } } }, scales: { y: { min: 0, max: 100, grid: { color: 'rgba(31,36,50,.06)' }, ticks: { callback: v => v + '%' } }, x: { grid: { display: false } } } }
                 });
 
                 mk('feeDonut', {
@@ -362,7 +362,7 @@
                     mk('examGradeBar', {
                         type: 'bar',
                         data: { labels: chartData.examChart.labels, datasets: [{ data: chartData.examChart.data, backgroundColor: chartData.examChart.colors, borderRadius: 6, maxBarThickness: 40 }] },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => ctx.parsed.y + ' জন শিক্ষার্থী' } } }, scales: { y: { grid: { color: 'rgba(42,35,32,.06)' } }, x: { grid: { display: false } } } }
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => ctx.parsed.y + ' জন শিক্ষার্থী' } } }, scales: { y: { grid: { color: 'rgba(31,36,50,.06)' } }, x: { grid: { display: false } } } }
                     });
                 }
             }

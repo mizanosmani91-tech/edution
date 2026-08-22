@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="manifest" href="/manifest.webmanifest">
-    <meta name="theme-color" content="#5C1A2B">
+    <meta name="theme-color" content="#6C5CE7">
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
     <script>
         if ('serviceWorker' in navigator) {
@@ -57,7 +57,7 @@
                 @if (auth()->user()->institution?->logo_path)
                     <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url(auth()->user()->institution->logo_path) }}" alt="{{ auth()->user()->institution->name }}" style="height:100%;width:100%;object-fit:cover;">
                 @else
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#E7C767" stroke-width="1.6"><path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/><path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#6C5CE7" stroke-width="1.6"><path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/><path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/></svg>
                 @endif
             </div>
             <div class="sidebar-brand">

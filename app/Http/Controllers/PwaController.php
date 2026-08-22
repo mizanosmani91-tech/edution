@@ -39,7 +39,7 @@ class PwaController extends Controller
             $icons[] = ['src' => '/icons/icon-512-maskable.png', 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'maskable'];
         }
 
-        $themeColor = $institution?->settings?->theme_primary_color ?: '#5C1A2B';
+        $themeColor = $institution?->settings?->theme_primary_color ?: '#6C5CE7';
 
         return response()->json([
             'name' => $name,
@@ -48,7 +48,7 @@ class PwaController extends Controller
             'start_url' => '/',
             'scope' => '/',
             'display' => 'standalone',
-            'background_color' => '#F7F2E5',
+            'background_color' => '#F7F8FC',
             'theme_color' => $themeColor,
             'orientation' => 'portrait-primary',
             'lang' => 'bn',

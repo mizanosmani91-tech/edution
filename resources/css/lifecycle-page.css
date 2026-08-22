@@ -11,13 +11,13 @@
 .lifecycle-page .stud-list{max-height:520px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
 .lifecycle-page .stud-row{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:10px;cursor:pointer;}
 .lifecycle-page .stud-row:hover{background:var(--paper-deep);}
-.lifecycle-page .stud-row.selected-preview{background:rgba(201,162,39,.12);}
+.lifecycle-page .stud-row.selected-preview{background:rgba(245,158,11,.12);}
 .lifecycle-page .stud-row .ini{width:32px;height:32px;border-radius:50%;background:color-mix(in srgb, var(--student) 16%, white);color:var(--student);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .lifecycle-page .stud-row .info{flex:1;min-width:0;}
 .lifecycle-page .stud-row .nm{font-size:12.8px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .lifecycle-page .stud-row .ds{font-size:10.8px;color:var(--ink-soft);}
 
-.lifecycle-page .cert-sheet{background:#fff;border:1px solid var(--line);border-radius:16px;padding:36px 40px;position:relative;box-shadow:0 4px 20px rgba(42,35,32,.06);}
+.lifecycle-page .cert-sheet{background:#fff;border:1px solid var(--line);border-radius:16px;padding:36px 40px;position:relative;box-shadow:0 4px 20px rgba(31,36,50,.06);}
 .lifecycle-page .cert-sheet::before{content:'';position:absolute;inset:10px;border:2px solid var(--gold);border-radius:8px;pointer-events:none;}
 .lifecycle-page .cert-head{text-align:center;margin-bottom:22px;}
 .lifecycle-page .cert-head h1{font-family:'Tiro Bangla',serif;font-size:22px;color:var(--maroon);margin:0 0 4px;}

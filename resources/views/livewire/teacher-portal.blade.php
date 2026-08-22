@@ -27,10 +27,10 @@
             </p>
 
             @if ($checkInError)
-                <div class="info-box" style="background:rgba(166,65,46,.08);border-color:rgba(166,65,46,.3);color:var(--bad);margin-bottom:14px;">{{ $checkInError }}</div>
+                <div class="info-box" style="background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3);color:var(--bad);margin-bottom:14px;">{{ $checkInError }}</div>
             @endif
             @if ($checkInSuccess)
-                <div class="info-box" style="background:rgba(47,110,82,.1);border-color:rgba(47,110,82,.3);color:var(--good);margin-bottom:14px;">{{ $checkInSuccess }}</div>
+                <div class="info-box" style="background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:var(--good);margin-bottom:14px;">{{ $checkInSuccess }}</div>
             @endif
 
             <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:center;">

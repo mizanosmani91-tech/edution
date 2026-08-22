@@ -36,8 +36,8 @@
         </style>
     @endif
 </head>
-<body class="flex min-h-screen items-center justify-center bg-[radial-gradient(1200px_700px_at_15%_10%,#EFE7D3_0%,transparent_60%),radial-gradient(1000px_600px_at_90%_90%,#E7DEC5_0%,transparent_55%),#E5DCC5] p-4">
-<div class="w-full max-w-[440px] rounded-[22px] bg-white p-9 shadow-[0_30px_60px_-20px_rgba(60,30,20,.35)]">
+<body class="flex min-h-screen items-center justify-center bg-[radial-gradient(1200px_700px_at_15%_10%,#EEF1FA_0%,transparent_60%),radial-gradient(1000px_600px_at_90%_90%,#E7DEC5_0%,transparent_55%),#E5DCC5] p-4">
+<div class="w-full max-w-[440px] rounded-[22px] bg-white p-9 shadow-[0_30px_60px_-20px_rgba(31,36,50,.35)]">
 
     <div class="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full overflow-hidden" style="background:var(--color-maroon);">
         @if ($__inst?->logo_path)

@@ -52,13 +52,13 @@
 
 .profile-page .short-actions{display:flex;flex-direction:column;gap:8px;}
 .profile-page .short-actions button, .profile-page .short-actions a{width:100%;border-radius:10px;padding:9px 10px;font-size:12.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;border:0;}
-.profile-page .sa-primary{background:linear-gradient(180deg,var(--gold-light),var(--gold));color:#3E1120;}
+.profile-page .sa-primary{background:linear-gradient(180deg,var(--gold-light),var(--gold));color:#fff;}
 .profile-page .sa-ghost{background:#fff;border:1.4px solid var(--line) !important;color:var(--ink-muted);}
 .profile-page .sa-ghost:hover{border-color:var(--ink-soft) !important;color:var(--ink);}
 .profile-page .short-actions svg{width:14px;height:14px;}
 
 .profile-page .tabs-col{min-width:0;}
-.profile-page .tab-bar{position:sticky;top:0;z-index:4;display:flex;gap:5px;overflow-x:auto;background:rgba(247,242,229,.92);backdrop-filter:blur(4px);padding:6px;border-radius:13px;border:1px solid var(--line);margin-bottom:18px;}
+.profile-page .tab-bar{position:sticky;top:0;z-index:4;display:flex;gap:5px;overflow-x:auto;background:rgba(247,248,252,.92);backdrop-filter:blur(4px);padding:6px;border-radius:13px;border:1px solid var(--line);margin-bottom:18px;}
 .profile-page .tab-bar .tab-btn{flex-shrink:0;padding:9px 15px;border-radius:9px;border:0;background:none;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-muted);white-space:nowrap;}
 .profile-page .tab-bar .tab-btn:hover{color:var(--ink);background:#fff;}
 .profile-page .tab-bar .tab-btn.active{background:var(--accent,var(--teacher));color:#fff;}

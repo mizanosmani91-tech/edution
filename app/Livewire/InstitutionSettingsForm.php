@@ -16,8 +16,8 @@ class InstitutionSettingsForm extends Component
     public bool $consecutivePeriodBlocking = true;
 
     // ব্র্যান্ডিং
-    public string $themePrimaryColor = '#5C1A2B';
-    public string $themeAccentColor = '#C9A227';
+    public string $themePrimaryColor = '#6C5CE7';
+    public string $themeAccentColor = '#F59E0B';
 
     // চেক-ইন/চেক-আউট geofence
     public ?string $institutionLatitude = null;
@@ -38,8 +38,8 @@ class InstitutionSettingsForm extends Component
         $this->institutionAddress = $institution->address ?? '';
 
         $this->consecutivePeriodBlocking = (bool) ($settings->consecutive_period_blocking ?? true);
-        $this->themePrimaryColor = $settings->theme_primary_color ?? '#5C1A2B';
-        $this->themeAccentColor = $settings->theme_accent_color ?? '#C9A227';
+        $this->themePrimaryColor = $settings->theme_primary_color ?? '#6C5CE7';
+        $this->themeAccentColor = $settings->theme_accent_color ?? '#F59E0B';
 
         $this->institutionLatitude = $institution->latitude !== null ? (string) $institution->latitude : null;
         $this->institutionLongitude = $institution->longitude !== null ? (string) $institution->longitude : null;

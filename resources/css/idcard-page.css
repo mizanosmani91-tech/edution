@@ -2,7 +2,7 @@
    .idcard-page — আইডি কার্ড জেনারেশন (edu-id-card-generation.html)
    scoped, .card/.row মতো জেনেরিক নাম বাকি অ্যাপ থেকে আলাদা রাখতে
    ========================================================== */
-.idcard-page{ --theme:#5C1A2B; --theme-deep:#3E1120; }
+.idcard-page{ --theme:#6C5CE7; --theme-deep:#4B3FC4; }
 
 .idcard-page .idc-grid{display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start;}
 @media (max-width:1080px){.idcard-page .idc-grid{grid-template-columns:1fr;}.idcard-page .picker-card{position:static;}}
@@ -17,7 +17,7 @@
 .idcard-page .stud-list{max-height:520px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
 .idcard-page .stud-row{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:10px;cursor:pointer;}
 .idcard-page .stud-row:hover{background:var(--paper-deep);}
-.idcard-page .stud-row.selected-preview{background:rgba(201,162,39,.12);}
+.idcard-page .stud-row.selected-preview{background:rgba(245,158,11,.12);}
 .idcard-page .stud-row .ini{width:32px;height:32px;border-radius:50%;background:color-mix(in srgb, var(--student) 16%, white);color:var(--student);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .idcard-page .stud-row .info{flex:1;min-width:0;}
 .idcard-page .stud-row .nm{font-size:12.8px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -25,10 +25,10 @@
 
 .idcard-page .template-strip{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
 .idcard-page .tpl-opt{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:8px 16px;font-size:12.5px;font-weight:700;color:var(--ink-muted);cursor:pointer;}
-.idcard-page .tpl-opt.active{border-color:var(--gold);background:rgba(201,162,39,.1);color:var(--ink);}
+.idcard-page .tpl-opt.active{border-color:var(--gold);background:rgba(245,158,11,.1);color:var(--ink);}
 
 .idcard-page .preview-wrap{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start;margin-bottom:22px;}
-.idcard-page .id-card{width:300px;height:475px;border-radius:16px;position:relative;overflow:hidden;box-shadow:0 16px 40px -14px rgba(42,35,32,.35);font-family:'Hind Siliguri',sans-serif;background:#fff;flex-shrink:0;}
+.idcard-page .id-card{width:300px;height:475px;border-radius:16px;position:relative;overflow:hidden;box-shadow:0 16px 40px -14px rgba(31,36,50,.35);font-family:'Hind Siliguri',sans-serif;background:#fff;flex-shrink:0;}
 @media (max-width:860px){.idcard-page .id-card{width:260px;height:412px;}}
 
 .idcard-page .idc-top{background:linear-gradient(135deg,var(--theme) 0%, var(--theme-deep) 100%);padding:16px 16px 46px;color:#fff;position:relative;}

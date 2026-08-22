@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#5C1A2B">
+<meta name="theme-color" content="#6C5CE7">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <script>
     if ('serviceWorker' in navigator) {
@@ -18,12 +18,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --cover-maroon:#5C1A2B; --cover-maroon-deep:#3E1120;
-    --gold:#C9A227; --gold-light:#E7C767;
-    --paper:#F7F2E5; --paper-deep:#EFE7D3; --card:#FFFFFF;
-    --ink:#2A2320; --ink-muted:#7A7061; --ink-soft:#AFA593;
-    --line:rgba(42,35,32,.10);
-    --good:#2F6E52; --bad:#A6412E;
+    --cover-maroon:#6C5CE7; --cover-maroon-deep:#4B3FC4;
+    --gold:#F59E0B; --gold-light:#FBBF24;
+    --paper:#F7F8FC; --paper-deep:#EEF1FA; --card:#FFFFFF;
+    --ink:#1F2432; --ink-muted:#6B7280; --ink-soft:#9CA3AF;
+    --line:rgba(31,36,50,.10);
+    --good:#10B981; --bad:#EF4444;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -31,7 +31,7 @@
   a{color:inherit; text-decoration:none;} button{font-family:inherit;}
   ::-webkit-scrollbar{width:8px;} ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:8px;}
 
-  .topbar{ display:flex; align-items:center; justify-content:space-between; padding:18px 30px; border-bottom:1px solid var(--line); background:rgba(247,242,229,.9); backdrop-filter:blur(6px); position:sticky; top:0; z-index:10; }
+  .topbar{ display:flex; align-items:center; justify-content:space-between; padding:18px 30px; border-bottom:1px solid var(--line); background:rgba(247,248,252,.9); backdrop-filter:blur(6px); position:sticky; top:0; z-index:10; }
   .brand{ display:flex; align-items:center; gap:10px; }
   .brand-emblem{ width:34px;height:34px;border-radius:50%; background:var(--cover-maroon); display:flex;align-items:center;justify-content:center; flex-shrink:0; }
   .brand-emblem svg{ width:17px;height:17px; }
@@ -48,7 +48,7 @@
   .steps-bar{ display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:34px; flex-wrap:wrap; }
   .step-pill{ display:flex; align-items:center; gap:8px; }
   .step-circle{ width:30px;height:30px;border-radius:50%; background:#fff; border:1.5px solid var(--line); display:flex;align-items:center;justify-content:center; font-size:13px; font-weight:700; color:var(--ink-soft); flex-shrink:0; }
-  .step-pill.active .step-circle{ background:var(--gold); border-color:var(--gold); color:#3E1120; }
+  .step-pill.active .step-circle{ background:var(--gold); border-color:var(--gold); color:#4B3FC4; }
   .step-pill.done .step-circle{ background:var(--good); border-color:var(--good); color:#fff; }
   .step-pill .lbl{ font-size:12.5px; font-weight:700; color:var(--ink-soft); }
   .step-pill.active .lbl, .step-pill.done .lbl{ color:var(--ink); }
@@ -67,9 +67,9 @@
   .type-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px; }
   .type-card{ border:1.6px solid var(--line); border-radius:14px; padding:18px 14px; text-align:center; cursor:pointer; transition:all .15s ease; }
   .type-card:hover{ border-color:var(--ink-soft); }
-  .type-card.active{ border-color:var(--gold); background:rgba(201,162,39,.08); }
+  .type-card.active{ border-color:var(--gold); background:rgba(245,158,11,.08); }
   .type-ic{ width:44px;height:44px;border-radius:12px; margin:0 auto 10px; display:flex;align-items:center;justify-content:center; background:var(--paper-deep); }
-  .type-card.active .type-ic{ background:rgba(201,162,39,.2); }
+  .type-card.active .type-ic{ background:rgba(245,158,11,.2); }
   .type-ic svg{ width:22px;height:22px; color:var(--cover-maroon); }
   .type-card .t{ font-size:13.5px; font-weight:700; }
 
@@ -83,7 +83,7 @@
     font-size:13.5px; font-family:inherit; color:var(--ink); background:#fff; outline:0;
     transition:border-color .15s ease, box-shadow .15s ease;
   }
-  .field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,162,39,.15); }
+  .field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--gold); box-shadow:0 0 0 3px rgba(245,158,11,.15); }
   .field .err{ font-size:11px; color:var(--bad); margin-top:5px; }
   .hint{ font-size:11px; color:var(--ink-soft); margin-top:5px; }
   .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
@@ -96,8 +96,8 @@
 
   .plan-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:10px; }
   .plan-card{ border:1.6px solid var(--line); border-radius:16px; padding:20px 18px; cursor:pointer; position:relative; }
-  .plan-card.active{ border-color:var(--gold); background:rgba(201,162,39,.06); box-shadow:0 10px 24px -14px rgba(201,162,39,.5); }
-  .plan-badge{ position:absolute; top:-11px; right:16px; background:var(--gold); color:#3E1120; font-size:10px; font-weight:700; padding:4px 12px; border-radius:20px; }
+  .plan-card.active{ border-color:var(--gold); background:rgba(245,158,11,.06); box-shadow:0 10px 24px -14px rgba(245,158,11,.5); }
+  .plan-badge{ position:absolute; top:-11px; right:16px; background:var(--gold); color:#4B3FC4; font-size:10px; font-weight:700; padding:4px 12px; border-radius:20px; }
   .plan-card h3{ font-family:'Tiro Bangla',serif; font-size:16.5px; margin:0 0 4px; }
   .plan-card .desc{ font-size:11.5px; color:var(--ink-muted); margin-bottom:12px; }
   .plan-price{ font-family:'Tiro Bangla',serif; font-size:24px; color:var(--cover-maroon); margin-bottom:10px; }
@@ -117,7 +117,7 @@
   .avail-msg.bad{ color:var(--bad); }
   .avail-msg svg{ width:14px;height:14px; }
 
-  .secret-box{ display:flex; gap:10px; background:rgba(201,162,39,.09); border:1px solid rgba(201,162,39,.3); border-radius:12px; padding:14px 16px; font-size:12.5px; color:#7A5E10; margin-bottom:20px; }
+  .secret-box{ display:flex; gap:10px; background:rgba(245,158,11,.09); border:1px solid rgba(245,158,11,.3); border-radius:12px; padding:14px 16px; font-size:12.5px; color:#7A5E10; margin-bottom:20px; }
   .secret-box svg{ width:18px;height:18px; flex-shrink:0; margin-top:1px; }
 
   .terms-row{ display:flex; align-items:flex-start; gap:9px; font-size:12.5px; color:var(--ink-muted); margin:18px 0; }
@@ -128,12 +128,12 @@
   .btn-ghost, .btn-primary{ border-radius:11px; padding:12px 22px; font-size:14px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:8px; border:0; }
   .btn-ghost{ background:#fff; border:1.5px solid var(--line); color:var(--ink-muted); }
   .btn-ghost:hover{ border-color:var(--ink-soft); color:var(--ink); }
-  .btn-primary{ background:linear-gradient(180deg, var(--gold-light), var(--gold)); color:#3E1120; box-shadow:0 8px 18px -8px rgba(201,162,39,.55); }
+  .btn-primary{ background:linear-gradient(180deg, var(--gold-light), var(--gold)); color:#4B3FC4; box-shadow:0 8px 18px -8px rgba(245,158,11,.55); }
   .btn-primary:hover{ filter:brightness(1.03); }
   .btn-primary svg, .btn-ghost svg{ width:16px;height:16px; }
 
   .success-wrap{ text-align:center; padding:20px 10px 10px; }
-  .success-ic{ width:78px;height:78px;border-radius:50%; background:rgba(47,110,82,.12); display:flex;align-items:center;justify-content:center; margin:0 auto 22px; }
+  .success-ic{ width:78px;height:78px;border-radius:50%; background:rgba(16,185,129,.12); display:flex;align-items:center;justify-content:center; margin:0 auto 22px; }
   .success-ic svg{ width:38px;height:38px; color:var(--good); }
   .success-wrap h2{ font-family:'Tiro Bangla',serif; font-size:24px; margin:0 0 8px; }
   .success-wrap p{ font-size:13.5px; color:var(--ink-muted); max-width:460px; margin:0 auto 26px; line-height:1.7; }
@@ -158,7 +158,7 @@
 
 <div class="topbar">
   <div class="brand">
-    <div class="brand-emblem"><svg viewBox="0 0 24 24" fill="none" stroke="#E7C767" stroke-width="1.6"><path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/><path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/></svg></div>
+    <div class="brand-emblem"><svg viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="1.6"><path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/><path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/></svg></div>
     <div class="name">EDUTION</div>
   </div>
   <div class="topbar-link">ইতিমধ্যে অ্যাকাউন্ট আছে? <b><a href="{{ route('login') }}">লগইন করুন</a></b></div>

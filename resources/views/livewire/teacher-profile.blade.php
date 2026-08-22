@@ -305,14 +305,14 @@
             function draw() {
                 canvas.dataset.rendered = '1';
                 Chart.defaults.font.family = "'Hind Siliguri', sans-serif";
-                Chart.defaults.color = '#7A7061';
+                Chart.defaults.color = '#6B7280';
                 new Chart(canvas, {
                     type: 'line',
                     data: {
                         labels: trend.map(t => t.label),
-                        datasets: [{ data: trend.map(t => t.pct), borderColor: '#35528F', backgroundColor: 'rgba(53,82,143,.12)', tension: .4, fill: true, pointRadius: 0, borderWidth: 2.5, spanGaps: true }]
+                        datasets: [{ data: trend.map(t => t.pct), borderColor: '#3B82F6', backgroundColor: 'rgba(59,130,246,.12)', tension: .4, fill: true, pointRadius: 0, borderWidth: 2.5, spanGaps: true }]
                     },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 100, grid: { color: 'rgba(42,35,32,.06)' }, ticks: { callback: v => v + '%' } }, x: { grid: { display: false } } } }
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 100, grid: { color: 'rgba(31,36,50,.06)' }, ticks: { callback: v => v + '%' } }, x: { grid: { display: false } } } }
                 });
             }
             if (window.Chart) { draw(); } else {

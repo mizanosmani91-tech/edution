@@ -35,8 +35,8 @@
         </style>
     @endif
 </head>
-<body class="flex min-h-screen items-center justify-center bg-[radial-gradient(1200px_700px_at_15%_10%,#EFE7D3_0%,transparent_60%),radial-gradient(1000px_600px_at_90%_90%,#E7DEC5_0%,transparent_55%),#E5DCC5] p-4">
-<div class="w-full max-w-[440px] rounded-[22px] bg-white p-9 shadow-[0_30px_60px_-20px_rgba(60,30,20,.35)]">
+<body class="flex min-h-screen items-center justify-center bg-[radial-gradient(1200px_700px_at_15%_10%,#EEF1FA_0%,transparent_60%),radial-gradient(1000px_600px_at_90%_90%,#E7DEC5_0%,transparent_55%),#E5DCC5] p-4">
+<div class="w-full max-w-[440px] rounded-[22px] bg-white p-9 shadow-[0_30px_60px_-20px_rgba(31,36,50,.35)]">
 
     <div class="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full overflow-hidden" style="background:var(--color-maroon);">
         @if ($institution?->logo_path)
@@ -49,8 +49,8 @@
         @endif
     </div>
 
-    <div id="formError" class="mb-4 hidden rounded-lg border border-[rgba(166,65,46,.3)] bg-[rgba(166,65,46,.08)] px-3.5 py-2.5 text-[13px] text-[var(--color-bad)]"></div>
-    <div id="infoMessage" class="mb-4 hidden rounded-lg border border-[rgba(47,110,82,.3)] bg-[rgba(47,110,82,.08)] px-3.5 py-2.5 text-center text-[12.5px] text-[var(--color-good)]"></div>
+    <div id="formError" class="mb-4 hidden rounded-lg border border-[rgba(239,68,68,.3)] bg-[rgba(239,68,68,.08)] px-3.5 py-2.5 text-[13px] text-[var(--color-bad)]"></div>
+    <div id="infoMessage" class="mb-4 hidden rounded-lg border border-[rgba(16,185,129,.3)] bg-[rgba(16,185,129,.08)] px-3.5 py-2.5 text-center text-[12.5px] text-[var(--color-good)]"></div>
 
     {{-- ধাপ ১: ইমেইল --}}
     <div id="stepEmail">
@@ -103,7 +103,7 @@
 
     {{-- ধাপ ৩: সফল --}}
     <div id="stepDone" class="hidden text-center">
-        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full" style="background:rgba(47,110,82,.12);">
+        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full" style="background:rgba(16,185,129,.12);">
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-good)" stroke-width="1.8" class="h-6 w-6"><path d="M20 6 9 17l-5-5"/></svg>
         </div>
         <h1 class="text-[21px] font-bold text-[var(--color-ink)]">পাসওয়ার্ড পরিবর্তন হয়েছে</h1>

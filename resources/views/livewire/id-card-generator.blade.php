@@ -1,4 +1,4 @@
-<div class="idcard-page" x-data="{ showBlood: true, showQr: true, showPhone: true, showEn: true, theme: '#5C1A2B', themeDeep: '#3E1120' }" :style="'--theme:'+theme+';--theme-deep:'+themeDeep">
+<div class="idcard-page" x-data="{ showBlood: true, showQr: true, showPhone: true, showEn: true, theme: '#6C5CE7', themeDeep: '#4B3FC4' }" :style="'--theme:'+theme+';--theme-deep:'+themeDeep">
     <div class="page-head">
         <div>
             <div style="font-size:12px;color:var(--ink-soft);margin-bottom:2px;">শিক্ষার্থী / আইডি কার্ড</div>
@@ -91,7 +91,7 @@
                             </div>
                             <div class="idc-qr" x-show="showQr">
                                 <svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#fff"/>
-                                    <g fill="#2A2320">
+                                    <g fill="#1F2432">
                                         <rect x="6" y="6" width="24" height="24"/><rect x="12" y="12" width="12" height="12" fill="#fff"/>
                                         <rect x="70" y="6" width="24" height="24"/><rect x="76" y="12" width="12" height="12" fill="#fff"/>
                                         <rect x="6" y="70" width="24" height="24"/><rect x="12" y="76" width="12" height="12" fill="#fff"/>
@@ -119,10 +119,10 @@
                     </div>
                     <div class="color-row">
                         <span class="lbl">থিম রঙ:</span>
-                        <div class="color-dot" :class="{active: theme==='#5C1A2B'}" style="background:#5C1A2B" @click="theme='#5C1A2B';themeDeep='#3E1120'"></div>
-                        <div class="color-dot" :class="{active: theme==='#35528F'}" style="background:#35528F" @click="theme='#35528F';themeDeep='#1F3459'"></div>
-                        <div class="color-dot" :class="{active: theme==='#2F6E52'}" style="background:#2F6E52" @click="theme='#2F6E52';themeDeep='#1B4433'"></div>
-                        <div class="color-dot" :class="{active: theme==='#A65A2E'}" style="background:#A65A2E" @click="theme='#A65A2E';themeDeep='#733D1D'"></div>
+                        <div class="color-dot" :class="{active: theme==='#6C5CE7'}" style="background:#6C5CE7" @click="theme='#6C5CE7';themeDeep='#4B3FC4'"></div>
+                        <div class="color-dot" :class="{active: theme==='#3B82F6'}" style="background:#3B82F6" @click="theme='#3B82F6';themeDeep='#1F3459'"></div>
+                        <div class="color-dot" :class="{active: theme==='#10B981'}" style="background:#10B981" @click="theme='#10B981';themeDeep='#1B4433'"></div>
+                        <div class="color-dot" :class="{active: theme==='#EC4899'}" style="background:#EC4899" @click="theme='#EC4899';themeDeep='#733D1D'"></div>
                     </div>
                 </div>
 

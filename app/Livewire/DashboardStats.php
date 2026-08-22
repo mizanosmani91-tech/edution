@@ -94,7 +94,7 @@ class DashboardStats extends Component
         $attendanceDonut = [
             'labels' => ['উপস্থিত', 'অনুপস্থিত', 'দেরিতে', 'ছুটি'],
             'data' => [$presentToday, $absentToday, $lateToday, $leaveToday],
-            'colors' => ['#2F6E52', '#A6412E', '#C9A227', '#35528F'],
+            'colors' => ['#10B981', '#EF4444', '#F59E0B', '#3B82F6'],
         ];
 
         // ===== ক্লাস-ভিত্তিক আজকের হাজিরা % =====
@@ -118,7 +118,7 @@ class DashboardStats extends Component
         $feeChart = [
             'labels' => ['আদায়কৃত', 'বকেয়া'],
             'data' => [round((float) $monthCollection), round((float) $totalDue)],
-            'colors' => ['#2F6E52', '#A6412E'],
+            'colors' => ['#10B981', '#EF4444'],
         ];
 
         // ===== পরীক্ষা: সাম্প্রতিক প্রকাশিত পরীক্ষার গ্রেড বিভাজন =====
@@ -140,7 +140,7 @@ class DashboardStats extends Component
                 'exam_name' => $latestExam->name,
                 'labels' => array_keys($bands),
                 'data' => array_values($bands),
-                'colors' => ['#2F6E52', '#35528F', '#C9A227', '#A65A2E', '#A6412E'],
+                'colors' => ['#10B981', '#3B82F6', '#F59E0B', '#EC4899', '#EF4444'],
             ];
         }
 
@@ -149,7 +149,7 @@ class DashboardStats extends Component
         $staffDonut = [
             'labels' => ['উপস্থিত', 'অনুপস্থিত', 'দেরিতে'],
             'data' => [$staffToday->where('status', 'present')->count(), $staffToday->where('status', 'absent')->count(), $staffToday->where('status', 'late')->count()],
-            'colors' => ['#2F6E52', '#A6412E', '#C9A227'],
+            'colors' => ['#10B981', '#EF4444', '#F59E0B'],
         ];
 
         // ===== মাসের সেরা =====

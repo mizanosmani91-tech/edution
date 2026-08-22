@@ -27,7 +27,7 @@
     <div class="profile-grid">
         {{-- SHORT DETAILS CARD --}}
         <aside class="short-card">
-            <div class="short-banner" style="background:linear-gradient(120deg,#6E2136,var(--cover-maroon-deep));"></div>
+            <div class="short-banner" style="background:linear-gradient(120deg,#8B7CF6,var(--cover-maroon-deep));"></div>
             <div class="short-photo-wrap">
                 <div class="short-photo" style="background:linear-gradient(135deg,var(--gold-light),var(--gold));color:var(--cover-maroon-deep);">
                     @if ($student->photo_path)

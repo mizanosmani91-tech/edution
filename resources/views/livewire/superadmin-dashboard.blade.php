@@ -57,8 +57,8 @@
             <div class="chart-box" wire:ignore>
               <canvas x-init="
                 if ($el.chartInstance) { $el.chartInstance.destroy(); }
-                Chart.defaults.font.family = &quot;'Hind Siliguri', sans-serif&quot;; Chart.defaults.color = '#7A7061';
-                $el.chartInstance = new Chart($el, { type:'line', data:{ labels: @js($growthMonths['labels']), datasets:[{ data: @js($growthMonths['data']), borderColor:'#C9A227', backgroundColor:'rgba(201,162,39,.14)', tension:.4, fill:true, pointRadius:0, borderWidth:2.5 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{grid:{color:'rgba(42,35,32,.06)'}}, x:{grid:{display:false}} } } });
+                Chart.defaults.font.family = &quot;'Hind Siliguri', sans-serif&quot;; Chart.defaults.color = '#6B7280';
+                $el.chartInstance = new Chart($el, { type:'line', data:{ labels: @js($growthMonths['labels']), datasets:[{ data: @js($growthMonths['data']), borderColor:'#F59E0B', backgroundColor:'rgba(245,158,11,.14)', tension:.4, fill:true, pointRadius:0, borderWidth:2.5 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{grid:{color:'rgba(31,36,50,.06)'}}, x:{grid:{display:false}} } } });
               "></canvas>
             </div>
           </div>
@@ -68,12 +68,12 @@
             <div class="chart-box" style="height:190px;" wire:ignore>
               <canvas x-init="
                 if ($el.chartInstance) { $el.chartInstance.destroy(); }
-                $el.chartInstance = new Chart($el, { type:'doughnut', data:{ labels:['পোস্টপেইড','প্রিপেইড'], datasets:[{ data: @js($planDistribution), backgroundColor:['#35528F','#C9A227'], borderWidth:3, borderColor:'#fff' }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'68%', plugins:{legend:{display:false}} } });
+                $el.chartInstance = new Chart($el, { type:'doughnut', data:{ labels:['পোস্টপেইড','প্রিপেইড'], datasets:[{ data: @js($planDistribution), backgroundColor:['#3B82F6','#F59E0B'], borderWidth:3, borderColor:'#fff' }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'68%', plugins:{legend:{display:false}} } });
               "></canvas>
             </div>
             <div class="legend">
-              <span><i style="background:#35528F"></i>পোস্টপেইড (মাসিক, ছাত্রসংখ্যা টায়ার)</span>
-              <span><i style="background:#C9A227"></i>প্রিপেইড (৳৫/ছাত্র, ব্যালেন্স)</span>
+              <span><i style="background:#3B82F6"></i>পোস্টপেইড (মাসিক, ছাত্রসংখ্যা টায়ার)</span>
+              <span><i style="background:#F59E0B"></i>প্রিপেইড (৳৫/ছাত্র, ব্যালেন্স)</span>
             </div>
           </div>
         </div>
@@ -213,7 +213,7 @@
             <tbody>
               @forelse ($institutions as $inst)
                 <tr wire:key="inst-{{ $inst->id }}">
-                  <td><div class="inst-cell"><div class="ini" style="background:#5C1A2B">{{ mb_substr($inst->name, 0, 1) }}</div><div><div class="nm">{{ $inst->name }}</div><div class="sub">{{ $inst->slug }}.edution.xyz</div></div></div></td>
+                  <td><div class="inst-cell"><div class="ini" style="background:#6C5CE7">{{ mb_substr($inst->name, 0, 1) }}</div><div><div class="nm">{{ $inst->name }}</div><div class="sub">{{ $inst->slug }}.edution.xyz</div></div></div></td>
                   <td>{{ ['school'=>'স্কুল','madrasa'=>'মাদরাসা','kindergarten'=>'কিন্ডারগার্টেন'][$inst->institution_type] ?? '—' }}</td>
                   <td>
                       @if ($inst->isPrepaid())
@@ -253,8 +253,8 @@
           <div class="chart-box" wire:ignore>
             <canvas x-init="
               if ($el.chartInstance) { $el.chartInstance.destroy(); }
-              Chart.defaults.font.family = &quot;'Hind Siliguri', sans-serif&quot;; Chart.defaults.color = '#7A7061';
-              $el.chartInstance = new Chart($el, { type:'bar', data:{ labels: @js($revenueMonths['labels']), datasets:[{ data: @js($revenueMonths['data']), backgroundColor:'#5C1A2B', borderRadius:6, maxBarThickness:28 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{grid:{color:'rgba(42,35,32,.06)'}}, x:{grid:{display:false}} } } });
+              Chart.defaults.font.family = &quot;'Hind Siliguri', sans-serif&quot;; Chart.defaults.color = '#6B7280';
+              $el.chartInstance = new Chart($el, { type:'bar', data:{ labels: @js($revenueMonths['labels']), datasets:[{ data: @js($revenueMonths['data']), backgroundColor:'#6C5CE7', borderRadius:6, maxBarThickness:28 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{grid:{color:'rgba(31,36,50,.06)'}}, x:{grid:{display:false}} } } });
             "></canvas>
           </div>
         </div>
@@ -680,7 +680,7 @@
               </div>
             </div>
 
-            <div class="modal-sec" style="border:1.5px solid rgba(166,65,46,.3);border-radius:12px;padding:14px 16px;background:rgba(166,65,46,.04);">
+            <div class="modal-sec" style="border:1.5px solid rgba(239,68,68,.3);border-radius:12px;padding:14px 16px;background:rgba(239,68,68,.04);">
               <h4 style="color:var(--bad);">⚠ বিপজ্জনক অঞ্চল</h4>
               <p style="font-size:12.5px;color:var(--ink-muted);margin:4px 0 10px;line-height:1.7;">
                 এই প্রতিষ্ঠান রিসাইকেল বিনে সরানো হবে — subdomain সাথে সাথে বন্ধ হয়ে যাবে, কিন্তু সব ডেটা (শিক্ষার্থী, শিক্ষক, হাজিরা, ফি) অক্ষত থাকবে। ভুল করে সরালেও রিসাইকেল বিন থেকে ফিরিয়ে আনা যাবে।
@@ -723,7 +723,7 @@
             <button class="modal-close" wire:click="closePurgeModal" type="button">&times;</button>
           </div>
           <div class="modal-body">
-            <div class="modal-sec" style="border:1.5px solid rgba(166,65,46,.3);border-radius:12px;padding:14px 16px;background:rgba(166,65,46,.04);">
+            <div class="modal-sec" style="border:1.5px solid rgba(239,68,68,.3);border-radius:12px;padding:14px 16px;background:rgba(239,68,68,.04);">
               <p style="font-size:12.5px;color:var(--ink-muted);margin:0 0 10px;line-height:1.7;">
                 এই প্রতিষ্ঠান ও এর সকল ডেটা (শিক্ষার্থী, শিক্ষক, হাজিরা, ফি, পরীক্ষা — সবকিছু) <b>স্থায়ীভাবে</b> ডিলিট হয়ে যাবে। এটা আর ফেরানো যাবে না। নিশ্চিত করতে নিচে স্লাগ (<b>{{ $purgeInst->slug }}</b>) হুবুহু টাইপ করুন।
               </p>

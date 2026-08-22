@@ -16,7 +16,7 @@
                 <thead><tr><th>বিষয়</th><th>অগ্রাধিকার</th><th>স্ট্যাটাস</th><th>তারিখ</th></tr></thead>
                 <tbody>
                     @forelse ($tickets as $t)
-                        <tr wire:key="tk-{{ $t->id }}" wire:click="loadTicket('{{ $t->id }}')" style="cursor:pointer; {{ $activeTicket && $activeTicket->id === $t->id ? 'background:rgba(201,162,39,.06);' : '' }}">
+                        <tr wire:key="tk-{{ $t->id }}" wire:click="loadTicket('{{ $t->id }}')" style="cursor:pointer; {{ $activeTicket && $activeTicket->id === $t->id ? 'background:rgba(245,158,11,.06);' : '' }}">
                             <td>{{ $t->subject }}</td>
                             <td>{{ match($t->priority) { 'high' => 'জরুরি', 'low' => 'সাধারণ', default => 'মধ্যম' } }}</td>
                             <td><span class="pill {{ $t->status === 'resolved' ? 'active' : 'due' }}">{{ $t->status === 'resolved' ? 'সমাধান হয়েছে' : 'খোলা' }}</span></td>
@@ -36,7 +36,7 @@
 
                 <div style="display:flex; flex-direction:column; gap:10px; max-height:280px; overflow-y:auto; margin-bottom:14px;">
                     @foreach ($activeTicket->messages as $m)
-                        <div style="background:{{ $m->sender_type === 'superadmin' ? 'rgba(201,162,39,.1)' : 'var(--paper-deep)' }}; border-radius:10px; padding:10px 12px; font-size:12.5px;">
+                        <div style="background:{{ $m->sender_type === 'superadmin' ? 'rgba(245,158,11,.1)' : 'var(--paper-deep)' }}; border-radius:10px; padding:10px 12px; font-size:12.5px;">
                             <div style="font-weight:700; font-size:11.5px; margin-bottom:3px;">{{ $m->sender_name }} {{ $m->sender_type === 'superadmin' ? '(সাপোর্ট)' : '' }}</div>
                             {{ $m->body }}
                             <div style="font-size:10px; color:var(--ink-soft); margin-top:5px;">{{ $m->created_at->format('d M, Y — h:i A') }}</div>

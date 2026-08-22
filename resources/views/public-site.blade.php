@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#5C1A2B">
+<meta name="theme-color" content="#6C5CE7">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <script>
     if ('serviceWorker' in navigator) {
@@ -21,16 +21,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 @php
     $__settings = $institution->settings;
-    $__primary = $__settings?->theme_primary_color ?? '#5C1A2B';
-    $__accent = $__settings?->theme_accent_color ?? '#C9A227';
+    $__primary = $__settings?->theme_primary_color ?? '#6C5CE7';
+    $__accent = $__settings?->theme_accent_color ?? '#F59E0B';
 @endphp
 <style>
   :root{
-    --maroon: {{ $__primary }}; --maroon-deep:#3E1120;
-    --gold: {{ $__accent }}; --gold-light:#E7C767;
-    --paper:#F7F2E5; --paper-deep:#EFE7D3; --card:#FFFFFF;
-    --ink:#2A2320; --ink-muted:#7A7061; --ink-soft:#AFA593;
-    --line:rgba(42,35,32,.10);
+    --maroon: {{ $__primary }}; --maroon-deep:#4B3FC4;
+    --gold: {{ $__accent }}; --gold-light:#FBBF24;
+    --paper:#F7F8FC; --paper-deep:#EEF1FA; --card:#FFFFFF;
+    --ink:#1F2432; --ink-muted:#6B7280; --ink-soft:#9CA3AF;
+    --line:rgba(31,36,50,.10);
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -39,7 +39,7 @@
   img,svg{display:block;}
   .wrap{max-width:900px;margin:0 auto;padding:0 20px;}
 
-  .hero{ background:linear-gradient(180deg, var(--maroon), var(--maroon-deep)); color:#F7F2E5; padding:48px 0 60px; }
+  .hero{ background:linear-gradient(180deg, var(--maroon), var(--maroon-deep)); color:#F7F8FC; padding:48px 0 60px; }
   .hero-inner{ display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
   .logo-box{ width:76px;height:76px;border-radius:18px;overflow:hidden;background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center; }
   .logo-box img{ width:100%;height:100%;object-fit:cover; }
@@ -47,7 +47,7 @@
   .hero p{ margin:0; color:#E7DEC5; font-size:14px; }
   .hero .badges{ margin-top:14px; display:flex; gap:8px; flex-wrap:wrap; }
   .badge{ font-size:12px; background:rgba(255,255,255,.12); padding:5px 12px; border-radius:20px; }
-  .login-btn{ margin-top:20px; display:inline-flex; align-items:center; gap:8px; background:linear-gradient(180deg, var(--gold-light), var(--gold)); color:#3E1120; font-weight:700; padding:12px 22px; border-radius:12px; font-size:14px; }
+  .login-btn{ margin-top:20px; display:inline-flex; align-items:center; gap:8px; background:linear-gradient(180deg, var(--gold-light), var(--gold)); color:#4B3FC4; font-weight:700; padding:12px 22px; border-radius:12px; font-size:14px; }
 
   .card{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px; margin-top:-30px; position:relative; z-index:2; box-shadow:0 20px 40px -25px rgba(0,0,0,.2); }
   .info-row{ display:flex; gap:10px; padding:10px 0; border-bottom:1px dashed var(--line); font-size:13.5px; }

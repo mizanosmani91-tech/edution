@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="/manifest.webmanifest">
-    <meta name="theme-color" content="#5C1A2B">
+    <meta name="theme-color" content="#6C5CE7">
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
     <script>
         if ('serviceWorker' in navigator) {
@@ -17,13 +17,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --cover-maroon:#5C1A2B; --cover-maroon-deep:#3E1120;
-    --gold:#C9A227; --gold-light:#E7C767;
-    --paper:#F7F2E5; --paper-deep:#EFE7D3; --card:#FFFFFF;
-    --ink:#2A2320; --ink-muted:#7A7061; --ink-soft:#AFA593;
-    --line:rgba(42,35,32,.10);
-    --guardian:#2F6E52; --teacher:#35528F; --student:#A65A2E; --admin:#C9A227;
-    --good:#2F6E52;
+    --cover-maroon:#6C5CE7; --cover-maroon-deep:#4B3FC4;
+    --gold:#F59E0B; --gold-light:#FBBF24;
+    --paper:#F7F8FC; --paper-deep:#EEF1FA; --card:#FFFFFF;
+    --ink:#1F2432; --ink-muted:#6B7280; --ink-soft:#9CA3AF;
+    --line:rgba(31,36,50,.10);
+    --guardian:#10B981; --teacher:#3B82F6; --student:#EC4899; --admin:#F59E0B;
+    --good:#10B981;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -35,18 +35,18 @@
 
   .wrap{ max-width:1160px; margin:0 auto; padding:0 24px; }
   section{ padding:76px 0; }
-  .eyebrow{ display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:700; letter-spacing:.06em; color:var(--cover-maroon); background:rgba(92,26,43,.07); padding:6px 14px; border-radius:20px; margin-bottom:14px; }
+  .eyebrow{ display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:700; letter-spacing:.06em; color:var(--cover-maroon); background:rgba(108,92,231,.07); padding:6px 14px; border-radius:20px; margin-bottom:14px; }
   h2.sec-title{ font-family:'Tiro Bangla',serif; font-size:32px; margin:0 0 10px; }
   p.sec-sub{ font-size:15px; color:var(--ink-muted); max-width:560px; margin:0 auto 40px; line-height:1.7; }
   .center{ text-align:center; }
 
-  .btn-primary{ display:inline-flex; align-items:center; gap:9px; border:0; border-radius:12px; padding:14px 24px; background:linear-gradient(180deg, var(--gold-light), var(--gold)); color:#3E1120; font-weight:700; font-size:14.5px; cursor:pointer; box-shadow:0 10px 22px -10px rgba(201,162,39,.65); white-space:nowrap; }
+  .btn-primary{ display:inline-flex; align-items:center; gap:9px; border:0; border-radius:12px; padding:14px 24px; background:linear-gradient(180deg, var(--gold-light), var(--gold)); color:#4B3FC4; font-weight:700; font-size:14.5px; cursor:pointer; box-shadow:0 10px 22px -10px rgba(245,158,11,.65); white-space:nowrap; }
   .btn-primary:hover{ filter:brightness(1.03); }
   .btn-ghost{ display:inline-flex; align-items:center; gap:9px; border:1.6px solid var(--line); border-radius:12px; padding:13px 22px; background:#fff; color:var(--ink); font-weight:700; font-size:14.5px; cursor:pointer; white-space:nowrap; }
   .btn-ghost:hover{ border-color:var(--ink-soft); }
   .btn-primary svg,.btn-ghost svg{ width:16px;height:16px; }
 
-  .nav{ position:sticky; top:0; z-index:50; background:rgba(247,242,229,.9); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+  .nav{ position:sticky; top:0; z-index:50; background:rgba(247,248,252,.9); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
   .nav-inner{ max-width:1160px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
   .brand{ display:flex; align-items:center; gap:10px; }
   .brand-emblem{ width:36px;height:36px;border-radius:50%; background:var(--cover-maroon); display:flex;align-items:center;justify-content:center; flex-shrink:0; }
@@ -75,14 +75,14 @@
   .hero-visual{ position:relative; }
   .mock-frame{
     background:var(--card); border-radius:18px; border:1px solid var(--line);
-    box-shadow:0 30px 60px -20px rgba(60,30,20,.3); overflow:hidden;
+    box-shadow:0 30px 60px -20px rgba(31,36,50,.3); overflow:hidden;
     transform:rotate(1.2deg);
   }
   .mock-topbar{ display:flex; gap:6px; padding:12px 14px; border-bottom:1px solid var(--line); }
   .mock-topbar span{ width:9px;height:9px;border-radius:50%; background:var(--line); }
   .mock-body{ display:grid; grid-template-columns:70px 1fr; }
   .mock-side{ background:linear-gradient(160deg,var(--cover-maroon),var(--cover-maroon-deep)); padding:16px 10px; display:flex; flex-direction:column; gap:14px; align-items:center; }
-  .mock-side span{ width:22px;height:22px;border-radius:6px; background:rgba(231,199,103,.25); }
+  .mock-side span{ width:22px;height:22px;border-radius:6px; background:rgba(251,191,36,.25); }
   .mock-side span.active{ background:var(--gold); }
   .mock-main{ padding:16px; }
   .mock-kpis{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px; }
@@ -92,7 +92,7 @@
   .mock-chart{ background:var(--paper-deep); border-radius:9px; height:90px; padding:10px; display:flex; align-items:flex-end; gap:6px; }
   .mock-chart span{ flex:1; background:linear-gradient(180deg,var(--gold-light),var(--gold)); border-radius:3px 3px 0 0; }
   .float-card{
-    position:absolute; background:#fff; border-radius:12px; padding:10px 14px; box-shadow:0 14px 30px -12px rgba(60,30,20,.35);
+    position:absolute; background:#fff; border-radius:12px; padding:10px 14px; box-shadow:0 14px 30px -12px rgba(31,36,50,.35);
     display:flex; align-items:center; gap:10px; font-size:12px; font-weight:700;
   }
   .float-card.f1{ top:-14px; right:-18px; }
@@ -122,15 +122,15 @@
   .whom-card li{ font-size:13px; color:var(--ink-muted); display:flex; align-items:flex-start; gap:8px; justify-content:flex-end; text-align:right; }
   .whom-card li svg{ width:15px;height:15px; color:var(--accent); flex-shrink:0; margin-top:2px; }
 
-  .roles-band{ background:linear-gradient(135deg,#6E2136,var(--cover-maroon-deep)); border-radius:24px; padding:44px 40px; color:#F3E9D2; }
+  .roles-band{ background:linear-gradient(135deg,#8B7CF6,var(--cover-maroon-deep)); border-radius:24px; padding:44px 40px; color:#F3E9D2; }
   .roles-band h2{ color:var(--gold-light); }
-  .roles-band .sec-sub{ color:rgba(243,233,210,.75); }
+  .roles-band .sec-sub{ color:rgba(255,255,255,.75); }
   .roles-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:10px; }
-  .role-card{ background:rgba(255,255,255,.06); border:1px solid rgba(231,199,103,.2); border-radius:14px; padding:20px; text-align:center; }
-  .role-ic{ width:46px;height:46px;border-radius:50%; background:rgba(231,199,103,.15); display:flex;align-items:center;justify-content:center; margin:0 auto 12px; }
+  .role-card{ background:rgba(255,255,255,.06); border:1px solid rgba(251,191,36,.2); border-radius:14px; padding:20px; text-align:center; }
+  .role-ic{ width:46px;height:46px;border-radius:50%; background:rgba(251,191,36,.15); display:flex;align-items:center;justify-content:center; margin:0 auto 12px; }
   .role-ic svg{ width:22px;height:22px; color:var(--gold-light); }
   .role-card .t{ font-family:'Tiro Bangla',serif; font-size:15.5px; margin-bottom:4px; }
-  .role-card .d{ font-size:12px; color:rgba(243,233,210,.65); line-height:1.6; }
+  .role-card .d{ font-size:12px; color:rgba(255,255,255,.65); line-height:1.6; }
 
   .billing-toggle{ display:inline-flex; background:var(--paper-deep); border-radius:12px; padding:4px; margin-bottom:36px; }
   .billing-toggle button{ border:0; background:none; padding:9px 20px; border-radius:9px; font-size:13px; font-weight:700; color:var(--ink-muted); cursor:pointer; }
@@ -139,8 +139,8 @@
 
   .price-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; align-items:stretch; }
   .price-card{ background:var(--card); border:1.5px solid var(--line); border-radius:18px; padding:28px 24px; display:flex; flex-direction:column; }
-  .price-card.popular{ border-color:var(--gold); box-shadow:0 20px 40px -18px rgba(201,162,39,.4); position:relative; }
-  .popular-badge{ position:absolute; top:-13px; right:24px; background:var(--gold); color:#3E1120; font-size:11px; font-weight:700; padding:5px 14px; border-radius:20px; }
+  .price-card.popular{ border-color:var(--gold); box-shadow:0 20px 40px -18px rgba(245,158,11,.4); position:relative; }
+  .popular-badge{ position:absolute; top:-13px; right:24px; background:var(--gold); color:#4B3FC4; font-size:11px; font-weight:700; padding:5px 14px; border-radius:20px; }
   .price-card h3{ font-family:'Tiro Bangla',serif; font-size:19px; margin:0 0 6px; }
   .price-card .desc{ font-size:12.5px; color:var(--ink-muted); margin-bottom:18px; }
   .price-amt{ font-family:'Tiro Bangla',serif; font-size:34px; color:var(--cover-maroon); margin-bottom:2px; }
@@ -171,9 +171,9 @@
   .faq-a-inner{ overflow:hidden; }
   .faq-a{ padding:0 20px 18px; font-size:13px; color:var(--ink-muted); line-height:1.8; }
 
-  .final-cta{ background:linear-gradient(135deg,#6E2136,var(--cover-maroon-deep)); border-radius:24px; padding:56px 40px; text-align:center; color:#F3E9D2; position:relative; overflow:hidden; }
+  .final-cta{ background:linear-gradient(135deg,#8B7CF6,var(--cover-maroon-deep)); border-radius:24px; padding:56px 40px; text-align:center; color:#F3E9D2; position:relative; overflow:hidden; }
   .final-cta h2{ font-family:'Tiro Bangla',serif; font-size:30px; color:var(--gold-light); margin:0 0 12px; }
-  .final-cta p{ font-size:14.5px; color:rgba(243,233,210,.8); max-width:480px; margin:0 auto 26px; line-height:1.7; }
+  .final-cta p{ font-size:14.5px; color:rgba(255,255,255,.8); max-width:480px; margin:0 auto 26px; line-height:1.7; }
   .final-ctas{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
 
   footer{ padding:50px 0 30px; border-top:1px solid var(--line); }
@@ -212,7 +212,7 @@
 <nav class="nav">
   <div class="nav-inner">
     <div class="brand">
-      <div class="brand-emblem"><svg viewBox="0 0 24 24" fill="none" stroke="#E7C767" stroke-width="1.6"><path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/><path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/></svg></div>
+      <div class="brand-emblem"><svg viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="1.6"><path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/><path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/></svg></div>
       <div class="name">EDUTION</div>
     </div>
     <div class="nav-links">
@@ -277,8 +277,8 @@
           </div>
         </div>
       </div>
-      <div class="float-card f1"><div class="fic" style="background:rgba(47,110,82,.14);color:var(--good);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg></div>ফি আদায় সম্পন্ন</div>
-      <div class="float-card f2"><div class="fic" style="background:rgba(201,162,39,.16);color:#8a6c17;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12 2.3 2.3L16 9.7"/></svg></div>হাজিরা ৯৬.২%</div>
+      <div class="float-card f1"><div class="fic" style="background:rgba(16,185,129,.14);color:var(--good);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg></div>ফি আদায় সম্পন্ন</div>
+      <div class="float-card f2"><div class="fic" style="background:rgba(245,158,11,.16);color:#8a6c17;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12 2.3 2.3L16 9.7"/></svg></div>হাজিরা ৯৬.২%</div>
     </div>
   </div>
 </header>
@@ -361,7 +361,7 @@
   <div class="wrap">
     <div class="roles-band">
       <div class="center">
-        <div class="eyebrow" style="background:rgba(231,199,103,.14); color:var(--gold-light);">একক লগইন</div>
+        <div class="eyebrow" style="background:rgba(251,191,36,.14); color:var(--gold-light);">একক লগইন</div>
         <h2 class="sec-title">সবার জন্য একটাই প্ল্যাটফর্ম</h2>
         <p class="sec-sub">এডমিন, শিক্ষক, অভিভাবক ও শিক্ষার্থী — প্রত্যেকের নিজস্ব ড্যাশবোর্ড, একই সিস্টেমে।</p>
       </div>
@@ -505,7 +505,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
           ফ্রি ট্রায়াল শুরু করুন
         </a>
-        <a href="#" class="btn-ghost" style="background:transparent; border-color:rgba(231,199,103,.4); color:#F3E9D2;">সেলস টিমের সাথে কথা বলুন</a>
+        <a href="#" class="btn-ghost" style="background:transparent; border-color:rgba(251,191,36,.4); color:#F3E9D2;">সেলস টিমের সাথে কথা বলুন</a>
       </div>
     </div>
   </div>

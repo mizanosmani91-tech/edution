@@ -49,7 +49,7 @@
         <div class="legend-row">
             <span><i style="background:var(--good);color:#fff;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></i>উপস্থিত</span>
             <span><i style="background:var(--bad);color:#fff;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></i>অনুপস্থিত</span>
-            <span><i style="background:var(--admin);color:#3E1120;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="5" width="16" height="16" rx="2"/></svg></i>ছুটি</span>
+            <span><i style="background:var(--admin);color:#4B3FC4;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="5" width="16" height="16" rx="2"/></svg></i>ছুটি</span>
             <span><i style="background:var(--teacher);color:#fff;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></i>দেরিতে</span>
         </div>
 
