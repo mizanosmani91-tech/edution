@@ -11,7 +11,7 @@ class SupportTicketMessage extends Model
     use HasFactory, UuidPrimaryKey;
 
     protected $fillable = [
-        'support_ticket_id', 'sender_type', 'sender_name', 'body',
+        'support_ticket_id', 'sender_type', 'sender_name', 'body', 'page_url', 'browser_info',
     ];
 
     public function ticket()

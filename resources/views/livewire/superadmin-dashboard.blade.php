@@ -402,6 +402,12 @@
                   <div class="msg {{ $m->sender_type === 'superadmin' ? 'admin' : '' }}">
                     <div class="who">{{ $m->sender_name }}</div>
                     {{ $m->body }}
+                    @if ($m->page_url)
+                      <div style="font-size:10.5px; color:var(--ink-muted); margin-top:4px;">📍 পেজ: <a href="{{ $m->page_url }}" target="_blank" style="color:inherit;text-decoration:underline;">{{ \Illuminate\Support\Str::limit($m->page_url, 60) }}</a></div>
+                    @endif
+                    @if ($m->browser_info)
+                      <div style="font-size:10.5px; color:var(--ink-muted);">🖥️ {{ \Illuminate\Support\Str::limit($m->browser_info, 70) }}</div>
+                    @endif
                     <div class="time">{{ $m->created_at->format('d M, Y — h:i A') }}</div>
                   </div>
                 @endforeach

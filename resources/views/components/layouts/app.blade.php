@@ -454,6 +454,8 @@
     </nav>
 </div>
 
+<livewire:support-widget />
+
 @livewireScripts
 </body>
 </html>
