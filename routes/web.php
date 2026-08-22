@@ -148,6 +148,7 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/fee-structures-page', \App\Livewire\FeeStructureManager::class)->name('fee-structures.index');
     Route::get('/expenses-page', \App\Livewire\ExpenseTracker::class)->name('expenses.index');
     Route::get('/income-expense-report-page', \App\Livewire\IncomeExpenseReport::class)->name('income-expense-report.index');
+    Route::get('/budget-page', \App\Livewire\BudgetManager::class)->name('budget.index');
     Route::get('/books-page', \App\Livewire\BookManager::class)->name('books.index');
     Route::get('/book-issues-page', \App\Livewire\BookIssueManager::class)->name('book-issues.index');
     Route::get('/book-fines-page', \App\Livewire\BookIssueManager::class)->name('book-fines.index')->defaults('tab', 'overdue');

@@ -202,7 +202,7 @@
 
             @if (auth()->user()->role !== 'teacher')
             {{-- ফি/অর্থ --}}
-            <div class="nav-module {{ $activeIf('fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees','scholarships.*') }}" x-data="{ open: {{ request()->routeIs(['fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees','scholarships.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees','scholarships.*','budget.*') }}" x-data="{ open: {{ request()->routeIs(['fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees','scholarships.*','budget.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/><circle cx="16.5" cy="15" r="1.4"/></svg></span>
                     <span class="lbl">ফি/অর্থ</span>
@@ -216,6 +216,7 @@
                     <a href="{{ route('scholarships.index') }}" class="sub-item {{ request()->routeIs('scholarships.*') ? 'active' : '' }}">বৃত্তি/মওকুফ</a>
                     <a href="{{ route('expenses.index') }}" class="sub-item {{ request()->routeIs('expenses.*') ? 'active' : '' }}">খরচ/ব্যয় ট্র্যাকিং</a>
                     <a href="{{ route('income-expense-report.index') }}" class="sub-item {{ request()->routeIs('income-expense-report.*') ? 'active' : '' }}">আয়-ব্যয় রিপোর্ট</a>
+                    <a href="{{ route('budget.index') }}" class="sub-item {{ request()->routeIs('budget.*') ? 'active' : '' }}">বাজেট পরিকল্পনা</a>
                 </div></div></div>
             </div>
 
