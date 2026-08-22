@@ -16,8 +16,7 @@
     @if ($institution && $institution->favicon_path)
         <link rel="icon" href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($institution->favicon_path) }}">
     @endif
-    @vite(['resources/css/app.css'])
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @php
         $__settings = $institution?->settings;
         $__primary = $__settings->theme_primary_color ?? null;
@@ -155,6 +154,26 @@
 
         {{-- ফর্ম (ডান) --}}
         <div class="relative flex flex-col p-8 md:p-10">
+            {{-- মোবাইল/অ্যাপে দেখা যাওয়া ব্র্যান্ডিং হেডার — বাম কভার প্যানেল
+                 md এর নিচে hidden থাকে বলে ছোট স্ক্রিনে লোগো/প্রতিষ্ঠানের নাম
+                 আলাদাভাবে এখানে দেখানো হচ্ছে (Alpine নির্ভর নয়, তাই সবসময় দেখা যাবে) --}}
+            <div class="mb-6 flex items-center gap-3 md:hidden">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--color-gold)]/50 bg-[var(--color-maroon)]">
+                    @if ($institution && $institution->logo_path)
+                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($institution->logo_path) }}" alt="{{ $institution->name }}" class="h-full w-full object-cover">
+                    @else
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#E7C767" stroke-width="1.6" class="h-6 w-6">
+                            <path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/>
+                            <path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/>
+                        </svg>
+                    @endif
+                </div>
+                <div>
+                    <p class="font-serif-bn text-lg leading-tight text-[var(--color-ink)]">{{ $institution->name ?? 'EDUTION' }}</p>
+                    <p class="text-[11px] uppercase tracking-[.2em] text-[var(--color-ink-muted)]">{{ $institution ? 'EDUTION দ্বারা পরিচালিত' : 'EDUCATION MANAGEMENT' }}</p>
+                </div>
+            </div>
+
             {{-- Role tabs --}}
             <div class="mb-6 flex flex-wrap gap-1.5">
                 <template x-for="(data, key) in roles" :key="key">
