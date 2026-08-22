@@ -289,6 +289,19 @@
                     <a href="{{ route('visitors.index') }}" class="sub-item {{ request()->routeIs('visitors.*') ? 'active' : '' }}">ভিজিটর লগ/গেট পাস</a>
                 </div></div></div>
             </div>
+
+            {{-- ইনভেন্টরি --}}
+            <div class="nav-module {{ $activeIf('inventory.*','inventory-issues.*') }}" x-data="{ open: {{ request()->routeIs(['inventory.*','inventory-issues.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 8 12 3 3 8l9 5 9-5Z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></span>
+                    <span class="lbl">ইনভেন্টরি</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('inventory.index') }}" class="sub-item {{ request()->routeIs('inventory.index') ? 'active' : '' }}">আইটেম তালিকা</a>
+                    <a href="{{ route('inventory-issues.index') }}" class="sub-item {{ request()->routeIs('inventory-issues.*') ? 'active' : '' }}">ইস্যু ও রিটার্ন</a>
+                </div></div></div>
+            </div>
             @endif
 
             {{-- পোর্টাল --}}
