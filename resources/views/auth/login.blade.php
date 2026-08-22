@@ -170,6 +170,14 @@
             <div class="mb-6">
                 <h1 class="font-serif-bn text-2xl text-[var(--color-ink)]" x-text="roles[role].title">এডমিন হিসেবে লগইন করুন</h1>
                 <p class="mt-1 text-sm text-[var(--color-ink-muted)]" x-text="roles[role].sub">প্রতিষ্ঠানের সার্বিক নিয়ন্ত্রণ ও পরিচালনার জন্য প্রবেশ করুন।</p>
+
+                {{-- শুধু নেটিভ Android অ্যাপ থেকে খোলা হলেই দেখা যাবে (লঞ্চার ?app=1 যোগ করে) —
+                     সাধারণ ব্রাউজারে এই লিংক লাগবে না, কারণ URL সরাসরি লিখেই প্রতিষ্ঠান বদলানো যায় --}}
+                @if (request()->query('app') === '1')
+                    <a href="https://localhost/index.html?reset=1" class="mt-2 inline-flex items-center gap-1 text-[12.5px] text-[var(--color-ink-muted)] underline underline-offset-2">
+                        অন্য প্রতিষ্ঠানে প্রবেশ করতে চান? এখানে চাপুন
+                    </a>
+                @endif
             </div>
 
             @if (!$institution)

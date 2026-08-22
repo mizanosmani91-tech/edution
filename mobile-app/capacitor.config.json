@@ -1,0 +1,13 @@
+{
+  "appId": "xyz.edution.app",
+  "appName": "EDUTION",
+  "webDir": "www",
+  "backgroundColor": "#F7F2E5",
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": ["*.edution.xyz", "edution.xyz"]
+  }
+}

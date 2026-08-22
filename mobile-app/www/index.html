@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="bn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>EDUTION</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            font-family: system-ui, -apple-system, "Noto Sans Bengali", sans-serif;
+            background: #F7F2E5; color: #2a2320;
+        }
+        .card { width: 90%; max-width: 380px; text-align: center; padding: 10px; }
+        .logo { width: 84px; height: 84px; border-radius: 20px; margin: 0 auto 18px; display: block; }
+        h1 { font-size: 22px; margin: 0 0 4px; color: #5C1A2B; }
+        p.sub { font-size: 13px; color: #776a5f; margin: 0 0 26px; line-height: 1.6; }
+        label { display: block; text-align: left; font-size: 13px; margin-bottom: 6px; color: #554a41; }
+        .input-row { display: flex; align-items: stretch; border: 1.5px solid #ddd2c4; border-radius: 12px; overflow: hidden; background: #fff; }
+        .input-row input {
+            flex: 1; border: none; outline: none; padding: 14px; font-size: 15px; background: transparent; min-width: 0;
+        }
+        .input-row .suffix { display: flex; align-items: center; padding: 0 12px; font-size: 13px; color: #999; white-space: nowrap; }
+        button.go {
+            width: 100%; margin-top: 16px; padding: 14px; border: none; border-radius: 12px;
+            background: #5C1A2B; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer;
+        }
+        button.go:disabled { opacity: .5; }
+        .err { color: #c0392b; font-size: 12.5px; margin-top: 10px; min-height: 16px; }
+        .hint { margin-top: 22px; font-size: 11.5px; color: #a89c8d; line-height: 1.7; }
+        .loading { display: none; }
+        .loading.show { display: block; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img class="logo" src="icons/icon-192.png" alt="EDUTION" onerror="this.style.display='none'">
+        <h1>EDUTION</h1>
+        <p class="sub">আপনার প্রতিষ্ঠানের EDUTION লিংক দিয়ে শুরু করুন — এটা একবার সেট করলেই পরের বার সরাসরি লগইন পেজ খুলে যাবে।</p>
+
+        <label for="slug">প্রতিষ্ঠানের লিংক</label>
+        <div class="input-row">
+            <input id="slug" type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="যেমন: flourish">
+            <span class="suffix">.edution.xyz</span>
+        </div>
+        <div class="err" id="err"></div>
+
+        <button class="go" id="goBtn" type="button" onclick="goToSchool()">প্রবেশ করুন</button>
+
+        <div class="hint">প্রতিষ্ঠানের অফিস থেকে দেওয়া লিংক বা কোড ব্যবহার করুন। সঠিক লিংক না জানা থাকলে আপনার স্কুল/মাদরাসার অফিসের সাথে যোগাযোগ করুন।</div>
+    </div>
+
+    <script>
+        var STORAGE_KEY = 'edution_subdomain';
+
+        function normalizeSlug(raw) {
+            raw = (raw || '').trim().toLowerCase();
+            // ইউজার পুরো লিংক (https://flourish.edution.xyz/login) পেস্ট করলেও যেন কাজ করে
+            raw = raw.replace(/^https?:\/\//, '').replace(/\.edution\.xyz.*$/, '').replace(/\/.*/, '');
+            return raw.replace(/[^a-z0-9-]/g, '');
+        }
+
+        function goToSchool() {
+            var input = document.getElementById('slug');
+            var err = document.getElementById('err');
+            var slug = normalizeSlug(input.value);
+
+            if (!slug) {
+                err.textContent = 'সঠিক প্রতিষ্ঠানের লিংক/কোড লিখুন।';
+                return;
+            }
+
+            err.textContent = '';
+            localStorage.setItem(STORAGE_KEY, slug);
+            // ?app=1 দিয়ে Laravel সাইট বুঝতে পারে এটা নেটিভ অ্যাপ থেকে খোলা হয়েছে,
+            // তখন লগইন পেজে "প্রতিষ্ঠান পরিবর্তন করুন" লিংক দেখানো হয়
+            window.location.href = 'https://' + slug + '.edution.xyz/?app=1';
+        }
+
+        (function () {
+            var params = new URLSearchParams(window.location.search);
+
+            // লগইন পেজের "প্রতিষ্ঠান পরিবর্তন করুন" লিংক থেকে এখানে ফিরে
+            // এলে সেভ করা সাবডোমেইন মুছে আবার ফর্ম দেখানো হয়
+            if (params.get('reset') === '1') {
+                localStorage.removeItem(STORAGE_KEY);
+                return;
+            }
+
+            var saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                window.location.href = 'https://' + saved + '.edution.xyz/?app=1';
+            }
+        })();
+
+        document.getElementById('slug').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') goToSchool();
+        });
+    </script>
+</body>
+</html>
