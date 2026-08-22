@@ -49,6 +49,13 @@ class ImportFieldMap
                 ['key' => 'marks_obtained', 'label' => 'প্রাপ্ত নম্বর', 'required' => true, 'synonyms' => ['marks', 'marks obtained', 'score', 'প্রাপ্ত নম্বর', 'নম্বর']],
                 ['key' => 'is_absent', 'label' => 'অনুপস্থিত (yes/no)', 'required' => false, 'synonyms' => ['absent', 'is absent', 'অনুপস্থিত']],
             ],
+            'attendance-device' => [
+                ['key' => 'device_user_id', 'label' => 'ডিভাইস ইউজার আইডি', 'required' => true, 'synonyms' => ['user id', 'userid', 'enroll no', 'enroll id', 'employee id', 'id', 'device user id', 'আইডি']],
+                ['key' => 'date', 'label' => 'তারিখ (YYYY-MM-DD)', 'required' => true, 'synonyms' => ['date', 'attendance date', 'তারিখ']],
+                ['key' => 'check_in', 'label' => 'প্রবেশের সময় (First In)', 'required' => false, 'synonyms' => ['check in', 'time in', 'first in', 'in time', 'প্রবেশ']],
+                ['key' => 'check_out', 'label' => 'বাহিরের সময় (Last Out)', 'required' => false, 'synonyms' => ['check out', 'time out', 'last out', 'out time', 'বাহির']],
+                ['key' => 'status', 'label' => 'স্ট্যাটাস (ঐচ্ছিক)', 'required' => false, 'synonyms' => ['status', 'attendance status', 'স্ট্যাটাস']],
+            ],
             default => [],
         };
     }
@@ -60,6 +67,7 @@ class ImportFieldMap
             'teachers' => 'শিক্ষক/স্টাফ',
             'fees' => 'ফি হিস্টোরি',
             'exam-results' => 'পরীক্ষার ফলাফল',
+            'attendance-device' => 'অ্যাটেন্ডেন্স ডিভাইস',
             default => 'ডাটা',
         };
     }

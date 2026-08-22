@@ -38,6 +38,19 @@
                 </div>
             @endif
 
+            @if ($entity === 'attendance-device')
+                <div class="alert-note" style="margin-bottom:16px;">
+                    আপনার বায়োমেট্রিক/অ্যাটেন্ডেন্স ডিভাইস (যেমন ZKTeco, eSSL) থেকে অ্যাটেন্ডেন্স রিপোর্ট CSV/Excel আকারে এক্সপোর্ট করুন (সাধারণত প্রতিদিন প্রতি ব্যক্তির জন্য একটা সারি, User ID + First In + Last Out কলাম সহ)। ডিভাইসে যে User ID দিয়ে একজনকে এনরোল করা হয়েছে, সেটা অবশ্যই সিস্টেমের শিক্ষক/স্টাফ আইডি বা শিক্ষার্থী আইডির সাথে হুবহু মিলতে হবে — নাহলে সেই সারি ইমপোর্ট হবে না।
+                </div>
+                <div class="field">
+                    <label>ডিভাইস ইউজাররা কারা? <span class="req">*</span></label>
+                    <select wire:model="personType">
+                        <option value="teacher">শিক্ষক/স্টাফ</option>
+                        <option value="student">শিক্ষার্থী</option>
+                    </select>
+                </div>
+            @endif
+
             <div class="field">
                 <label>ফাইল নির্বাচন করুন</label>
                 <input type="file" wire:model="file" accept=".xlsx,.xls,.csv,.docx">

@@ -193,6 +193,7 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/import/teachers', \App\Livewire\DataImporter::class)->name('import.teachers')->defaults('entity', 'teachers');
     Route::get('/import/fees', \App\Livewire\DataImporter::class)->name('import.fees')->defaults('entity', 'fees');
     Route::get('/import/exam-results', \App\Livewire\DataImporter::class)->name('import.exam-results')->defaults('entity', 'exam-results');
+    Route::get('/import/attendance-device', \App\Livewire\DataImporter::class)->name('import.attendance-device')->defaults('entity', 'attendance-device');
     Route::get('/academic-sessions', \App\Livewire\AcademicSessionManager::class)->name('academic-sessions.index');
     Route::get('/homework', \App\Livewire\HomeworkManager::class)->name('homework.index');
     Route::get('/lesson-plans', \App\Livewire\LessonPlanManager::class)->name('lesson-plans.index');

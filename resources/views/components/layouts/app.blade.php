@@ -146,7 +146,7 @@
             @endif
 
             {{-- হাজিরা --}}
-            <div class="nav-module {{ $activeIf('attendance.*','staff-attendance.*','attendance-report.*','leave-requests.*') }}" x-data="{ open: {{ request()->routeIs(['attendance.*','staff-attendance.*','attendance-report.*','leave-requests.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('attendance.*','staff-attendance.*','attendance-report.*','leave-requests.*','import.attendance-device') }}" x-data="{ open: {{ request()->routeIs(['attendance.*','staff-attendance.*','attendance-report.*','leave-requests.*','import.attendance-device']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12 2.3 2.3L16 9.7"/></svg></span>
                     <span class="lbl">হাজিরা</span>
@@ -157,6 +157,7 @@
                     <a href="{{ route('staff-attendance.index') }}" class="sub-item {{ request()->routeIs('staff-attendance.*') ? 'active' : '' }}">স্টাফ হাজিরা</a>
                     <a href="{{ route('leave-requests.index') }}" class="sub-item {{ request()->routeIs('leave-requests.*') ? 'active' : '' }}">ছুটির আবেদন</a>
                     <a href="{{ route('attendance-report.index') }}" class="sub-item {{ request()->routeIs('attendance-report.*') ? 'active' : '' }}">হাজিরা রিপোর্ট</a>
+                    <a href="{{ route('import.attendance-device') }}" class="sub-item {{ request()->routeIs('import.attendance-device') ? 'active' : '' }}">অ্যাটেন্ডেন্স ডিভাইস ইমপোর্ট</a>
                 </div></div></div>
             </div>
 

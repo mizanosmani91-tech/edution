@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Attendance;
 use App\Models\Exam;
 use App\Models\ExamMark;
 use App\Models\ExamSubject;
@@ -9,6 +10,7 @@ use App\Models\FeeCollection;
 use App\Models\Institution;
 use App\Models\SchoolClass;
 use App\Models\Section;
+use App\Models\StaffAttendance;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Services\ImportService;
@@ -34,6 +36,8 @@ class DataImporter extends Component
 
     public ?string $examId = null; // শুধু exam-results এর জন্য দরকার
 
+    public string $personType = 'teacher'; // শুধু attendance-device এর জন্য: teacher / student
+
     public int $validCount = 0;
     public int $invalidCount = 0;
     public array $previewRows = []; // ['data' => [...], 'valid' => bool, 'reason' => string]
@@ -46,7 +50,7 @@ class DataImporter extends Component
 
     public function mount(string $entity = 'students'): void
     {
-        $this->entity = in_array($entity, ['students', 'teachers', 'fees', 'exam-results'], true) ? $entity : 'students';
+        $this->entity = in_array($entity, ['students', 'teachers', 'fees', 'exam-results', 'attendance-device'], true) ? $entity : 'students';
     }
 
     public function updatedFile(): void
@@ -106,6 +110,12 @@ class DataImporter extends Component
             return;
         }
 
+        if ($this->entity === 'attendance-device' && ! in_array($this->personType, ['teacher', 'student'], true)) {
+            $this->fileError = 'ডিভাইসের ইউজারগুলো শিক্ষক/স্টাফ নাকি শিক্ষার্থী তা নির্বাচন করুন।';
+
+            return;
+        }
+
         $this->step = 'mapping';
     }
 
@@ -156,6 +166,7 @@ class DataImporter extends Component
             'teachers' => $this->validateTeacherRow($row),
             'fees' => $this->validateFeeRow($row),
             'exam-results' => $this->validateExamResultRow($row),
+            'attendance-device' => $this->validateAttendanceDeviceRow($row),
             default => ['valid' => false, 'reason' => 'অজানা ধরন'],
         };
     }
@@ -259,6 +270,36 @@ class DataImporter extends Component
         return in_array($value, ['1', 'yes', 'true', 'হ্যাঁ', 'হ্যা', 'absent', 'অনুপস্থিত'], true);
     }
 
+    /**
+     * বায়োমেট্রিক/অ্যাটেন্ডেন্স ডিভাইসের এক্সপোর্ট করা CSV/Excel ভ্যালিডেট করে।
+     * ডিভাইসে যে User ID দিয়ে একজনকে এনরোল করা হয়েছে, সেটা অবশ্যই সিস্টেমের
+     * শিক্ষক/স্টাফ আইডি অথবা শিক্ষার্থী আইডির সাথে মিলতে হবে — নাহলে কোন
+     * ছাত্র/শিক্ষক সেটা বোঝার উপায় নেই।
+     */
+    protected function validateAttendanceDeviceRow(array $row): array
+    {
+        $deviceUserId = trim((string) ($row['device_user_id'] ?? ''));
+        if ($deviceUserId === '') {
+            return ['valid' => false, 'reason' => 'ডিভাইস ইউজার আইডি নেই'];
+        }
+
+        if ($this->personType === 'teacher') {
+            if (! Teacher::where('teacher_id_no', $deviceUserId)->exists()) {
+                return ['valid' => false, 'reason' => "আইডি \"{$deviceUserId}\" এর কোনো শিক্ষক/স্টাফ পাওয়া যায়নি (Teacher ID এর সাথে মিলছে না)"];
+            }
+        } else {
+            if (! Student::where('student_id_no', $deviceUserId)->exists()) {
+                return ['valid' => false, 'reason' => "আইডি \"{$deviceUserId}\" এর কোনো শিক্ষার্থী পাওয়া যায়নি (Student ID এর সাথে মিলছে না)"];
+            }
+        }
+
+        if (! $this->parseDate($row['date'] ?? null)) {
+            return ['valid' => false, 'reason' => 'তারিখ পড়া যায়নি (YYYY-MM-DD ফরম্যাট ব্যবহার করুন)'];
+        }
+
+        return ['valid' => true, 'reason' => ''];
+    }
+
     public function runImport(): void
     {
         $this->importedCount = 0;
@@ -279,6 +320,7 @@ class DataImporter extends Component
                     'teachers' => $this->importTeacherRow($item['data']),
                     'fees' => $this->importFeeRow($item['data']),
                     'exam-results' => $this->importExamResultRow($item['data']),
+                    'attendance-device' => $this->importAttendanceDeviceRow($item['data']),
                     default => null,
                 };
                 $this->importedCount++;
@@ -408,6 +450,71 @@ class DataImporter extends Component
         }
     }
 
+    /**
+     * ⚠️ প্রতি ডিভাইস ইউজারের প্রতিদিন একাধিক পাঞ্চ (একাধিক check-in/out)
+     * থাকলে ডিভাইসের নিজস্ব রিপোর্ট এক্সপোর্টেই সাধারণত একটা মাত্র সারিতে
+     * First-In/Last-Out মিলিয়ে দেয় — এই ইমপোর্ট সেই ধরে নিয়ে কাজ করে। একই
+     * ব্যক্তি একই তারিখের জন্য একাধিকবার (একাধিক সারিতে) থাকলে শেষেরটাই
+     * থেকে যাবে (updateOrCreate)।
+     */
+    protected function importAttendanceDeviceRow(array $row): void
+    {
+        $deviceUserId = trim((string) $row['device_user_id']);
+        $date = $this->parseDate($row['date']);
+        $checkIn = $this->parseDateTime($date, $row['check_in'] ?? null);
+        $checkOut = $this->parseDateTime($date, $row['check_out'] ?? null);
+        $status = trim((string) ($row['status'] ?? '')) ?: ($checkIn ? 'present' : 'absent');
+
+        if ($this->personType === 'teacher') {
+            $teacher = Teacher::where('teacher_id_no', $deviceUserId)->first();
+
+            StaffAttendance::updateOrCreate(
+                ['teacher_id' => $teacher->id, 'date' => $date],
+                [
+                    'status' => $status,
+                    'check_in' => $checkIn,
+                    'check_out' => $checkOut,
+                    'marked_by' => auth()->id(),
+                    'remarks' => 'বায়োমেট্রিক/অ্যাটেন্ডেন্স ডিভাইস থেকে ইমপোর্ট করা হয়েছে',
+                ]
+            );
+        } else {
+            $student = Student::where('student_id_no', $deviceUserId)->first();
+
+            Attendance::updateOrCreate(
+                ['student_id' => $student->id, 'date' => $date],
+                [
+                    'class_id' => $student->class_id,
+                    'section_id' => $student->section_id,
+                    'status' => $status,
+                    'marked_by' => auth()->id(),
+                    'remarks' => 'বায়োমেট্রিক/অ্যাটেন্ডেন্স ডিভাইস থেকে ইমপোর্ট করা হয়েছে',
+                ]
+            );
+        }
+    }
+
+    protected function parseDateTime(?string $date, $timeValue): ?string
+    {
+        if (empty($date) || empty($timeValue)) {
+            return null;
+        }
+
+        try {
+            $time = trim((string) $timeValue);
+
+            // শুধু সময় দেওয়া থাকলে (যেমন "09:05" বা "09:05 AM") তারিখের সাথে জোড়া লাগানো হয়
+            if (preg_match('/^\d{1,2}:\d{2}(:\d{2})?\s*(AM|PM|am|pm)?$/', $time)) {
+                return \Carbon\Carbon::parse("{$date} {$time}")->toDateTimeString();
+            }
+
+            // পুরো datetime স্ট্রিং দেওয়া থাকলে সরাসরি parse
+            return \Carbon\Carbon::parse($time)->toDateTimeString();
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
     public function startOver(): void
     {
         $this->reset(['file', 'headers', 'rows', 'mapping', 'previewRows', 'validCount', 'invalidCount', 'importedCount', 'failedCount', 'failedRows', 'fileError']);
@@ -422,4 +529,6 @@ class DataImporter extends Component
             'exams' => $this->entity === 'exam-results' ? Exam::orderByDesc('start_date')->get() : collect(),
         ])->layout('components.layouts.app', ['title' => ImportFieldMap::label($this->entity).' ইমপোর্ট']);
     }
+
+    /* personType আলাদা কোনো getter দরকার নেই — এটা সরাসরি wire:model দিয়ে blade থেকে বাইন্ড হয় */
 }
