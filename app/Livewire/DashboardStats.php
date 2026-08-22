@@ -144,6 +144,32 @@ class DashboardStats extends Component
             ];
         }
 
+        // ===== স্টার শিক্ষার্থী: সাম্প্রতিক প্রকাশিত পরীক্ষায় শীর্ষ ৫ =====
+        $topScorers = collect();
+        if ($latestExam) {
+            $subjectFullMarks = \App\Models\ExamSubject::where('exam_id', $latestExam->id)->sum('full_marks');
+            if ($subjectFullMarks > 0) {
+                $topScorers = ExamMark::whereHas('examSubject', fn ($q) => $q->where('exam_id', $latestExam->id))
+                    ->whereNotNull('marks_obtained')
+                    ->with('student.schoolClass')
+                    ->get()
+                    ->groupBy('student_id')
+                    ->map(function ($group) use ($subjectFullMarks) {
+                        $student = $group->first()->student;
+                        $total = $group->sum('marks_obtained');
+                        return $student ? [
+                            'student' => $student,
+                            'total' => $total,
+                            'percent' => round($total / $subjectFullMarks * 100),
+                        ] : null;
+                    })
+                    ->filter()
+                    ->sortByDesc('percent')
+                    ->take(5)
+                    ->values();
+            }
+        }
+
         // ===== আজকের শিক্ষক/স্টাফ হাজিরা =====
         $staffToday = StaffAttendance::where('date', now()->toDateString())->get();
         $staffDonut = [
@@ -177,6 +203,8 @@ class DashboardStats extends Component
             'staffDonut' => $staffDonut,
             'honorStudent' => $honors->get('student'),
             'honorTeacher' => $honors->get('teacher'),
+            'topScorers' => $topScorers,
+            'latestExam' => $latestExam,
         ]);
     }
 }
