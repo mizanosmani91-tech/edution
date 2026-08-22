@@ -67,6 +67,23 @@
                     </div>
                 </div>
 
+                @if ($recentHifz->isNotEmpty())
+                    <div class="settings-section" style="margin-bottom:20px;">
+                        <h3>সাম্প্রতিক হিফজ অগ্রগতি</h3>
+                        @foreach ($recentHifz as $h)
+                            <div style="padding:10px 0;border-bottom:1px dashed var(--line);font-size:13px;">
+                                <div style="font-weight:700;">{{ $h->date->format('d M, Y') }}</div>
+                                <div class="sub" style="font-size:12px;">
+                                    @if($h->sabak_range) সবক: {{ $h->sabak_para }} ({{ $h->sabak_range }}) @endif
+                                    @if($h->sabqi_range) · সবকি: {{ $h->sabqi_range }} @endif
+                                    @if($h->manzil_range) · মঞ্জিল: {{ $h->manzil_range }} @endif
+                                </div>
+                                @if($h->remarks)<div class="sub" style="font-size:12px;margin-top:2px;">{{ $h->remarks }}</div>@endif
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
                 <div class="settings-section">
                     <h3>সাম্প্রতিক নোটিশ</h3>
                     @forelse ($notices->take(3) as $notice)

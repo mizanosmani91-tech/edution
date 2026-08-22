@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\Conversation;
 use App\Models\ConversationParticipant;
 use App\Models\FeeCollection;
+use App\Models\HifzProgress;
 use App\Models\Homework;
 use App\Models\IntegrationSetting;
 use App\Models\HomeworkCompletion;
@@ -326,6 +327,11 @@ class GuardianPortal extends Component
             ]);
         }
 
+        $recentHifz = collect();
+        if ($child) {
+            $recentHifz = HifzProgress::where('student_id', $child->id)->latest('date')->limit(5)->get();
+        }
+
         $bkashEnabled = (bool) (IntegrationSetting::find(app('tenant.institution_id'))?->bkash_enabled);
 
         // অপঠিত মেসেজের সংখ্যা (overview badge এর জন্য)
@@ -353,6 +359,7 @@ class GuardianPortal extends Component
             'homeworks' => $homeworks,
             'unreadCount' => $unreadCount,
             'bkashEnabled' => $bkashEnabled,
+            'recentHifz' => $recentHifz,
         ])->layout('components.layouts.app', ['title' => 'অভিভাবক পোর্টাল']);
     }
 }
