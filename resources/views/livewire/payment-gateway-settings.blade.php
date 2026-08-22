@@ -7,7 +7,7 @@
     </div>
 
     <div class="alert-note" style="margin-bottom:16px;">
-        bKash এর জন্য অটোমেটিক অনলাইন পেমেন্ট চালু আছে — নিচের তথ্য সঠিকভাবে দিলে অভিভাবক নিজেই bKash দিয়ে ফি পরিশোধ করতে পারবেন, আর সেটা এডমিনের ম্যানুয়াল কনফার্মেশন ছাড়াই স্বয়ংক্রিয়ভাবে হিসেবে যোগ হয়ে যাবে। প্রথমে "Sandbox মোড" চালু রেখে টেস্ট করে নিন, তারপর প্রোডাকশন ক্রেডেনশিয়াল দিয়ে Sandbox বন্ধ করুন। Nagad এখনো ম্যানুয়াল পদ্ধতিতেই কাজ করে (অভিভাবক দাবি জমা দেয়, অফিস যাচাই করে নিশ্চিত করে)।
+        bKash ও Nagad দুইটার জন্যই অটোমেটিক অনলাইন পেমেন্ট চালু আছে — নিচের তথ্য সঠিকভাবে দিলে অভিভাবক নিজেই পরিশোধ করতে পারবেন, আর সেটা এডমিনের ম্যানুয়াল কনফার্মেশন ছাড়াই স্বয়ংক্রিয়ভাবে হিসেবে যোগ হয়ে যাবে। প্রথমে "Sandbox মোড" চালু রেখে টেস্ট করে নিন, তারপর প্রোডাকশন ক্রেডেনশিয়াল দিয়ে Sandbox বন্ধ করুন। Nagad এর "Merchant Private Key" ও "PG Public Key" Nagad Merchant Portal থেকে "Key Generate" করে পাওয়া যায় — শুধু BEGIN/END লাইন বাদ দিয়ে মাঝের অংশটুকু এখানে বসান।
     </div>
 
     @if ($savedMessage)
@@ -39,7 +39,13 @@
         </div>
         <div class="info-grid" style="grid-template-columns:1fr 1fr;">
             <div class="field"><label>মার্চেন্ট নম্বর</label><input type="text" wire:model="nagadMerchantNumber"></div>
-            <div class="field"><label>API Key</label><input type="text" wire:model="nagadApiKey"></div>
+            <div class="field"><label>Merchant ID</label><input type="text" wire:model="nagadMerchantId" placeholder="Nagad Merchant Portal থেকে"></div>
+            <div class="field" style="grid-column:1/-1;"><label>Merchant Private Key</label><textarea wire:model="nagadMerchantPrivateKey" rows="3" placeholder="-----BEGIN/END RSA PRIVATE KEY----- বাদ দিয়ে মাঝের অংশ"></textarea></div>
+            <div class="field" style="grid-column:1/-1;"><label>Nagad PG Public Key</label><textarea wire:model="nagadPgPublicKey" rows="3" placeholder="-----BEGIN/END PUBLIC KEY----- বাদ দিয়ে মাঝের অংশ"></textarea></div>
+            <div class="field" style="display:flex;align-items:center;gap:8px;padding-top:6px;">
+                <label class="switch"><input type="checkbox" wire:model="nagadSandbox"><span class="switch-track"></span></label>
+                <label style="margin:0;">Sandbox মোড (টেস্টের জন্য)</label>
+            </div>
         </div>
     </div>
 

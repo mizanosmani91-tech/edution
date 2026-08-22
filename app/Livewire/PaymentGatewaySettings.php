@@ -18,6 +18,10 @@ class PaymentGatewaySettings extends Component
     public bool $nagadEnabled = false;
     public string $nagadMerchantNumber = '';
     public string $nagadApiKey = '';
+    public string $nagadMerchantId = '';
+    public string $nagadMerchantPrivateKey = '';
+    public string $nagadPgPublicKey = '';
+    public bool $nagadSandbox = true;
 
     public ?string $savedMessage = null;
 
@@ -36,16 +40,18 @@ class PaymentGatewaySettings extends Component
         $this->nagadEnabled = $settings?->nagad_enabled ?? false;
         $this->nagadMerchantNumber = $settings?->nagad_merchant_number ?? '';
         $this->nagadApiKey = $settings?->nagad_api_key ?? '';
+        $this->nagadMerchantId = $settings?->nagad_merchant_id ?? '';
+        $this->nagadMerchantPrivateKey = $settings?->nagad_merchant_private_key ?? '';
+        $this->nagadPgPublicKey = $settings?->nagad_pg_public_key ?? '';
+        $this->nagadSandbox = $settings?->nagad_sandbox ?? true;
     }
 
     public function save(): void
     {
-        // ⚠️ bKash Tokenized Checkout ইন্টিগ্রেশন কোড-সম্পূর্ণ (OnlinePaymentController,
-        // BkashPaymentService) — কিন্তু বাস্তব sandbox/production ক্রেডেনশিয়াল ছাড়া
-        // এখনো লাইভ টেস্ট করা হয়নি। এখানে username/password/app_key/app_secret বসিয়ে
-        // sandbox মোডে প্রথমে একটা টেস্ট পেমেন্ট করে যাচাই করে নেওয়া জরুরি।
-        // Nagad এখনো ইন্টিগ্রেট করা হয়নি — অভিভাবক পোর্টালে Nagad এর জন্য এখনো
-        // পুরনো ম্যানুয়াল "claim then admin confirm" পদ্ধতিই ব্যবহার হবে।
+        // ⚠️ bKash Tokenized Checkout ও Nagad Checkout — দুইটা ইন্টিগ্রেশনই কোড-সম্পূর্ণ
+        // (OnlinePaymentController, BkashPaymentService, NagadPaymentService) — কিন্তু
+        // বাস্তব sandbox/production ক্রেডেনশিয়াল ছাড়া এখনো লাইভ টেস্ট করা হয়নি।
+        // প্রথমে Sandbox মোডে টেস্ট পেমেন্ট করে যাচাই করে নেওয়া জরুরি।
         IntegrationSetting::updateOrCreate(
             ['institution_id' => app('tenant.institution_id')],
             [
@@ -59,6 +65,10 @@ class PaymentGatewaySettings extends Component
                 'nagad_enabled' => $this->nagadEnabled,
                 'nagad_merchant_number' => $this->nagadMerchantNumber ?: null,
                 'nagad_api_key' => $this->nagadApiKey ?: null,
+                'nagad_merchant_id' => $this->nagadMerchantId ?: null,
+                'nagad_merchant_private_key' => $this->nagadMerchantPrivateKey ?: null,
+                'nagad_pg_public_key' => $this->nagadPgPublicKey ?: null,
+                'nagad_sandbox' => $this->nagadSandbox,
             ]
         );
 

@@ -332,7 +332,9 @@ class GuardianPortal extends Component
             $recentHifz = HifzProgress::where('student_id', $child->id)->latest('date')->limit(5)->get();
         }
 
-        $bkashEnabled = (bool) (IntegrationSetting::find(app('tenant.institution_id'))?->bkash_enabled);
+        $integrationSettings = IntegrationSetting::find(app('tenant.institution_id'));
+        $bkashEnabled = (bool) ($integrationSettings?->bkash_enabled);
+        $nagadEnabled = (bool) ($integrationSettings?->nagad_enabled);
 
         // অপঠিত মেসেজের সংখ্যা (overview badge এর জন্য)
         $unreadCount = ConversationParticipant::where('user_id', auth()->id())
@@ -359,6 +361,7 @@ class GuardianPortal extends Component
             'homeworks' => $homeworks,
             'unreadCount' => $unreadCount,
             'bkashEnabled' => $bkashEnabled,
+            'nagadEnabled' => $nagadEnabled,
             'recentHifz' => $recentHifz,
         ])->layout('components.layouts.app', ['title' => 'অভিভাবক পোর্টাল']);
     }

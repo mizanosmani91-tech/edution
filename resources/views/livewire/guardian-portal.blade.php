@@ -132,6 +132,9 @@
                                                 @if ($bkashEnabled)
                                                     <a href="{{ route('online-payment.initiate', $fee->id) }}" class="btn-primary" style="padding:6px 12px;font-size:12px;background:#e2136e;border-color:#e2136e;">bKash এ পে করুন</a>
                                                 @endif
+                                                @if ($nagadEnabled)
+                                                    <a href="{{ route('online-payment.initiate', ['feeCollection' => $fee->id, 'gateway' => 'nagad']) }}" class="btn-primary" style="padding:6px 12px;font-size:12px;background:#f5821f;border-color:#f5821f;">Nagad এ পে করুন</a>
+                                                @endif
                                                 <button wire:click="openPayModal('{{ $fee->id }}')" type="button" class="btn-ghost" style="padding:6px 12px;font-size:12px;">অন্যভাবে পেমেন্ট জমা দিন</button>
                                             @else
                                                 <span class="sub" style="font-size:11.5px;">অফিস নিশ্চিত করলে হালনাগাদ হবে</span>
