@@ -151,10 +151,16 @@ class ExamSeatPlanManager extends Component
 
     public function render()
     {
-        $rooms = ExamSeatPlan::where('exam_id', $this->examId)
-            ->orderBy('display_order')
-            ->with(['assignments.student.schoolClass', 'assignments.student.section'])
-            ->get();
+        // ⚠️ examId খালি স্ট্রিং হতে পারে (কোনো পরীক্ষা তৈরি না থাকলে) —
+        // exam_id একটা uuid কলাম, খালি স্ট্রিং দিয়ে where() করলে Postgres এ
+        // "invalid input syntax for type uuid" এরর দিয়ে পুরো পেজ ভেঙে যায় (500)।
+        // তাই আগে খালি কিনা চেক করে নেওয়া হচ্ছে।
+        $rooms = $this->examId
+            ? ExamSeatPlan::where('exam_id', $this->examId)
+                ->orderBy('display_order')
+                ->with(['assignments.student.schoolClass', 'assignments.student.section'])
+                ->get()
+            : collect();
 
         return view('livewire.exam-seat-plan-manager', [
             'exams' => Exam::orderByDesc('start_date')->get(),

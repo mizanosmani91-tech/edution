@@ -71,7 +71,7 @@
                                     <td>{{ $a->student->student_id_no }}</td>
                                     <td>{{ $a->student->schoolClass->full_label ?? '' }} {{ $a->student->section->name ?? '' }}</td>
                                     <td>
-                                        <select onchange="if(this.value) { @this.call('moveStudent', '{{ $a->id }}', this.value); this.value=''; }">
+                                        <select onchange="if(this.value) { $wire.call('moveStudent', '{{ $a->id }}', this.value); this.value=''; }">
                                             <option value="">অন্য রুমে সরান</option>
                                             @foreach ($rooms as $r2)
                                                 @if ($r2->id !== $room->id)
