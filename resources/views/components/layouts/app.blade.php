@@ -81,7 +81,7 @@
 
             @if (auth()->user()->role !== 'teacher')
             {{-- একাডেমিক --}}
-            <div class="nav-module {{ $activeIf('academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*','live-class-monitor.*') }}" x-data="{ open: {{ request()->routeIs(['academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*','live-class-monitor.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*','live-class-monitor.*','quizzes.*') }}" x-data="{ open: {{ request()->routeIs(['academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*','live-class-monitor.*','quizzes.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2 2 0 0 1 6 4h13v14H6a2 2 0 0 0-2 2V5.5Z"/><path d="M19 18v3"/></svg></span>
                     <span class="lbl">একাডেমিক</span>
@@ -97,6 +97,7 @@
                     <a href="{{ route('homework.index') }}" class="sub-item {{ request()->routeIs('homework.*') ? 'active' : '' }}">হোমওয়ার্ক/অ্যাসাইনমেন্ট</a>
                     <a href="{{ route('lesson-plans.index') }}" class="sub-item {{ request()->routeIs('lesson-plans.*') ? 'active' : '' }}">লেসন প্ল্যান</a>
                     <a href="{{ route('question-bank.index') }}" class="sub-item {{ request()->routeIs('question-bank.*') ? 'active' : '' }}">প্রশ্ন ব্যাংক</a>
+                    <a href="{{ route('quizzes.index') }}" class="sub-item {{ request()->routeIs('quizzes.*') ? 'active' : '' }}">অনলাইন কুইজ (তৈরি করুন)</a>
                 </div></div></div>
             </div>
 
@@ -287,6 +288,7 @@
                     <a href="{{ route('portal.guardian') }}" class="sub-item {{ request()->routeIs('portal.guardian') ? 'active' : '' }}">অভিভাবক পোর্টাল</a>
                     <a href="{{ route('portal.student') }}" class="sub-item {{ request()->routeIs('portal.student') ? 'active' : '' }}">শিক্ষার্থী পোর্টাল</a>
                     <a href="{{ route('portal.teacher') }}" class="sub-item {{ request()->routeIs('portal.teacher') ? 'active' : '' }}">শিক্ষক পোর্টাল</a>
+                    <a href="{{ route('student-quizzes.index') }}" class="sub-item {{ request()->routeIs('student-quizzes.*') ? 'active' : '' }}">আমার কুইজ (শিক্ষার্থী)</a>
                 </div></div></div>
             </div>
 

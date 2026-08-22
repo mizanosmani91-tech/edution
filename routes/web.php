@@ -202,6 +202,9 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/homework', \App\Livewire\HomeworkManager::class)->name('homework.index');
     Route::get('/lesson-plans', \App\Livewire\LessonPlanManager::class)->name('lesson-plans.index');
     Route::get('/question-bank', \App\Livewire\QuestionBankManager::class)->name('question-bank.index');
+    Route::get('/quizzes', \App\Livewire\QuizManager::class)->name('quizzes.index');
+    Route::get('/my-quizzes', \App\Livewire\StudentQuizList::class)->name('student-quizzes.index');
+    Route::get('/my-quizzes/{quiz}', \App\Livewire\TakeQuiz::class)->name('student-quizzes.take');
     Route::get('/result-weighting', \App\Livewire\ResultWeightingManager::class)->name('result-weighting.index');
     Route::get('/scholarships', \App\Livewire\ScholarshipManager::class)->name('scholarships.index');
 
