@@ -3,20 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Support\ImportFieldMap;
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * বাল্ক ইমপোর্ট উইজার্ডের "নমুনা ফাইল ডাউনলোড করুন" বাটনের জন্য —
  * ImportFieldMap-এ সংজ্ঞায়িত ফিল্ড লিস্ট + উদাহরণ সারি দিয়ে একটা
- * .xlsx ফাইল বানিয়ে ডাউনলোড করে দেয়, যাতে ব্যবহারকারী ঠিক কোন কলাম
+ * .csv ফাইল বানিয়ে ডাউনলোড করে দেয়, যাতে ব্যবহারকারী ঠিক কোন কলাম
  * কোন ফরম্যাটে লাগবে তা বুঝে নিজের আসল ডাটা দিয়ে ফাইলটা পূরণ করতে পারেন।
+ *
+ * নোট: প্রথমে এটা PhpSpreadsheet দিয়ে .xlsx বানাত, কিন্তু লাইভ VPS-এ
+ * মেমরি/রিসোর্স সীমাবদ্ধতার কারণে মাঝেমধ্যে PHP-FPM ওয়ার্কার ক্র্যাশ
+ * করে 503 দিচ্ছিল (স্বাভাবিক exception না হওয়ায় try/catch দিয়েও ধরা
+ * যাচ্ছিল না)। ImportService::parse() এমনিতেই CSV সাপোর্ট করে, তাই
+ * হালকা ও নির্ভরযোগ্য CSV স্ট্রিমিং এ পরিবর্তন করা হয়েছে।
  */
 class ImportSampleController extends Controller
 {
-    public function download(string $entity): Response
+    public function download(string $entity): StreamedResponse
     {
         $fields = ImportFieldMap::fields($entity);
 
@@ -24,53 +27,29 @@ class ImportSampleController extends Controller
             abort(404);
         }
 
-        // ⚠️ TEMPORARY DEBUG: লাইভে এই রুট 500 দিচ্ছিল, কারণ চিহ্নিত করার
-        // জন্য সাময়িকভাবে exception টা সরাসরি রেসপন্সে দেখানো হচ্ছে। রুটটা
-        // auth+tenant middleware এর পেছনে (শুধু লগইন করা এডমিন দেখতে পারবে),
-        // কারণ বের হওয়ার সাথে সাথে এই ব্লক সরিয়ে ফেলা হবে।
-        try {
-            $sampleRows = ImportFieldMap::sampleRows($entity);
+        $sampleRows = ImportFieldMap::sampleRows($entity);
+        $filename = 'edution-namuna-'.$entity.'.csv';
 
-            $spreadsheet = new Spreadsheet();
-            $sheet = $spreadsheet->getActiveSheet();
-            $sheet->setTitle('নমুনা');
+        return response()->streamDownload(function () use ($fields, $sampleRows) {
+            // এক্সেলে বাংলা ঠিকমতো দেখানোর জন্য UTF-8 BOM
+            echo "\xEF\xBB\xBF";
 
-            foreach ($fields as $i => $field) {
-                $colLetter = Coordinate::stringFromColumnIndex($i + 1);
-                $sheet->setCellValue($colLetter.'1', $field['label'].($field['required'] ? ' *' : ''));
-                $sheet->getStyle($colLetter.'1')->getFont()->setBold(true);
-                $sheet->getColumnDimension($colLetter)->setWidth(22);
+            $out = fopen('php://output', 'w');
+
+            $headerRow = array_map(
+                fn ($field) => $field['label'].($field['required'] ? ' *' : ''),
+                $fields
+            );
+            fputcsv($out, $headerRow);
+
+            foreach ($sampleRows as $row) {
+                $line = array_map(fn ($field) => $row[$field['key']] ?? '', $fields);
+                fputcsv($out, $line);
             }
 
-            foreach ($sampleRows as $rowIndex => $row) {
-                $rowNumber = $rowIndex + 2;
-                foreach ($fields as $i => $field) {
-                    $colLetter = Coordinate::stringFromColumnIndex($i + 1);
-                    $value = $row[$field['key']] ?? '';
-                    $sheet->setCellValue($colLetter.$rowNumber, $value);
-                }
-            }
-
-            $sheet->freezePane('A2');
-
-            $filename = 'edution-namuna-'.$entity.'.xlsx';
-
-            $writer = new Xlsx($spreadsheet);
-            $tmpPath = tempnam(sys_get_temp_dir(), 'edu_sample_').'.xlsx';
-            $writer->save($tmpPath);
-            $contents = file_get_contents($tmpPath);
-            @unlink($tmpPath);
-
-            return response($contents, 200, [
-                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'Content-Disposition' => 'attachment; filename="'.$filename.'"',
-            ]);
-        } catch (\Throwable $e) {
-            return response()->json([
-                'debug_error' => $e->getMessage(),
-                'debug_file' => $e->getFile().':'.$e->getLine(),
-                'debug_trace' => explode("\n", $e->getTraceAsString()),
-            ], 500);
-        }
+            fclose($out);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
     }
 }
