@@ -36,6 +36,11 @@ Route::get('/manifest.webmanifest', [\App\Http\Controllers\PwaController::class,
 // শেয়ার করার জন্য। মূল '/' রুট ইচ্ছাকৃতভাবে বদলানো হয়নি, এটা আলাদা path।
 Route::get('/school-profile', [\App\Http\Controllers\PublicSiteController::class, 'show'])->name('public-site.show');
 
+// গাড়ির লাইভ GPS ট্র্যাকিং — ড্রাইভারের পাবলিক শেয়ার লিংক (auth ছাড়াই খোলা যায়,
+// tracking_token একটা ৩২-ক্যারেক্টার র‍্যান্ডম, unique টোকেন দিয়ে সুরক্ষিত)
+Route::get('/transport-tracking/{token}', [\App\Http\Controllers\VehicleTrackingController::class, 'share'])->name('transport-tracking.share');
+Route::post('/transport-tracking/{token}/update', [\App\Http\Controllers\VehicleTrackingController::class, 'update'])->name('transport-tracking.update');
+
 // ⚠️ প্রতিষ্ঠানের নিজস্ব সাবডোমেইনে (যেমন annazah.edution.xyz) রুট পেজে
 // সাধারণ landing page না দেখিয়ে সরাসরি সেই প্রতিষ্ঠানের লগইন পেজ দেখানো হয়।
 // মূল ডোমেইন (edution.xyz/www) বা অচেনা সাবডোমেইনে যথারীতি landing page।
@@ -158,6 +163,8 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/book-fines-page', \App\Livewire\BookIssueManager::class)->name('book-fines.index')->defaults('tab', 'overdue');
     Route::get('/transport-page', \App\Livewire\TransportManager::class)->name('transport.index');
     Route::get('/transport-assignment-page', \App\Livewire\TransportManager::class)->name('transport-assignment.index')->defaults('tab', 'assignments');
+    Route::get('/transport-tracking-page', \App\Livewire\VehicleTrackingMap::class)->name('transport-tracking.index');
+    Route::get('/transport-tracking/positions', [\App\Http\Controllers\VehicleTrackingController::class, 'positions'])->name('transport-tracking.positions');
     Route::get('/hostel-page', \App\Livewire\HostelManager::class)->name('hostel.index');
     Route::get('/hostel-fees-page', \App\Livewire\HostelManager::class)->name('hostel-fees.index')->defaults('tab', 'fees');
     Route::get('/complaints-page', \App\Livewire\ComplaintBox::class)->name('complaints.index');

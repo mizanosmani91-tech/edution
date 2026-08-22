@@ -235,7 +235,7 @@
             </div>
 
             {{-- পরিবহন --}}
-            <div class="nav-module {{ $activeIf('transport.*','transport-assignment.*') }}" x-data="{ open: {{ request()->routeIs(['transport.*','transport-assignment.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('transport.*','transport-assignment.*','transport-tracking.*') }}" x-data="{ open: {{ request()->routeIs(['transport.*','transport-assignment.*','transport-tracking.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="9" width="18" height="8" rx="2"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg></span>
                     <span class="lbl">পরিবহন</span>
@@ -244,6 +244,7 @@
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('transport.index') }}" class="sub-item {{ request()->routeIs('transport.*') ? 'active' : '' }}">রুট ও গাড়ি</a>
                     <a href="{{ route('transport-assignment.index') }}" class="sub-item {{ request()->routeIs('transport-assignment.*') ? 'active' : '' }}">ছাত্র-পরিবহন সংযুক্তি</a>
+                    <a href="{{ route('transport-tracking.index') }}" class="sub-item {{ request()->routeIs('transport-tracking.*') ? 'active' : '' }}">লাইভ GPS ট্র্যাকিং</a>
                 </div></div></div>
             </div>
 
