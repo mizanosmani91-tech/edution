@@ -7,7 +7,7 @@
     </div>
 
     <div class="alert-note" style="margin-bottom:16px;">
-        এখানে শুধু আপনার bKash/Nagad মার্চেন্ট তথ্য সংরক্ষণ করা যাবে। প্রকৃত অনলাইন পেমেন্ট গ্রহণের ফিচার এখনো সক্রিয় করা হয়নি — এর জন্য আপনার bKash/Nagad মার্চেন্ট অ্যাকাউন্ট থেকে আসল API credential দরকার হবে। credential দিলে পরবর্তী ধাপে লাইভ ইন্টিগ্রেশন যুক্ত করা হবে।
+        bKash এর জন্য অটোমেটিক অনলাইন পেমেন্ট চালু আছে — নিচের তথ্য সঠিকভাবে দিলে অভিভাবক নিজেই bKash দিয়ে ফি পরিশোধ করতে পারবেন, আর সেটা এডমিনের ম্যানুয়াল কনফার্মেশন ছাড়াই স্বয়ংক্রিয়ভাবে হিসেবে যোগ হয়ে যাবে। প্রথমে "Sandbox মোড" চালু রেখে টেস্ট করে নিন, তারপর প্রোডাকশন ক্রেডেনশিয়াল দিয়ে Sandbox বন্ধ করুন। Nagad এখনো ম্যানুয়াল পদ্ধতিতেই কাজ করে (অভিভাবক দাবি জমা দেয়, অফিস যাচাই করে নিশ্চিত করে)।
     </div>
 
     @if ($savedMessage)
@@ -21,9 +21,15 @@
         </div>
         <div class="info-grid" style="grid-template-columns:1fr 1fr;">
             <div class="field"><label>মার্চেন্ট নম্বর</label><input type="text" wire:model="bkashMerchantNumber"></div>
-            <div class="field"><label>API Key</label><input type="text" wire:model="bkashApiKey" placeholder="bKash sandbox/production API key"></div>
+            <div class="field"><label>App Key</label><input type="text" wire:model="bkashApiKey" placeholder="bKash App Key"></div>
+            <div class="field"><label>App Secret</label><input type="password" wire:model="bkashApiSecret"></div>
+            <div class="field"><label>Username</label><input type="text" wire:model="bkashUsername" placeholder="bKash Checkout Username"></div>
+            <div class="field"><label>Password</label><input type="password" wire:model="bkashPassword"></div>
+            <div class="field" style="display:flex;align-items:center;gap:8px;padding-top:22px;">
+                <label class="switch"><input type="checkbox" wire:model="bkashSandbox"><span class="switch-track"></span></label>
+                <label style="margin:0;">Sandbox মোড (টেস্টের জন্য)</label>
+            </div>
         </div>
-        <div class="field"><label>API Secret</label><input type="password" wire:model="bkashApiSecret"></div>
     </div>
 
     <div class="cert-form-card lifecycle-page" style="margin-bottom:16px;">

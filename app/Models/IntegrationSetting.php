@@ -17,6 +17,7 @@ class IntegrationSetting extends Model
     protected $fillable = [
         'institution_id',
         'bkash_enabled', 'bkash_merchant_number', 'bkash_api_key', 'bkash_api_secret',
+        'bkash_username', 'bkash_password', 'bkash_sandbox',
         'nagad_enabled', 'nagad_merchant_number', 'nagad_api_key',
         'sms_enabled', 'sms_provider', 'sms_api_key', 'sms_sender_id',
         'email_enabled', 'email_smtp_host', 'email_smtp_port', 'email_smtp_username',
@@ -25,11 +26,13 @@ class IntegrationSetting extends Model
 
     protected $casts = [
         'bkash_enabled' => 'boolean',
+        'bkash_sandbox' => 'boolean',
         'nagad_enabled' => 'boolean',
         'sms_enabled' => 'boolean',
         'email_enabled' => 'boolean',
         'bkash_api_key' => 'encrypted',
         'bkash_api_secret' => 'encrypted',
+        'bkash_password' => 'encrypted',
         'nagad_api_key' => 'encrypted',
         'sms_api_key' => 'encrypted',
         'email_smtp_password' => 'encrypted',

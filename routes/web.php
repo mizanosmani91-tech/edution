@@ -177,6 +177,8 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/live-class-monitor', \App\Livewire\LiveClassMonitor::class)->name('live-class-monitor.index');
 
     Route::get('/portal/guardian', \App\Livewire\GuardianPortal::class)->name('portal.guardian');
+    Route::get('/online-payment/{feeCollection}/initiate', [\App\Http\Controllers\OnlinePaymentController::class, 'initiate'])->name('online-payment.initiate');
+    Route::get('/online-payment/callback', [\App\Http\Controllers\OnlinePaymentController::class, 'callback'])->name('online-payment.callback');
     Route::get('/portal/teacher', \App\Livewire\TeacherPortal::class)->name('portal.teacher');
     Route::get('/portal/student', \App\Livewire\StudentPortal::class)->name('portal.student');
 

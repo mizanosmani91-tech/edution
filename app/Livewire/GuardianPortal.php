@@ -7,6 +7,7 @@ use App\Models\Conversation;
 use App\Models\ConversationParticipant;
 use App\Models\FeeCollection;
 use App\Models\Homework;
+use App\Models\IntegrationSetting;
 use App\Models\HomeworkCompletion;
 use App\Models\LeaveRequest;
 use App\Models\Notice;
@@ -56,6 +57,12 @@ class GuardianPortal extends Component
         $firstChild = auth()->user()->children()->first();
         $this->activeChildId = $firstChild?->id;
         $this->profilePhone = auth()->user()->phone ?? '';
+
+        // bKash পেমেন্ট শেষে callback থেকে ?tab=fees দিয়ে ফেরত পাঠানো হয়,
+        // সেটা এখানে ধরে সরাসরি ফি ট্যাবেই খুলে দেওয়া হয়
+        if (request()->query('tab')) {
+            $this->activeTab = request()->query('tab');
+        }
     }
 
     public function setTab(string $tab): void
@@ -319,6 +326,8 @@ class GuardianPortal extends Component
             ]);
         }
 
+        $bkashEnabled = (bool) (IntegrationSetting::find(app('tenant.institution_id'))?->bkash_enabled);
+
         // অপঠিত মেসেজের সংখ্যা (overview badge এর জন্য)
         $unreadCount = ConversationParticipant::where('user_id', auth()->id())
             ->with('conversation')
@@ -343,6 +352,7 @@ class GuardianPortal extends Component
             'notices' => $notices,
             'homeworks' => $homeworks,
             'unreadCount' => $unreadCount,
+            'bkashEnabled' => $bkashEnabled,
         ])->layout('components.layouts.app', ['title' => 'অভিভাবক পোর্টাল']);
     }
 }

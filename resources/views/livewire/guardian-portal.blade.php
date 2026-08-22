@@ -82,6 +82,12 @@
 
             {{-- ================= ফি ================= --}}
             @if ($activeTab === 'fees')
+                @if (session('success'))
+                    <div class="alert-note" style="margin-bottom:14px;background:var(--good-soft, #e6f7ee);color:var(--good, #0a8a4a);">{{ session('success') }}</div>
+                @endif
+                @if (session('error'))
+                    <div class="alert-note" style="margin-bottom:14px;background:var(--bad-soft, #fbe9e9);color:var(--bad, #c0392b);">{{ session('error') }}</div>
+                @endif
                 <div class="table-card">
                     <table>
                         <thead><tr><th>মাস/ধরন</th><th>বকেয়া</th><th>পরিশোধিত</th><th>স্ট্যাটাস</th><th>কার্যক্রম</th></tr></thead>
@@ -100,13 +106,16 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <div class="row-actions">
+                                        <div class="row-actions" style="flex-wrap:wrap;gap:6px;">
                                             @if ($fee->status === 'paid')
                                                 <a href="{{ route('fee-collections.receipt', $fee->id) }}" target="_blank" title="রশিদ দেখুন">
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l3 3v17H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
                                                 </a>
                                             @elseif ($fee->guardian_claim_status !== 'pending')
-                                                <button wire:click="openPayModal('{{ $fee->id }}')" type="button" class="btn-primary" style="padding:6px 12px;font-size:12px;">পেমেন্ট জমা দিন</button>
+                                                @if ($bkashEnabled)
+                                                    <a href="{{ route('online-payment.initiate', $fee->id) }}" class="btn-primary" style="padding:6px 12px;font-size:12px;background:#e2136e;border-color:#e2136e;">bKash এ পে করুন</a>
+                                                @endif
+                                                <button wire:click="openPayModal('{{ $fee->id }}')" type="button" class="btn-ghost" style="padding:6px 12px;font-size:12px;">অন্যভাবে পেমেন্ট জমা দিন</button>
                                             @else
                                                 <span class="sub" style="font-size:11.5px;">অফিস নিশ্চিত করলে হালনাগাদ হবে</span>
                                             @endif
@@ -122,7 +131,7 @@
 
                 <div class="info-box" style="margin-top:14px;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-                    "পেমেন্ট জমা দিন" চাপলে bKash/Nagad/ব্যাংক/নগদ যেভাবে পরিশোধ করেছেন তার তথ্য জমা দিতে পারবেন — প্রতিষ্ঠানের অফিস যাচাই করে নিশ্চিত করার পর তা বকেয়া থেকে বাদ যাবে।
+                    "bKash এ পে করুন" চাপলে সরাসরি bKash এর পেজে গিয়ে পেমেন্ট করলেই স্বয়ংক্রিয়ভাবে বকেয়া থেকে বাদ যাবে, অফিসের অপেক্ষা করতে হবে না। Nagad/ব্যাংক/হাতে-হাতে পরিশোধ করলে "অন্যভাবে পেমেন্ট জমা দিন" চেপে তথ্য জমা দিন — সেটা অফিস যাচাই করে নিশ্চিত করবে।
                 </div>
 
                 @if ($payingFeeId)
