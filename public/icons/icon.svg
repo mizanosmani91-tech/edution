@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#5C1A2B"/>
+  <rect x="40" y="40" width="432" height="432" rx="72" fill="none" stroke="#C9A227" stroke-width="6"/>
+  <g fill="#E7C767">
+    <path d="M256 128 96 200l160 72 160-72-160-72z"/>
+    <path d="M164 232v88c0 28 41 60 92 60s92-32 92-60v-88l-92 41-92-41z" opacity="0.9"/>
+    <circle cx="392" cy="212" r="10"/>
+    <rect x="387" y="212" width="10" height="86"/>
+  </g>
+  <text x="256" y="452" font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700" fill="#F7F2E5" text-anchor="middle">EDUTION</text>
+</svg>
