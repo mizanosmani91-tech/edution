@@ -44,8 +44,10 @@ class NotificationGatewaySettings extends Component
 
     public function save(): void
     {
-        // ⚠️ শুধু credential সংরক্ষণ — SMS/Email আসলেই পাঠানো এখনো ইমপ্লিমেন্ট
-        // করা হয়নি, কারণ real SMS gateway account / SMTP credential দরকার।
+        // SMS চালু থাকলে TenantSmsService দিয়ে অভিভাবকদের কাছে সত্যিই SMS যায়
+        // (ফি বকেয়া, উপস্থিতি অনুপস্থিতি, ফলাফল প্রকাশ — NotificationService দেখুন)।
+        // এখানে bulksmsbd.net এর real API key/Sender ID বসাতে হবে, নাহলে SMS
+        // পাঠানো চুপচাপ স্কিপ হয়ে যাবে (শুধু in-app নোটিফিকেশন থেকে যাবে)।
         IntegrationSetting::updateOrCreate(
             ['institution_id' => app('tenant.institution_id')],
             [

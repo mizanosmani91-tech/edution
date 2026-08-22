@@ -14,12 +14,17 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 /**
- * NotificationService — এখন শুধু in-app notification (ডেটাবেজে সেভ)।
- * SMS/push যোগ করতে চাইলে এখানে একটা করে চ্যানেল method যোগ করবেন
- * (sendSms(), sendPush()) — কল করার জায়গা বদলাতে হবে না।
+ * NotificationService — in-app notification (ডেটাবেজে সেভ) + অভিভাবকের কাছে
+ * SMS (প্রতিষ্ঠানের নিজস্ব SMS গেটওয়ে চালু থাকলে, TenantSmsService দিয়ে)।
+ * প্রতিষ্ঠান SMS চালু না করলে বা credential না দিলে SMS চুপচাপ স্কিপ হয়ে
+ * যায় — শুধু in-app notification থেকে যায়, কিছু ভাঙে না।
  */
 class NotificationService
 {
+    public function __construct(private TenantSmsService $tenantSms)
+    {
+    }
+
     public function feeDue(FeeCollection $fee): void
     {
         foreach ($fee->student->guardians as $guardian) {
@@ -31,6 +36,14 @@ class NotificationService
                 'body' => "৳{$fee->due_amount} বকেয়া আছে {$fee->due_month} মাসের জন্য।",
                 'link' => '/portal/guardian',
             ]);
+
+            if ($guardian->phone) {
+                $this->tenantSms->send(
+                    $fee->institution_id,
+                    $guardian->phone,
+                    "EDUTION: {$fee->student->name} এর {$fee->due_month} মাসের ৳{$fee->due_amount} ফি বকেয়া আছে। দ্রুত পরিশোধ করুন।"
+                );
+            }
         }
     }
 
@@ -44,6 +57,14 @@ class NotificationService
                 'title' => "{$student->name} আজ অনুপস্থিত",
                 'link' => '/portal/guardian',
             ]);
+
+            if ($guardian->phone) {
+                $this->tenantSms->send(
+                    $student->institution_id,
+                    $guardian->phone,
+                    "EDUTION: {$student->name} আজ ({$this->todayBn()}) স্কুলে অনুপস্থিত। কারণ জানা থাকলে অফিসে জানান।"
+                );
+            }
         }
     }
 
@@ -71,8 +92,21 @@ class NotificationService
                     'title' => "{$student->name} এর {$exam->name} ফলাফল প্রকাশিত হয়েছে",
                     'link' => '/portal/guardian',
                 ]);
+
+                if ($guardian->phone) {
+                    $this->tenantSms->send(
+                        $exam->institution_id,
+                        $guardian->phone,
+                        "EDUTION: {$student->name} এর {$exam->name} পরীক্ষার ফলাফল প্রকাশিত হয়েছে। পোর্টালে লগইন করে দেখুন।"
+                    );
+                }
             }
         }
+    }
+
+    private function todayBn(): string
+    {
+        return now()->translatedFormat('j F Y');
     }
 
     /**
