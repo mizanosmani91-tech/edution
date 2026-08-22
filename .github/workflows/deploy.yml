@@ -19,7 +19,15 @@ jobs:
           script: |
             set -e
             cd ~/edution-laravel
-            git pull origin main
+            # সার্ভারের working copy-তে মাঝেমধ্যে ট্র্যাক করা ফাইলে (যেমন
+            # package-lock.json) লোকাল পরিবর্তন থেকে যায় (ম্যানুয়াল npm
+            # install ইত্যাদির কারণে), যার ফলে `git pull` কনফ্লিক্টে আটকে
+            # পুরো ডিপ্লয় ফেইল করে দেয় — অথচ কোডে কোনো ভুল থাকে না। তাই
+            # এখন থেকে সবসময় origin/main-এর সাথে hard reset করা হবে
+            # (untracked ফাইল যেমন .env/storage/vendor/node_modules
+            # অক্ষত থাকবে, শুধু ট্র্যাক করা ফাইলের লোকাল ড্রিফট মুছে যাবে)।
+            git fetch origin main
+            git reset --hard origin/main
             composer install --no-dev --optimize-autoloader || composer update phpoffice/phpspreadsheet phpoffice/phpword --no-dev --with-dependencies --optimize-autoloader
             npm ci
             npm run build
