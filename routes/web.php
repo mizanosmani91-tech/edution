@@ -203,6 +203,7 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/lesson-plans', \App\Livewire\LessonPlanManager::class)->name('lesson-plans.index');
     Route::get('/question-bank', \App\Livewire\QuestionBankManager::class)->name('question-bank.index');
     Route::get('/quizzes', \App\Livewire\QuizManager::class)->name('quizzes.index');
+    Route::get('/visitors', \App\Livewire\VisitorLog::class)->name('visitors.index');
     Route::get('/my-quizzes', \App\Livewire\StudentQuizList::class)->name('student-quizzes.index');
     Route::get('/my-quizzes/{quiz}', \App\Livewire\TakeQuiz::class)->name('student-quizzes.take');
     Route::get('/result-weighting', \App\Livewire\ResultWeightingManager::class)->name('result-weighting.index');

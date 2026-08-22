@@ -277,6 +277,20 @@
                 </div></div></div>
             </div>
 
+            @if (auth()->user()->role !== 'teacher')
+            {{-- ভিজিটর --}}
+            <div class="nav-module {{ $activeIf('visitors.*') }}" x-data="{ open: {{ request()->routeIs(['visitors.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M4 20c0-3.5 3.5-6 8-6s8 2.5 8 6"/></svg></span>
+                    <span class="lbl">ভিজিটর</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('visitors.index') }}" class="sub-item {{ request()->routeIs('visitors.*') ? 'active' : '' }}">ভিজিটর লগ/গেট পাস</a>
+                </div></div></div>
+            </div>
+            @endif
+
             {{-- পোর্টাল --}}
             <div class="nav-module {{ $activeIf('portal.*') }}" x-data="{ open: {{ request()->routeIs(['portal.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
