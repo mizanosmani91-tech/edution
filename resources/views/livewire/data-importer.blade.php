@@ -21,9 +21,15 @@
     {{-- ধাপ ১: আপলোড --}}
     @if ($step === 'upload')
         <div class="cert-form-card">
-            <div class="alert-note" style="margin-bottom:16px;">
+            <div class="alert-note" style="margin-bottom:12px;">
                 সাপোর্টেড ফরম্যাট: Excel (.xlsx, .xls), CSV (.csv), Word (.docx — শুধু আসল টেবিল থাকলে কাজ করবে)। ফাইলের প্রথম সারি অবশ্যই কলামের নাম (header) হতে হবে — এরপর প্রতিটা সারিতে একজন করে {{ $entityLabel }}-এর তথ্য। কলামের ক্রম/নাম যেকোনো কিছু হতে পারে, পরের ধাপে আপনি নিজে মিলিয়ে দেবেন।
             </div>
+
+            <a href="{{ route('import.sample', $entity) }}" class="btn-ghost" style="margin-bottom:16px;display:inline-flex;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v13"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>
+                নমুনা ফাইল ডাউনলোড করুন
+            </a>
+            <p class="hint" style="margin-top:-10px;margin-bottom:16px;">সঠিক কলাম ও ফরম্যাট বুঝতে এই নমুনা ফাইলটা ডাউনলোড করে, তাতে নিজের আসল ডাটা বসিয়ে আপলোড করতে পারেন।</p>
 
             @if ($entity === 'exam-results')
                 <div class="field">

@@ -60,6 +60,39 @@ class ImportFieldMap
         };
     }
 
+    /**
+     * নমুনা ফাইলে দেখানোর জন্য প্রতিটা entity-এর জন্য ১-২টা উদাহরণ সারি
+     * (field key => উদাহরণ মান)। এগুলো শুধু ফরম্যাট বোঝানোর জন্য —
+     * ইমপোর্টের সময় এই ডাটা নিজে থেকে সিস্টেমে ঢুকবে না, ব্যবহারকারী
+     * ডাউনলোড করে নিজের আসল ডাটা দিয়ে সারিগুলো বদলে আপলোড করবেন।
+     */
+    public static function sampleRows(string $entity): array
+    {
+        return match ($entity) {
+            'students' => [
+                ['name' => 'মোহাম্মদ রাকিব হাসান', 'name_en' => 'Md Rakib Hasan', 'student_id_no' => 'S-1001', 'class_name' => 'ষষ্ঠ শ্রেণি', 'section_name' => 'ক', 'gender' => 'male', 'date_of_birth' => '2013-05-14', 'guardian_phone' => '01712345678', 'blood_group' => 'B+', 'previous_school' => 'আদর্শ প্রাথমিক বিদ্যালয়'],
+                ['name' => 'ফাতেমা আক্তার', 'name_en' => 'Fatema Akter', 'student_id_no' => 'S-1002', 'class_name' => 'সপ্তম শ্রেণি', 'section_name' => 'খ', 'gender' => 'female', 'date_of_birth' => '2012-11-02', 'guardian_phone' => '01898765432', 'blood_group' => 'O+', 'previous_school' => ''],
+            ],
+            'teachers' => [
+                ['name' => 'মোঃ আব্দুল করিম', 'teacher_id_no' => 'T-101', 'phone' => '01711112222', 'email' => 'karim@example.com', 'designation' => 'সহকারী শিক্ষক', 'joining_date' => '2020-01-15', 'base_salary' => '25000'],
+                ['name' => 'নাসরিন সুলতানা', 'teacher_id_no' => 'T-102', 'phone' => '01922223333', 'email' => 'nasrin@example.com', 'designation' => 'সিনিয়র শিক্ষক', 'joining_date' => '2018-06-01', 'base_salary' => '32000'],
+            ],
+            'fees' => [
+                ['student_id_no' => 'S-1001', 'due_month' => '2026-08', 'fee_type' => 'বেতন', 'amount_due' => '1500', 'amount_paid' => '1500', 'payment_method' => 'নগদ'],
+                ['student_id_no' => 'S-1002', 'due_month' => '2026-08', 'fee_type' => 'পরিবহন', 'amount_due' => '800', 'amount_paid' => '300', 'payment_method' => 'বিকাশ'],
+            ],
+            'exam-results' => [
+                ['student_id_no' => 'S-1001', 'subject_name' => 'বাংলা', 'marks_obtained' => '78', 'is_absent' => 'no'],
+                ['student_id_no' => 'S-1002', 'subject_name' => 'গণিত', 'marks_obtained' => '', 'is_absent' => 'yes'],
+            ],
+            'attendance-device' => [
+                ['device_user_id' => '1001', 'date' => '2026-08-20', 'check_in' => '08:02', 'check_out' => '16:05', 'status' => ''],
+                ['device_user_id' => '1002', 'date' => '2026-08-20', 'check_in' => '08:15', 'check_out' => '16:00', 'status' => ''],
+            ],
+            default => [],
+        };
+    }
+
     public static function label(string $entity): string
     {
         return match ($entity) {
