@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 10px; }
+        body { font-family: notosansbengali, sans-serif; font-size: 10px; }
         .institution-name { text-align: center; font-size: 15px; font-weight: bold; margin-bottom: 2px; }
         h1 { font-size: 13px; text-align: center; margin: 4px 0 2px; }
         .subtitle { text-align: center; color: #555; margin-bottom: 12px; }

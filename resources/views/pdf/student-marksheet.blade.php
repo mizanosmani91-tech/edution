@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 12px; }
+        body { font-family: notosansbengali, sans-serif; font-size: 12px; }
         h1 { font-size: 16px; text-align: center; margin-bottom: 4px; }
         .info { text-align: center; margin-bottom: 20px; color: #444; }
         table { width: 100%; border-collapse: collapse; }

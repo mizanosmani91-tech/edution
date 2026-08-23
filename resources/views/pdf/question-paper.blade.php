@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 11px; margin: 0; }
+        body { font-family: notosansbengali, sans-serif; font-size: 11px; margin: 0; }
         .page { display: table; width: 100%; table-layout: fixed; }
         .copy { display: table-cell; width: 50%; vertical-align: top; padding: 10px 14px; }
         .copy + .copy { border-left: 1px dashed #999; }
@@ -17,7 +17,7 @@
         .q-block { margin-bottom: 10px; }
         .q-head { font-weight: bold; }
         .q-marks { float: right; }
-        .q-content { white-space: pre-wrap; margin-top: 4px; line-height: 1.7; }
+        .q-content { margin-top: 4px; line-height: 1.7; }
     </style>
 </head>
 <body>
@@ -37,7 +37,7 @@
                     <div class="q-block">
                         <span class="q-marks">{{ rtrim(rtrim(number_format($item->marks, 2), '0'), '.') }}</span>
                         <span class="q-head">{{ $idx + 1 }}) {{ $item->heading }}</span>
-                        <div class="q-content">{{ $item->content }}</div>
+                        <div class="q-content">{!! \App\Support\BilingualPdfText::render($item->content) !!}</div>
                     </div>
                 @endforeach
             </div>

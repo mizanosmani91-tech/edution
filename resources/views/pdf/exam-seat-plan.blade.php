@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 11px; }
+        body { font-family: notosansbengali, sans-serif; font-size: 11px; }
         .institution-name { text-align: center; font-size: 16px; font-weight: bold; margin-bottom: 2px; }
         .exam-title { text-align: center; font-size: 13px; margin-bottom: 14px; }
         .room-page { page-break-after: always; }

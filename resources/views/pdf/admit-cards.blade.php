@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 12px; }
+        body { font-family: notosansbengali, sans-serif; font-size: 12px; }
         .card {
             border: 1.5px solid #333;
             padding: 16px;

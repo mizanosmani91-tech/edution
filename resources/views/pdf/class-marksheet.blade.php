@@ -7,7 +7,7 @@
         ওয়েব পেজের মতো utility class কাজ করবে না।
     --}}
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 11px; }
+        body { font-family: notosansbengali, sans-serif; font-size: 11px; }
         h1 { font-size: 16px; text-align: center; margin-bottom: 2px; }
         .subtitle { text-align: center; color: #555; margin-bottom: 16px; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
