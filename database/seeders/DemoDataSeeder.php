@@ -523,7 +523,7 @@ class DemoDataSeeder extends Seeder
                 foreach (array_chunk($rows, 500) as $chunk) {
                                 DB::table('routine_periods')->insert($chunk);
                 }
-
+    }
             private function seedMisc(string $instId, array $students, array $teachers, ?string $adminId): void
                 {
                             $deptNames = ['বিজ্ঞান বিভাগ', 'মানবিক বিভাগ', 'ব্যবসায় শিক্ষা বিভাগ'];
@@ -677,8 +677,7 @@ class DemoDataSeeder extends Seeder
                                             }
                             }
                 }
-    }
-
+    
     private function seedNotices(string $instId, ?string $adminId): void
     {
         $items = [
