@@ -467,7 +467,7 @@ class DemoDataSeeder extends Seeder
                                                     'exam_id' => $mid->id,
                                                     'exam_seat_plan_id' => $plan->id,
                                                     'student_id' => $s->id,
-                                                    'seat_no' => chr(65 + $planIndex) . '-' . str_pad((string) $seatInRoom, 2, '0', STR_PAD_LEFT),
+                                                                        'seat_no' => $seatInRoom,
                                                     'created_at' => now(),
                                                     'updated_at' => now(),
                                                 ];
