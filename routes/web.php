@@ -4,10 +4,11 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/debug-pdf-fonts-temp', function () {
+Route::get('/debug-pdf-fonts-v2', function () {
     $fontDir = storage_path('fonts');
     $file = resource_path('fonts/NotoSansBengali-Regular.ttf');
     $result = ['fontDir' => $fontDir, 'fontDirWritable' => is_writable($fontDir)];
+        $result['marker'] = 'V2-CACHE-BUST-TEST';
 
     try {
         $font = \FontLib\Font::load($file);
