@@ -72,7 +72,12 @@ class AppServiceProvider extends ServiceProvider
             @mkdir($fontDir, 0755, true);
         }
 
-        $marker = $fontDir.'/.edution-fonts-registered';
+        // ⚠️ v2: v1 মার্কার আগের একটা ডিপ্লয়ে ভুলভাবে লেখা হয়ে গিয়েছিল
+        // (registerFont() ব্যর্থ হলেও রিটার্ন ভ্যালু চেক না করেই মার্কার
+        // লিখে ফেলা হচ্ছিল, ফলে ব্যর্থ রেজিস্ট্রেশন স্থায়ীভাবে "সফল" হিসেবে
+        // আটকে থাকছিল)। তাই নাম বদলে v2 করা হলো, যাতে পুরনো মার্কার থাকলেও
+        // এবার আসলেই রিট্রাই হয়।
+        $marker = $fontDir.'/.edution-fonts-registered-v2';
         if (file_exists($marker)) {
             return;
         }
@@ -89,12 +94,26 @@ class AppServiceProvider extends ServiceProvider
             ['family' => 'notonaskharabic', 'style' => 'normal', 'weight' => 'normal', 'file' => resource_path('fonts/NotoNaskhArabic-Regular.ttf')],
         ];
 
+        $allOk = true;
         foreach ($fonts as $f) {
-            if (file_exists($f['file'])) {
-                $fontMetrics->registerFont(['family' => $f['family'], 'style' => $f['style'], 'weight' => $f['weight']], $f['file']);
+            if (! file_exists($f['file'])) {
+                $allOk = false;
+                \Illuminate\Support\Facades\Log::warning("PDF font file missing: {$f['file']}");
+                continue;
+            }
+
+            $ok = $fontMetrics->registerFont(['family' => $f['family'], 'style' => $f['style'], 'weight' => $f['weight']], $f['file']);
+            if (! $ok) {
+                $allOk = false;
+                \Illuminate\Support\Facades\Log::warning("PDF font registration failed for {$f['family']}");
             }
         }
 
-        file_put_contents($marker, now()->toDateTimeString());
+        // ⚠️ শুধু সব ফন্ট সফলভাবে রেজিস্টার হলেই মার্কার লিখছি — ব্যর্থ হলে
+        // পরের রিকোয়েস্টে আবার চেষ্টা হবে (registerFont() নিজেই ইতিমধ্যে
+        // সফল ফন্টগুলোর জন্য early-return করে, তাই রিট্রাই সস্তা)।
+        if ($allOk) {
+            file_put_contents($marker, now()->toDateTimeString());
+        }
     }
 }
