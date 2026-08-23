@@ -43,19 +43,30 @@
             <div>
                 <b>মোট বসানো হয়েছে:</b> {{ $totalAssigned }} জন ছাত্র / {{ $rooms->sum('capacity') }} মোট আসন ({{ $rooms->count() }}টা রুম)
             </div>
-            <div style="display:flex;gap:10px;">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
                 <button class="btn-primary" wire:click="generateSeatPlan" wire:confirm="পুরনো সিট বিন্যাস মুছে নতুন করে তৈরি করবেন?">স্বয়ংক্রিয়ভাবে সিট বিন্যাস তৈরি করুন</button>
                 @if ($totalAssigned > 0)
-                    <a class="btn-ghost" href="{{ route('exam-seat-plan.print', ['exam_id' => $examId]) }}" target="_blank">সিট প্ল্যান প্রিন্ট করুন (PDF)</a>
+                    <a class="btn-ghost" href="{{ route('exam-seat-plan.print', ['exam_id' => $examId]) }}" target="_blank">সিট প্ল্যান প্রিন্ট (PDF)</a>
+                    <a class="btn-ghost" href="{{ route('exam-attendance.print', ['exam_id' => $examId]) }}" target="_blank">উপস্থিতি শীট প্রিন্ট (PDF)</a>
+                    <a class="btn-ghost" href="{{ route('exam-hall-duty.print', ['exam_id' => $examId]) }}" target="_blank">হল ডিউটি তালিকা প্রিন্ট (PDF)</a>
                 @endif
             </div>
         </div>
 
         @forelse ($rooms as $room)
             <div class="cert-form-card lifecycle-page" style="margin-bottom:16px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:10px;">
                     <h3 style="font-family:'Tiro Bangla',serif;font-size:16px;margin:0;">{{ $room->room_name }} <span style="font-weight:400;font-size:12.5px;color:var(--ink-soft);">({{ $room->assignments->count() }}/{{ $room->capacity }} আসন পূর্ণ)</span></h3>
-                    <button class="btn-ghost" style="border-color:var(--bad);color:var(--bad);" wire:click="deleteRoom('{{ $room->id }}')" wire:confirm="এই রুমটা ও এর সব সিট বিন্যাস মুছে ফেলা হবে, নিশ্চিত?">রুম মুছুন</button>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12.5px;color:var(--ink-soft);margin:0;">দায়িত্বরত শিক্ষক:</label>
+                        <select onchange="$wire.call('assignHallTeacher', '{{ $room->id }}', this.value)" style="max-width:220px;">
+                            <option value="">নির্ধারণ করুন</option>
+                            @foreach ($teachers as $t)
+                                <option value="{{ $t->id }}" @selected($room->assigned_teacher_id === $t->id)>{{ $t->name }}</option>
+                            @endforeach
+                        </select>
+                        <button class="btn-ghost" style="border-color:var(--bad);color:var(--bad);" wire:click="deleteRoom('{{ $room->id }}')" wire:confirm="এই রুমটা ও এর সব সিট বিন্যাস মুছে ফেলা হবে, নিশ্চিত?">রুম মুছুন</button>
+                    </div>
                 </div>
 
                 @if ($room->assignments->isEmpty())

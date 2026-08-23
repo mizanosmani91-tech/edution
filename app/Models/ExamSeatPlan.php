@@ -20,6 +20,7 @@ class ExamSeatPlan extends Model
         'exam_id',
         'room_name',
         'capacity',
+        'assigned_teacher_id',
         'display_order',
     ];
 
@@ -31,6 +32,11 @@ class ExamSeatPlan extends Model
     public function exam()
     {
         return $this->belongsTo(Exam::class);
+    }
+
+    public function assignedTeacher()
+    {
+        return $this->belongsTo(Teacher::class, 'assigned_teacher_id');
     }
 
     public function assignments()

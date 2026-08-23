@@ -207,6 +207,12 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/marksheet/class-tabulation', [\App\Http\Controllers\MarksheetController::class, 'classTabulation'])->name('marksheet.class-tabulation');
     Route::get('/exam-seat-plan', \App\Livewire\ExamSeatPlanManager::class)->name('exam-seat-plan.index');
     Route::get('/exam-seat-plan/print', [\App\Http\Controllers\ExamSeatPlanController::class, 'print'])->name('exam-seat-plan.print');
+    Route::get('/exam-attendance/print', [\App\Http\Controllers\ExamSeatPlanController::class, 'attendance'])->name('exam-attendance.print');
+    Route::get('/exam-hall-duty/print', [\App\Http\Controllers\ExamSeatPlanController::class, 'hallDuty'])->name('exam-hall-duty.print');
+    Route::get('/answer-sheet-distribution/print', [\App\Http\Controllers\AnswerSheetDistributionController::class, 'print'])->name('answer-sheet-distribution.print');
+    Route::get('/question-papers', \App\Livewire\QuestionPaperBuilder::class)->name('question-papers.index');
+    Route::get('/question-papers/{questionPaper}/print', [\App\Http\Controllers\QuestionPaperController::class, 'print'])->name('question-papers.print');
+    Route::get('/exam-documents', \App\Livewire\ExamDocumentCenter::class)->name('exam-documents.index');
     Route::get('/marksheet/student/{student}', [\App\Http\Controllers\MarksheetController::class, 'studentMarksheet'])->name('marksheet.student');
     Route::get('/admit-cards/class', [\App\Http\Controllers\AdmitCardController::class, 'classAdmitCards'])->name('admit-cards.class');
     Route::get('/report-cards', \App\Livewire\ReportCardCenter::class)->name('report-cards.index');

@@ -181,7 +181,7 @@
             @endif
 
             {{-- পরীক্ষা ও ফলাফল --}}
-            <div class="nav-module {{ $activeIf('exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*','exam-seat-plan.*') }}" x-data="{ open: {{ request()->routeIs(['exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*','exam-seat-plan.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*','exam-seat-plan.*','exam-documents.*','question-papers.*') }}" x-data="{ open: {{ request()->routeIs(['exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*','exam-seat-plan.*','exam-documents.*','question-papers.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3h6l1 3H8l1-3Z"/><rect x="5" y="6" width="14" height="15" rx="2"/><path d="M9 12h6M9 16h6"/></svg></span>
                     <span class="lbl">পরীক্ষা ও ফলাফল</span>
@@ -197,6 +197,8 @@
                     <a href="{{ route('report-cards.index') }}" class="sub-item {{ request()->routeIs('report-cards.*') ? 'active' : '' }}">রিপোর্ট কার্ড/মার্কশিট</a>
                     <a href="{{ route('report-cards.index') }}" class="sub-item {{ request()->routeIs('report-cards.*') ? 'active' : '' }}">প্রবেশপত্র (Admit Card)</a>
                     <a href="{{ route('qawmi-grading.index') }}" class="sub-item {{ request()->routeIs('qawmi-grading.*') ? 'active' : '' }}">কওমি গ্রেডিং</a>
+                    <a href="{{ route('question-papers.index') }}" class="sub-item {{ request()->routeIs('question-papers.*') ? 'active' : '' }}">প্রশ্নপত্র</a>
+                    <a href="{{ route('exam-documents.index') }}" class="sub-item {{ request()->routeIs('exam-documents.*') ? 'active' : '' }}">ডকুমেন্ট সেন্টার</a>
                 </div></div></div>
             </div>
 

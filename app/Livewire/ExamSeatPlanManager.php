@@ -8,6 +8,7 @@ use App\Models\ExamSeatPlan;
 use App\Models\ExamSubject;
 use App\Models\SchoolClass;
 use App\Models\Student;
+use App\Models\Teacher;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -55,6 +56,17 @@ class ExamSeatPlanManager extends Component
         $this->newRoomName = '';
         $this->newRoomCapacity = 30;
         $this->dispatch('toast', message: 'রুম যোগ করা হয়েছে');
+    }
+
+    /**
+     * পরীক্ষার হলে দায়িত্বরত শিক্ষক অ্যাসাইন করা — হল-ডিউটি তালিকা প্রিন্টের
+     * জন্য দরকার।
+     */
+    public function assignHallTeacher(string $roomId, string $teacherId): void
+    {
+        $room = ExamSeatPlan::where('exam_id', $this->examId)->findOrFail($roomId);
+        $room->update(['assigned_teacher_id' => $teacherId ?: null]);
+        $this->dispatch('toast', message: 'হলের দায়িত্বরত শিক্ষক নির্ধারণ করা হয়েছে');
     }
 
     public function deleteRoom(string $roomId): void
@@ -158,13 +170,14 @@ class ExamSeatPlanManager extends Component
         $rooms = $this->examId
             ? ExamSeatPlan::where('exam_id', $this->examId)
                 ->orderBy('display_order')
-                ->with(['assignments.student.schoolClass', 'assignments.student.section'])
+                ->with(['assignments.student.schoolClass', 'assignments.student.section', 'assignedTeacher'])
                 ->get()
             : collect();
 
         return view('livewire.exam-seat-plan-manager', [
             'exams' => Exam::orderByDesc('start_date')->get(),
             'rooms' => $rooms,
+            'teachers' => Teacher::where('status', 'active')->orderBy('name')->get(),
             'totalAssigned' => $rooms->sum(fn ($r) => $r->assignments->count()),
         ])->layout('components.layouts.app', ['title' => 'পরীক্ষার সিট প্ল্যান']);
     }

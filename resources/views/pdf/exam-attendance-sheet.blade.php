@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: DejaVu Sans, sans-serif; font-size: 11px; }
+        .institution-name { text-align: center; font-size: 16px; font-weight: bold; margin-bottom: 2px; }
+        .exam-title { text-align: center; font-size: 13px; margin-bottom: 14px; }
+        .room-page { page-break-after: always; }
+        .room-page:last-child { page-break-after: auto; }
+        .room-head { font-size: 15px; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 6px; margin-bottom: 4px; }
+        .room-meta { font-size: 11px; color: #444; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #999; padding: 5px 7px; text-align: left; }
+        th { background: #eee; }
+        .sig-col { width: 140px; }
+    </style>
+</head>
+<body>
+    @foreach ($rooms as $room)
+        <div class="room-page">
+            <p class="institution-name">{{ $institution->name }}</p>
+            <p class="exam-title">{{ $exam->name }} ({{ $exam->academic_year }}) — উপস্থিতি/অনুপস্থিতি শীট</p>
+            <p class="room-head">রুম: {{ $room->room_name }} — মোট পরীক্ষার্থী: {{ $room->assignments->count() }}</p>
+            <p class="room-meta">দায়িত্বরত শিক্ষক: {{ $room->assignedTeacher->name ?? '.....................................' }} &nbsp;&nbsp;&nbsp; তারিখঃ .....................................</p>
+
+            <table>
+                <thead>
+                    <tr><th>সিট নং</th><th>ছাত্রের নাম</th><th>আইডি</th><th>শ্রেণি/শাখা</th><th class="sig-col">পরীক্ষার্থীর স্বাক্ষর</th></tr>
+                </thead>
+                <tbody>
+                    @foreach ($room->assignments as $a)
+                        <tr>
+                            <td>{{ $a->seat_no }}</td>
+                            <td>{{ $a->student->name }}</td>
+                            <td>{{ $a->student->student_id_no }}</td>
+                            <td>{{ $a->student->schoolClass->full_label ?? '' }} {{ $a->student->section->name ?? '' }}</td>
+                            <td class="sig-col">&nbsp;</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+            <p style="margin-top:30px;">.....................................<br>পরিদর্শকের স্বাক্ষর</p>
+        </div>
+    @endforeach
+</body>
+</html>
