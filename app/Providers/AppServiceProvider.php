@@ -77,7 +77,7 @@ class AppServiceProvider extends ServiceProvider
         // লিখে ফেলা হচ্ছিল, ফলে ব্যর্থ রেজিস্ট্রেশন স্থায়ীভাবে "সফল" হিসেবে
         // আটকে থাকছিল)। তাই নাম বদলে v2 করা হলো, যাতে পুরনো মার্কার থাকলেও
         // এবার আসলেই রিট্রাই হয়।
-        $marker = $fontDir.'/.edution-fonts-registered-v3';
+                $marker = $fontDir.'/.edution-fonts-registered-v4';
         if (file_exists($marker)) {
             return;
         }
@@ -89,10 +89,16 @@ class AppServiceProvider extends ServiceProvider
                 $dompdf = new \Dompdf\Dompdf(['fontDir' => $fontDir, 'fontCache' => $fontDir, 'chroot' => [base_path(), $fontDir, resource_path('fonts')]]);
         $fontMetrics = $dompdf->getFontMetrics();
 
-        $fonts = [
-            ['family' => 'notosansbengali', 'style' => 'normal', 'weight' => 'normal', 'file' => resource_path('fonts/NotoSansBengali-Regular.ttf')],
-            ['family' => 'notonaskharabic', 'style' => 'normal', 'weight' => 'normal', 'file' => resource_path('fonts/NotoNaskhArabic-Regular.ttf')],
-        ];
+                $fonts = [
+                                ['family' => 'notosansbengali', 'style' => 'normal', 'weight' => 'normal', 'file' => resource_path('fonts/NotoSansBengali-Regular.ttf')],
+                                ['family' => 'notosansbengali', 'style' => 'normal', 'weight' => 'bold', 'file' => resource_path('fonts/NotoSansBengali-Regular.ttf')],
+                                ['family' => 'notosansbengali', 'style' => 'italic', 'weight' => 'normal', 'file' => resource_path('fonts/NotoSansBengali-Regular.ttf')],
+                                ['family' => 'notosansbengali', 'style' => 'italic', 'weight' => 'bold', 'file' => resource_path('fonts/NotoSansBengali-Regular.ttf')],
+                                ['family' => 'notonaskharabic', 'style' => 'normal', 'weight' => 'normal', 'file' => resource_path('fonts/NotoNaskhArabic-Regular.ttf')],
+                                ['family' => 'notonaskharabic', 'style' => 'normal', 'weight' => 'bold', 'file' => resource_path('fonts/NotoNaskhArabic-Regular.ttf')],
+                                ['family' => 'notonaskharabic', 'style' => 'italic', 'weight' => 'normal', 'file' => resource_path('fonts/NotoNaskhArabic-Regular.ttf')],
+                                ['family' => 'notonaskharabic', 'style' => 'italic', 'weight' => 'bold', 'file' => resource_path('fonts/NotoNaskhArabic-Regular.ttf')],
+                            ];
 
         $allOk = true;
         foreach ($fonts as $f) {
