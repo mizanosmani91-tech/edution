@@ -8,6 +8,15 @@ use App\Models\Book;
 use App\Models\Certificate;
 use App\Models\Complaint;
 use App\Models\DisciplineRecord;
+use App\Models\Budget;
+use App\Models\Department;
+use App\Models\FeeInstallmentPlan;
+use App\Models\HifzProgress;
+use App\Models\InventoryItem;
+use App\Models\MonthlyHonor;
+use App\Models\SupportTicket;
+use App\Models\SupportTicketMessage;
+use App\Models\Visitor;
 use App\Models\Exam;
 use App\Models\ExamSeatPlan;
 use App\Models\ExamSubject;
@@ -88,6 +97,7 @@ class DemoDataSeeder extends Seeder
             $students = $this->seedStudents($instId, $classes, $sections);
             $this->seedPortalLogins($instId, $teachers, $students, $sections);
             $this->seedRoutine($instId, $classes, $sections, $subjects, $teachers);
+                        $this->seedMisc($instId, $students, $teachers, $adminId);
 
             $this->seedAttendance($instId, $students, $adminId);
             $this->seedStaffAttendance($instId, $teachers, $adminId);
@@ -512,6 +522,160 @@ class DemoDataSeeder extends Seeder
                 }
                 foreach (array_chunk($rows, 500) as $chunk) {
                                 DB::table('routine_periods')->insert($chunk);
+                }
+
+            private function seedMisc(string $instId, array $students, array $teachers, ?string $adminId): void
+                {
+                            $deptNames = ['বিজ্ঞান বিভাগ', 'মানবিক বিভাগ', 'ব্যবসায় শিক্ষা বিভাগ'];
+                            foreach ($deptNames as $i => $dn) {
+                                            Department::create([
+                                                                               'institution_id' => $instId,
+                                                                               'name' => $dn,
+                                                                               'name_bn' => $dn,
+                                                                               'display_order' => $i + 1,
+                                                                           ]);
+                            }
+
+                            $ticketData = [
+                                            ['বিলিং সংক্রান্ত সমস্যা', 'high', 'open'],
+                                            ['SMS পাঠানো যাচ্ছে না', 'med', 'resolved'],
+                                            ['রিপোর্ট কার্ড প্রিন্টে সমস্যা', 'low', 'open'],
+                                            ['নতুন ফিচার অনুরোধ', 'low', 'resolved'],
+                                            ['লগইন করতে সমস্যা হচ্ছে', 'high', 'resolved'],
+                                        ];
+                            foreach ($ticketData as $t) {
+                                            $ticket = SupportTicket::create([
+                                                                                            'institution_id' => $instId,
+                                                                                            'created_by' => $adminId,
+                                                                                            'subject' => $t[0],
+                                                                                            'priority' => $t[1],
+                                                                                            'status' => $t[2],
+                                                                                        ]);
+                                            SupportTicketMessage::create([
+                                                                                         'support_ticket_id' => $ticket->id,
+                                                                                         'sender_type' => 'institution',
+                                                                                         'sender_name' => 'ডেমো এডমিন',
+                                                                                         'body' => $t[0] . ' — বিস্তারিত জানানো হলো।',
+                                                                                     ]);
+                                            if ($t[2] === 'resolved') {
+                                                                SupportTicketMessage::create([
+                                                                                                                 'support_ticket_id' => $ticket->id,
+                                                                                                                 'sender_type' => 'superadmin',
+                                                                                                                 'sender_name' => 'EDUTION সাপোর্ট টিম',
+                                                                                                                 'body' => 'সমস্যাটি সমাধান করা হয়েছে। ধন্যবাদ।',
+                                                                                                             ]);
+                                            }
+                            }
+
+                            $purposes = ['অভিভাবক সাক্ষাৎ', 'ভর্তি সংক্রান্ত জিজ্ঞাসা', 'সরবরাহকারী', 'চাকরির সাক্ষাৎকার', 'অন্যান্য'];
+                            for ($i = 0; $i < 15; $i++) {
+                                            $checkIn = Carbon::now()->subDays(rand(0, 20))->setTime(rand(9, 15), rand(0, 59));
+                                            Visitor::create([
+                                                                            'institution_id' => $instId,
+                                                                            'name' => 'ভিজিটর ' . ($i + 1),
+                                                                            'phone' => '01' . rand(700000000, 999999999),
+                                                                            'purpose' => $purposes[array_rand($purposes)],
+                                                                            'meeting_with' => 'অধ্যক্ষ',
+                                                                            'check_in' => $checkIn,
+                                                                            'check_out' => rand(0, 100) < 80 ? (clone $checkIn)->addMinutes(rand(15, 90)) : null,
+                                                                            'recorded_by' => $adminId,
+                                                                        ]);
+                            }
+
+                            $months = [Carbon::now()->format('Y-m'), Carbon::now()->subMonth()->format('Y-m')];
+                            foreach ($months as $m) {
+                                            if (!empty($students)) {
+                                                                MonthlyHonor::create([
+                                                                                                         'institution_id' => $instId,
+                                                                                                         'category' => 'student',
+                                                                                                         'month' => $m,
+                                                                                                         'student_id' => $students[array_rand($students)]->id,
+                                                                                                         'score' => rand(90, 99) + (rand(0, 99) / 100),
+                                                                                                         'metrics' => ['attendance_pct' => rand(95, 100), 'avg_marks' => rand(85, 98)],
+                                                                                                     ]);
+                                            }
+                                            if (!empty($teachers)) {
+                                                                MonthlyHonor::create([
+                                                                                                         'institution_id' => $instId,
+                                                                                                         'category' => 'teacher',
+                                                                                                         'month' => $m,
+                                                                                                         'teacher_id' => $teachers[array_rand($teachers)]->id,
+                                                                                                         'score' => rand(90, 99) + (rand(0, 99) / 100),
+                                                                                                         'metrics' => ['attendance_pct' => rand(95, 100), 'performance_avg' => rand(85, 98)],
+                                                                                                     ]);
+                                            }
+                            }
+
+                            $budgetCats = ['বেতন', 'ইউটিলিটি', 'রক্ষণাবেক্ষণ', 'স্টেশনারি', 'অন্যান্য'];
+                            $curMonth = Carbon::now()->format('Y-m');
+                            foreach ($budgetCats as $bc) {
+                                            Budget::create([
+                                                                           'institution_id' => $instId,
+                                                                           'category' => $bc,
+                                                                           'period_month' => $curMonth,
+                                                                           'planned_amount' => rand(10, 60) * 1000,
+                                                                       ]);
+                            }
+
+                            foreach (array_slice($students, 0, 5) as $s) {
+                                            FeeInstallmentPlan::create([
+                                                                                       'institution_id' => $instId,
+                                                                                       'student_id' => $s->id,
+                                                                                       'fee_type' => 'ভর্তি ফি',
+                                                                                       'total_amount' => 15000,
+                                                                                       'installments_count' => 3,
+                                                                                       'start_month' => $curMonth,
+                                                                                       'created_by' => $adminId,
+                                                                                   ]);
+                            }
+
+                            $items = [
+                                            ['ব্ল্যাকবোর্ড', 'ক্লাসরুম সরঞ্জাম', 10],
+                                            ['ডেস্ক-বেঞ্চ', 'ক্লাসরুম সরঞ্জাম', 90],
+                                            ['প্রজেক্টর', 'ইলেকট্রনিক্স', 4],
+                                            ['কম্পিউটার', 'ইলেকট্রনিক্স', 15],
+                                            ['প্রিন্টার', 'ইলেকট্রনিক্স', 3],
+                                            ['চেয়ার (অফিস)', 'অফিস সরঞ্জাম', 20],
+                                            ['ফ্যান', 'ইলেকট্রনিক্স', 25],
+                                            ['বুকশেলফ', 'লাইব্রেরি সরঞ্জাম', 8],
+                                            ['ফার্স্ট এইড বক্স', 'স্বাস্থ্য সরঞ্জাম', 5],
+                                            ['মাইক্রোফোন সেট', 'ইলেকট্রনিক্স', 2],
+                                        ];
+                            foreach ($items as $i => $it) {
+                                            $total = $it[2];
+                                            InventoryItem::create([
+                                                                                  'institution_id' => $instId,
+                                                                                  'name' => $it[0],
+                                                                                  'category' => $it[1],
+                                                                                  'asset_tag' => 'AST-' . str_pad((string) ($i + 1), 4, '0', STR_PAD_LEFT),
+                                                                                  'quantity_total' => $total,
+                                                                                  'quantity_available' => max(0, $total - rand(0, min(3, $total))),
+                                                                                  'purchase_date' => Carbon::now()->subDays(rand(30, 700)),
+                                                                                  'purchase_price' => rand(500, 50000),
+                                                                                  'condition' => rand(1, 10) <= 8 ? 'good' : 'fair',
+                                                                                  'location' => 'মূল ভবন',
+                                                                              ]);
+                            }
+
+                            $qualities = ['excellent', 'good', 'weak'];
+                            foreach (array_slice($students, 0, 9) as $s) {
+                                            for ($d = 0; $d < 5; $d++) {
+                                                                HifzProgress::create([
+                                                                                                         'institution_id' => $instId,
+                                                                                                         'student_id' => $s->id,
+                                                                                                         'teacher_id' => !empty($teachers) ? $teachers[array_rand($teachers)]->id : null,
+                                                                                                         'date' => Carbon::now()->subDays($d),
+                                                                                                         'sabak_para' => 'পারা ' . rand(1, 30),
+                                                                                                         'sabak_range' => 'পৃষ্ঠা ' . rand(1, 20) . '-' . rand(21, 22),
+                                                                                                         'sabak_quality' => $qualities[array_rand($qualities)],
+                                                                                                         'sabqi_range' => 'পারা ' . rand(1, 30),
+                                                                                                         'sabqi_quality' => $qualities[array_rand($qualities)],
+                                                                                                         'manzil_range' => 'পারা ' . rand(1, 5),
+                                                                                                         'manzil_quality' => $qualities[array_rand($qualities)],
+                                                                                                         'recorded_by' => $adminId,
+                                                                                                     ]);
+                                            }
+                            }
                 }
     }
 
