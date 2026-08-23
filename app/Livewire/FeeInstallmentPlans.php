@@ -114,6 +114,7 @@ class FeeInstallmentPlans extends Component
                     'fee_type' => $this->feeType.' (কিস্তি '.$i.'/'.$count.')',
                     'amount_due' => $share,
                     'amount_paid' => 0,
+                    'payment_method' => 'cash', // এখনো পরিশোধ হয়নি, DB কলামটা NOT NULL তাই placeholder ডিফল্ট — আসল পেমেন্ট এন্ট্রির সময় বদলে যাবে
                     'due_month' => $cursor->format('Y-m'),
                     'status' => 'due',
                     'installment_plan_id' => $plan->id,
