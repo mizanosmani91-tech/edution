@@ -77,8 +77,12 @@ class AppServiceProvider extends ServiceProvider
             return;
         }
 
-        $options = new \Dompdf\Options(['fontDir' => $fontDir, 'fontCache' => $fontDir]);
-        $fontMetrics = new \Dompdf\FontMetrics($options);
+        // ⚠️ FontMetrics-এর কনস্ট্রাক্টর dompdf ভার্সনভেদে ভিন্ন হতে পারে
+        // (v3.x এ Canvas + Options দুটোই লাগে) — তাই সরাসরি FontMetrics না
+        // বানিয়ে পুরো Dompdf ইনস্ট্যান্স বানিয়ে তার getFontMetrics() ব্যবহার
+        // করা হচ্ছে, এটা Canvas ঠিকমতো সেটআপ করে দেয় ভার্সন-নিরপেক্ষভাবে।
+        $dompdf = new \Dompdf\Dompdf(['fontDir' => $fontDir, 'fontCache' => $fontDir]);
+        $fontMetrics = $dompdf->getFontMetrics();
 
         $fonts = [
             ['family' => 'notosansbengali', 'style' => 'normal', 'weight' => 'normal', 'file' => resource_path('fonts/NotoSansBengali-Regular.ttf')],
