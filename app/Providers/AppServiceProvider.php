@@ -86,7 +86,7 @@ class AppServiceProvider extends ServiceProvider
         // (v3.x এ Canvas + Options দুটোই লাগে) — তাই সরাসরি FontMetrics না
         // বানিয়ে পুরো Dompdf ইনস্ট্যান্স বানিয়ে তার getFontMetrics() ব্যবহার
         // করা হচ্ছে, এটা Canvas ঠিকমতো সেটআপ করে দেয় ভার্সন-নিরপেক্ষভাবে।
-        $dompdf = new \Dompdf\Dompdf(['fontDir' => $fontDir, 'fontCache' => $fontDir]);
+                $dompdf = new \Dompdf\Dompdf(['fontDir' => $fontDir, 'fontCache' => $fontDir, 'chroot' => [base_path(), $fontDir, resource_path('fonts')]]);
         $fontMetrics = $dompdf->getFontMetrics();
 
         $fonts = [
