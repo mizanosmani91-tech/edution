@@ -29,7 +29,7 @@ Route::get('/debug-pdf-fonts-v2', function () {
     }
 
     try {
-        $dompdf = new \Dompdf\Dompdf(['fontDir' => $fontDir, 'fontCache' => $fontDir]);
+                $dompdf = new \Dompdf\Dompdf(['fontDir' => $fontDir, 'fontCache' => $fontDir, 'chroot' => [base_path(), $fontDir, resource_path('fonts')]]);
         $fm = $dompdf->getFontMetrics();
         $ok = $fm->registerFont(['family' => 'notosansbengali', 'style' => 'normal', 'weight' => 'normal'], $file);
         $result['registerFontOk'] = $ok;
