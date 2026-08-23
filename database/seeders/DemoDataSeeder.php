@@ -9,6 +9,7 @@ use App\Models\Certificate;
 use App\Models\Complaint;
 use App\Models\DisciplineRecord;
 use App\Models\Exam;
+use App\Models\ExamSeatPlan;
 use App\Models\ExamSubject;
 use App\Models\Expense;
 use App\Models\FeeStructure;
@@ -21,6 +22,7 @@ use App\Models\Notice;
 use App\Models\PayrollRecord;
 use App\Models\PerformanceReview;
 use App\Models\QuestionBankItem;
+use App\Models\RoutinePeriod;
 use App\Models\Scholarship;
 use App\Models\SchoolClass;
 use App\Models\Section;
@@ -85,6 +87,7 @@ class DemoDataSeeder extends Seeder
             $teachers = $this->seedTeachers($instId, $subjects, $classes);
             $students = $this->seedStudents($instId, $classes, $sections);
             $this->seedPortalLogins($instId, $teachers, $students, $sections);
+            $this->seedRoutine($instId, $classes, $sections, $subjects, $teachers);
 
             $this->seedAttendance($instId, $students, $adminId);
             $this->seedStaffAttendance($instId, $teachers, $adminId);
@@ -440,6 +443,76 @@ class DemoDataSeeder extends Seeder
         foreach (array_chunk($markRows, 500) as $chunk) {
             DB::table('exam_marks')->insert($chunk);
         }
+
+        $roomNames = ['রুম ১০১', 'রুম ১০২', 'রুম ২০১'];
+                $seatPlans = [];
+                foreach ($roomNames as $i => $roomName) {
+                                $seatPlans[] = ExamSeatPlan::create([
+                                                                                    'institution_id' => $instId,
+                                                                                    'exam_id' => $mid->id,
+                                                                                    'room_name' => $roomName,
+                                                                                    'capacity' => 30,
+                                                                                    'display_order' => $i + 1,
+                                                                                ]);
+                }
+                $seatRows = [];
+                $planIndex = 0;
+                $seatInRoom = 0;
+                foreach ($students as $s) {
+                                $plan = $seatPlans[$planIndex];
+                                $seatInRoom++;
+                                $seatRows[] = [
+                                                    'id' => (string) Str::uuid(),
+                                                    'institution_id' => $instId,
+                                                    'exam_id' => $mid->id,
+                                                    'exam_seat_plan_id' => $plan->id,
+                                                    'student_id' => $s->id,
+                                                    'seat_no' => chr(65 + $planIndex) . '-' . str_pad((string) $seatInRoom, 2, '0', STR_PAD_LEFT),
+                                                    'created_at' => now(),
+                                                    'updated_at' => now(),
+                                                ];
+                                if ($seatInRoom >= $plan->capacity) {
+                                                    $planIndex = min($planIndex + 1, count($seatPlans) - 1);
+                                                    $seatInRoom = 0;
+                                }
+                }
+                foreach (array_chunk($seatRows, 500) as $chunk) {
+                                DB::table('exam_seat_assignments')->insert($chunk);
+                }
+    }
+
+    private function seedRoutine(string $instId, array $classes, array $sections, array $subjects, array $teachers): void
+    {
+                $days = [1, 2, 3, 4, 5, 6];
+                $periodsPerDay = 6;
+                $rows = [];
+                foreach ($sections as $si => $section) {
+                                foreach ($days as $day) {
+                                                    for ($period = 1; $period <= $periodsPerDay; $period++) {
+                                                                            $teacher = $teachers[($si + $day + $period) % count($teachers)];
+                                                                            $subject = $subjects[($si + $period) % count($subjects)];
+                                                                            $start = Carbon::createFromTime(8, 0)->addMinutes(($period - 1) * 50);
+                                                                            $end = (clone $start)->addMinutes(40);
+                                                                            $rows[] = [
+                                                                                                        'id' => (string) Str::uuid(),
+                                                                                                        'institution_id' => $instId,
+                                                                                                        'class_id' => $section->class_id,
+                                                                                                        'section_id' => $section->id,
+                                                                                                        'teacher_id' => $teacher->id,
+                                                                                                        'subject_id' => $subject->id,
+                                                                                                        'day_of_week' => $day,
+                                                                                                        'period_number' => $period,
+                                                                                                        'start_time' => $start->format('H:i:s'),
+                                                                                                        'end_time' => $end->format('H:i:s'),
+                                                                                                        'created_at' => now(),
+                                                                                                        'updated_at' => now(),
+                                                                                                    ];
+                                                    }
+                                }
+                }
+                foreach (array_chunk($rows, 500) as $chunk) {
+                                DB::table('routine_periods')->insert($chunk);
+                }
     }
 
     private function seedNotices(string $instId, ?string $adminId): void
