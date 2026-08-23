@@ -41,6 +41,10 @@ Route::get('/school-profile', [\App\Http\Controllers\PublicSiteController::class
 Route::get('/transport-tracking/{token}', [\App\Http\Controllers\VehicleTrackingController::class, 'share'])->name('transport-tracking.share');
 Route::post('/transport-tracking/{token}/update', [\App\Http\Controllers\VehicleTrackingController::class, 'update'])->name('transport-tracking.update');
 
+// সার্টিফিকেটের QR কোড স্ক্যান করলে এখানে আসে — লগইন ছাড়াই যেকোনো
+// ব্যক্তি (নিয়োগকর্তা, অন্য প্রতিষ্ঠান) সার্টিফিকেটের সত্যতা যাচাই করতে পারবে।
+Route::get('/verify/certificate/{id}', [\App\Http\Controllers\CertificateVerificationController::class, 'show'])->name('certificate.verify');
+
 // ⚠️ প্রতিষ্ঠানের নিজস্ব সাবডোমেইনে (যেমন annazah.edution.xyz) রুট পেজে
 // সাধারণ landing page না দেখিয়ে সরাসরি সেই প্রতিষ্ঠানের লগইন পেজ দেখানো হয়।
 // মূল ডোমেইন (edution.xyz/www) বা অচেনা সাবডোমেইনে যথারীতি landing page।

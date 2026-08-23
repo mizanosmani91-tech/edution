@@ -29,3 +29,17 @@ if (!window.Alpine) {
     window.Alpine = Alpine;
     Alpine.start();
 }
+
+import QRCode from 'qrcode';
+
+// সার্টিফিকেট/মার্কশিটের QR-ভেরিফিকেশন কোড ক্লায়েন্ট-সাইডে জেনারেট
+// করার জন্য — সার্ভার-সাইড PHP QR লাইব্রেরি (GD/Imagick নির্ভর) ব্যবহার
+// না করে ব্রাউজারেই <canvas>-এ আঁকা হয়, তাই আগের PhpSpreadsheet-এর
+// মতো সার্ভার রিসোর্স চাপের ঝুঁকি নেই। window.edutionRenderQr(canvasEl, url)
+// কল করলেই canvas-এ QR কোড বসে যাবে।
+window.edutionRenderQr = function (canvasEl, url) {
+    if (!canvasEl || !url) return;
+    QRCode.toCanvas(canvasEl, url, { width: 140, margin: 1 }, function (err) {
+        if (err) console.error('QR render error:', err);
+    });
+};

@@ -84,8 +84,16 @@
                                 <p>প্রতিষ্ঠান ত্যাগের তারিখঃ {{ $generated->issue_date->format('d M, Y') }}</p>
                             @endif
                         </div>
-                        <div class="cert-sign-row">
+                        <div class="cert-sign-row" style="align-items:flex-end;">
                             <div>শ্রেণি শিক্ষকের স্বাক্ষর</div>
+                            <div
+                                x-data="{}"
+                                x-init="window.edutionRenderQr($refs.qrCanvas, '{{ route('certificate.verify', $generated->id) }}')"
+                                style="display:flex;flex-direction:column;align-items:center;gap:4px;"
+                            >
+                                <canvas x-ref="qrCanvas" wire:key="qr-{{ $generated->id }}" width="90" height="90"></canvas>
+                                <span style="font-size:9px;color:var(--ink-soft);">স্ক্যান করে যাচাই করুন</span>
+                            </div>
                             <div>প্রধান শিক্ষক/অধ্যক্ষের স্বাক্ষর</div>
                         </div>
                     </div>

@@ -24,6 +24,11 @@ class Certificate extends Model
         return $this->belongsTo(Student::class);
     }
 
+    public function institution()
+    {
+        return $this->belongsTo(Institution::class);
+    }
+
     public function getTypeLabelAttribute(): string
     {
         return $this->type === 'character' ? 'চারিত্রিক সনদপত্র' : 'ছাড়পত্র (Transfer Certificate)';
