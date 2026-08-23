@@ -6,6 +6,45 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/debug-pdf-fonts-temp', function () {
     $fontDir = storage_path('fonts');
+    $file = resource_path('fonts/NotoSansBengali-Regular.ttf');
+    $result = ['fontDir' => $fontDir, 'fontDirWritable' => is_writable($fontDir)];
+
+    try {
+        $font = \FontLib\Font::load($file);
+        $result['fontLibLoadResult'] = $font ? get_class($font) : 'null/false';
+        if ($font) {
+            $font->parse();
+            $result['fontType'] = $font->getFontType();
+            $tmpUfm = tempnam(sys_get_temp_dir(), 'ufmtest');
+            $font->saveAdobeFontMetrics($tmpUfm);
+            $result['ufmSaved'] = file_exists($tmpUfm);
+            $result['ufmSize'] = file_exists($tmpUfm) ? filesize($tmpUfm) : null;
+            @unlink($tmpUfm);
+            $font->close();
+        }
+    } catch (\Throwable $e) {
+        $result['fontLibException'] = get_class($e).': '.$e->getMessage();
+        $result['fontLibTrace'] = explode("\n", $e->getTraceAsString());
+    }
+
+    try {
+        $dompdf = new \Dompdf\Dompdf(['fontDir' => $fontDir, 'fontCache' => $fontDir]);
+        $fm = $dompdf->getFontMetrics();
+        $ok = $fm->registerFont(['family' => 'notosansbengali', 'style' => 'normal', 'weight' => 'normal'], $file);
+        $result['registerFontOk'] = $ok;
+    } catch (\Throwable $e) {
+        $result['registerFontException'] = get_class($e).': '.$e->getMessage();
+    }
+
+    $result['phpVersion'] = PHP_VERSION;
+    $result['fileSize'] = filesize($file);
+    $result['fileReadable'] = is_readable($file);
+
+    return response()->json($result);
+});
+
+Route::get('/debug-pdf-fonts-temp', function () {
+    $fontDir = storage_path('fonts');
     $jsonPath = $fontDir.'/installed-fonts.json';
     $dompdf = new \Dompdf\Dompdf(['fontDir' => $fontDir, 'fontCache' => $fontDir]);
     $fm = $dompdf->getFontMetrics();
@@ -28,10 +67,10 @@ Route::get('/debug-pdf-fonts-temp', function () {
     ]);
 });
 
-// â ï¸ panel.edution.xyz domain-scoped à¦°à§à¦ à¦¸à¦¬à¦¾à¦° à¦à¦à§ à¦°à§à¦à¦¿à¦¸à§à¦à¦¾à¦° à¦à¦°à¦¾ à¦à¦°à§à¦°à¦¿ â
-// Laravel domain-restricted à¦°à§à¦à¦à§ à¦¬à§à¦¶à¦¿ à¦¸à§à¦ªà§à¦¸à¦¿à¦«à¦¿à¦ à¦§à¦°à§ à¦à¦à§à¦°à¦¾à¦§à¦¿à¦à¦¾à¦° à¦¦à§à¦¯à¦¼ à¦¨à¦¾,
-// à¦¶à§à¦§à§ à¦°à§à¦à¦¿à¦¸à§à¦à§à¦°à§à¦¶à¦¨ à¦à¦°à§à¦¡à¦¾à¦° à¦à¦¨à§à¦¯à¦¾à¦¯à¦¼à§ à¦ªà§à¦°à¦¥à¦® à¦®à§à¦¯à¦¾à¦ à¦à§à¦¤à§à¥¤ à¦à¦à¦¾ à¦¨à¦¿à¦à§ à¦¥à¦¾à¦à¦²à§
-// panel.edution.xyz/login à¦ à¦­à§à¦²à¦­à¦¾à¦¬à§ à¦¸à¦¾à¦§à¦¾à¦°à¦£ (à¦¨à¦¨-à¦¡à§à¦®à§à¦à¦¨) /login à¦°à§à¦à§ à¦à¦²à§ à¦¯à§à¦¤à¥¤
+// ⚠️ panel.edution.xyz domain-scoped রুট সবার আগে রেজিস্টার করা জরুরি —
+// Laravel domain-restricted রুটকে বেশি স্পেসিফিক ধরে অগ্রাধিকার দেয় না,
+// শুধু রেজিস্ট্রেশন অর্ডার অনুযায়ী প্রথম ম্যাচ জেতে। এটা নিচে থাকলে
+// panel.edution.xyz/login ও ভুলভাবে সাধারণ (নন-ডোমেইন) /login রুটে চলে যেত।
 Route::domain('panel.edution.xyz')->group(function () {
     Route::get('/login', [\App\Http\Controllers\Auth\SuperadminLoginController::class, 'create'])->name('superadmin.login');
     Route::post('/login', [\App\Http\Controllers\Auth\SuperadminLoginController::class, 'store'])->name('superadmin.login.store');
@@ -52,26 +91,26 @@ Route::middleware(['auth', 'superadmin', 'password.change'])->domain('panel.edut
 });
 
 
-// PWA manifest â à¦à§à¦¨à§ auth/tenant middleware à¦à¦¾à¦¡à¦¼à¦¾à¦, à¦¯à§à¦à§à¦¨à§ à¦¸à¦¾à¦¬à¦¡à§à¦®à§à¦à¦¨/à¦¡à§à¦®à§à¦à¦¨
-// à¦¥à§à¦à§ à¦à§à¦¯à¦¾à¦à§à¦¸à§à¦¸à¦¯à§à¦à§à¦¯ à¦¹à¦¤à§ à¦¹à¦¬à§ (à¦²à¦à¦à¦¨ à¦ªà§à¦ à¦¥à§à¦à§à¦ à¦à¦¨à¦¸à§à¦à¦² à¦à¦°à¦¾ à¦¯à¦¾à¦¬à§ à¦¬à¦²à§)
+// PWA manifest — কোনো auth/tenant middleware ছাড়াই, যেকোনো সাবডোমেইন/ডোমেইন
+// থেকে অ্যাক্সেসযোগ্য হতে হবে (লগইন পেজ থেকেও ইনস্টল করা যাবে বলে)
 Route::get('/manifest.webmanifest', [\App\Http\Controllers\PwaController::class, 'manifest'])->name('pwa.manifest');
 
-// à¦ªà§à¦°à¦¤à¦¿à¦·à§à¦ à¦¾à¦¨à§à¦° à¦ªà¦¾à¦¬à¦²à¦¿à¦ à¦ªà§à¦°à§à¦«à¦¾à¦à¦² à¦ªà§à¦ (à¦²à¦à¦à¦¨ à¦à¦¾à¦¡à¦¼à¦¾à¦ à¦¦à§à¦à¦¾ à¦¯à¦¾à¦¯à¦¼) â Facebook/à¦à§à¦à¦²à§
-// à¦¶à§à¦¯à¦¼à¦¾à¦° à¦à¦°à¦¾à¦° à¦à¦¨à§à¦¯à¥¤ à¦®à§à¦² '/' à¦°à§à¦ à¦à¦à§à¦à¦¾à¦à§à¦¤à¦­à¦¾à¦¬à§ à¦¬à¦¦à¦²à¦¾à¦¨à§ à¦¹à¦¯à¦¼à¦¨à¦¿, à¦à¦à¦¾ à¦à¦²à¦¾à¦¦à¦¾ pathà¥¤
+// প্রতিষ্ঠানের পাবলিক প্রোফাইল পেজ (লগইন ছাড়াই দেখা যায়) — Facebook/গুগলে
+// শেয়ার করার জন্য। মূল '/' রুট ইচ্ছাকৃতভাবে বদলানো হয়নি, এটা আলাদা path।
 Route::get('/school-profile', [\App\Http\Controllers\PublicSiteController::class, 'show'])->name('public-site.show');
 
-// à¦à¦¾à¦¡à¦¼à¦¿à¦° à¦²à¦¾à¦à¦­ GPS à¦à§à¦°à§à¦¯à¦¾à¦à¦¿à¦ â à¦¡à§à¦°à¦¾à¦à¦­à¦¾à¦°à§à¦° à¦ªà¦¾à¦¬à¦²à¦¿à¦ à¦¶à§à¦¯à¦¼à¦¾à¦° à¦²à¦¿à¦à¦ (auth à¦à¦¾à¦¡à¦¼à¦¾à¦ à¦à§à¦²à¦¾ à¦¯à¦¾à¦¯à¦¼,
-// tracking_token à¦à¦à¦à¦¾ à§©à§¨-à¦à§à¦¯à¦¾à¦°à§à¦à§à¦à¦¾à¦° à¦°âà§à¦¯à¦¾à¦¨à§à¦¡à¦®, unique à¦à§à¦à§à¦¨ à¦¦à¦¿à¦¯à¦¼à§ à¦¸à§à¦°à¦à§à¦·à¦¿à¦¤)
+// গাড়ির লাইভ GPS ট্র্যাকিং — ড্রাইভারের পাবলিক শেয়ার লিংক (auth ছাড়াই খোলা যায়,
+// tracking_token একটা ৩২-ক্যারেক্টার র‍্যান্ডম, unique টোকেন দিয়ে সুরক্ষিত)
 Route::get('/transport-tracking/{token}', [\App\Http\Controllers\VehicleTrackingController::class, 'share'])->name('transport-tracking.share');
 Route::post('/transport-tracking/{token}/update', [\App\Http\Controllers\VehicleTrackingController::class, 'update'])->name('transport-tracking.update');
 
-// à¦¸à¦¾à¦°à§à¦à¦¿à¦«à¦¿à¦à§à¦à§à¦° QR à¦à§à¦¡ à¦¸à§à¦à§à¦¯à¦¾à¦¨ à¦à¦°à¦²à§ à¦à¦à¦¾à¦¨à§ à¦à¦¸à§ â à¦²à¦à¦à¦¨ à¦à¦¾à¦¡à¦¼à¦¾à¦ à¦¯à§à¦à§à¦¨à§
-// à¦¬à§à¦¯à¦à§à¦¤à¦¿ (à¦¨à¦¿à¦¯à¦¼à§à¦à¦à¦°à§à¦¤à¦¾, à¦à¦¨à§à¦¯ à¦ªà§à¦°à¦¤à¦¿à¦·à§à¦ à¦¾à¦¨) à¦¸à¦¾à¦°à§à¦à¦¿à¦«à¦¿à¦à§à¦à§à¦° à¦¸à¦¤à§à¦¯à¦¤à¦¾ à¦¯à¦¾à¦à¦¾à¦ à¦à¦°à¦¤à§ à¦ªà¦¾à¦°à¦¬à§à¥¤
+// সার্টিফিকেটের QR কোড স্ক্যান করলে এখানে আসে — লগইন ছাড়াই যেকোনো
+// ব্যক্তি (নিয়োগকর্তা, অন্য প্রতিষ্ঠান) সার্টিফিকেটের সত্যতা যাচাই করতে পারবে।
 Route::get('/verify/certificate/{id}', [\App\Http\Controllers\CertificateVerificationController::class, 'show'])->name('certificate.verify');
 
-// â ï¸ à¦ªà§à¦°à¦¤à¦¿à¦·à§à¦ à¦¾à¦¨à§à¦° à¦¨à¦¿à¦à¦¸à§à¦¬ à¦¸à¦¾à¦¬à¦¡à§à¦®à§à¦à¦¨à§ (à¦¯à§à¦®à¦¨ annazah.edution.xyz) à¦°à§à¦ à¦ªà§à¦à§
-// à¦¸à¦¾à¦§à¦¾à¦°à¦£ landing page à¦¨à¦¾ à¦¦à§à¦à¦¿à¦¯à¦¼à§ à¦¸à¦°à¦¾à¦¸à¦°à¦¿ à¦¸à§à¦ à¦ªà§à¦°à¦¤à¦¿à¦·à§à¦ à¦¾à¦¨à§à¦° à¦²à¦à¦à¦¨ à¦ªà§à¦ à¦¦à§à¦à¦¾à¦¨à§ à¦¹à¦¯à¦¼à¥¤
-// à¦®à§à¦² à¦¡à§à¦®à§à¦à¦¨ (edution.xyz/www) à¦¬à¦¾ à¦à¦à§à¦¨à¦¾ à¦¸à¦¾à¦¬à¦¡à§à¦®à§à¦à¦¨à§ à¦¯à¦¥à¦¾à¦°à§à¦¤à¦¿ landing pageà¥¤
+// ⚠️ প্রতিষ্ঠানের নিজস্ব সাবডোমেইনে (যেমন annazah.edution.xyz) রুট পেজে
+// সাধারণ landing page না দেখিয়ে সরাসরি সেই প্রতিষ্ঠানের লগইন পেজ দেখানো হয়।
+// মূল ডোমেইন (edution.xyz/www) বা অচেনা সাবডোমেইনে যথারীতি landing page।
 Route::get('/', function () {
     $institution = \App\Models\Institution::resolveFromSubdomain(request()->getHost());
 
@@ -84,7 +123,7 @@ Route::get('/', function () {
 Route::get('/register', [\App\Http\Controllers\Auth\RegistrationController::class, 'create'])->name('register');
 Route::post('/register', [\App\Http\Controllers\Auth\RegistrationController::class, 'store'])->name('register.store');
 
-// â ï¸ à¦°à§à¦à¦¿à¦¸à§à¦à§à¦°à§à¦¶à¦¨à§à¦° à¦¸à¦®à¦¯à¦¼ à¦®à§à¦¬à¦¾à¦à¦² à¦¨à¦®à§à¦¬à¦° OTP à¦¯à¦¾à¦à¦¾à¦ â throttle à¦¦à¦¿à¦¯à¦¼à§ abuse à¦ à§à¦à¦¾à¦¨à§ à¦¹à¦²à§
+// ⚠️ রেজিস্ট্রেশনের সময় মোবাইল নম্বর OTP যাচাই — throttle দিয়ে abuse ঠেকানো হলো
 Route::post('/register/send-otp', [\App\Http\Controllers\Auth\OtpController::class, 'send'])
     ->middleware('throttle:5,1')->name('register.otp.send');
 Route::post('/register/verify-otp', [\App\Http\Controllers\Auth\OtpController::class, 'verify'])
@@ -98,8 +137,8 @@ Route::get('/login', function () {
 })->name('login');
 Route::post('/login', [LoginController::class, 'store']);
 
-// â ï¸ à¦ªà¦¾à¦¬à¦²à¦¿à¦ à¦¡à§à¦®à§ â à¦¸à¦«à¦ à¦°à§à¦à¦¿à¦¸à§à¦à§à¦°à§à¦¶à¦¨ + à¦à¦­à¦¿à¦­à¦¾à¦¬à¦/à¦¶à¦¿à¦à§à¦·à¦ à¦¡à§à¦®à§ à¦à¦à§à¦¸à§à¦¸ à¦°à¦¿à¦à§à¦¯à¦¼à§à¦¸à§à¦à¥¤
-// à¦ªà§à¦²à§à¦à¦¨ controller, guest-facing, à¦¸à¦¬à¦à§à¦²à§à¦¤à§ throttle (abuse à¦ à§à¦à¦¾à¦¤à§)à¥¤
+// ⚠️ পাবলিক ডেমো — সফট রেজিস্ট্রেশন + অভিভাবক/শিক্ষক ডেমো এক্সেস রিকোয়েস্ট।
+// প্লেইন controller, guest-facing, সবগুলোতে throttle (abuse ঠেকাতে)।
 Route::post('/demo/register', [\App\Http\Controllers\DemoAccessController::class, 'register'])
     ->middleware('throttle:10,1')->name('demo.register');
 Route::get('/demo/status', [\App\Http\Controllers\DemoAccessController::class, 'status'])
@@ -108,9 +147,9 @@ Route::post('/demo/request-access', [\App\Http\Controllers\DemoAccessController:
     ->middleware('throttle:10,1')->name('demo.request-access');
 Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
 
-// â ï¸ à¦ªà§à¦²à§à¦à¦¨ controller + fetch() (Livewire à¦¨à¦¾) â à¦à¦¾à¦°à¦£ Livewire-à¦à¦° shared
-// /livewire/update à¦°à§à¦à§ 'auth' middleware à¦¬à¦¾à¦§à§à¦¯à¦¤à¦¾à¦®à§à¦²à¦, à¦à¦¿à¦¨à§à¦¤à§ à¦à¦ à¦«à§à¦²à§
-// à¦¬à§à¦¯à¦¬à¦¹à¦¾à¦° à¦à¦°à§ à¦²à¦à¦à¦¨-à¦ à¦¨à¦¾ à¦à¦°à¦¾ à¦à¦à¦à¦¾à¦° (à¦ à¦¿à¦ registration OTP-à¦° à¦®à¦¤à§ à¦à¦¾à¦°à¦£à§)à¥¤
+// ⚠️ প্লেইন controller + fetch() (Livewire না) — কারণ Livewire-এর shared
+// /livewire/update রুটে 'auth' middleware বাধ্যতামূলক, কিন্তু এই ফ্লো
+// ব্যবহার করে লগইন-ই না করা ইউজার (ঠিক registration OTP-র মতো কারণে)।
 Route::get('/forgot-password', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'create'])->name('password.forgot');
 Route::post('/forgot-password/send-code', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendCode'])
     ->middleware('throttle:5,1')->name('password.forgot.send');
@@ -126,12 +165,12 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
 Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function () {
     Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
 
-    // ââ API-style JSON à¦°à§à¦ â à¦¨à¦¾à¦® à¦à¦²à¦¾à¦¦à¦¾ à¦°à¦¾à¦à¦¾ à¦¹à¦²à§ 'api.' prefix à¦¦à¦¿à¦¯à¦¼à§, à¦¯à§à¦¨
+    // ── API-style JSON রুট — নাম আলাদা রাখা হলো 'api.' prefix দিয়ে, যেন
     Route::get('/students/admission', \App\Livewire\StudentAdmissionWizard::class)->name('students.admission');
     Route::get('/academic/classes', \App\Livewire\ClassSectionManager::class)->name('academic.classes');
     Route::get('/academic/departments', \App\Livewire\DepartmentManager::class)->name('academic.departments');
     Route::get('/academic/subjects', \App\Livewire\SubjectManager::class)->name('academic.subjects');
-    // Livewire à¦ªà§à¦ à¦°à§à¦à§à¦° à¦¨à¦¾à¦®à§à¦° à¦¸à¦¾à¦¥à§ conflict à¦¨à¦¾ à¦¹à¦¯à¦¼ ââ
+    // Livewire পেজ রুটের নামের সাথে conflict না হয় ──
     Route::resource('students', StudentController::class)
         ->except(['create', 'edit'])
         ->names('api.students');
@@ -170,7 +209,7 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::post('routine', [\App\Http\Controllers\RoutinePeriodController::class, 'store']);
     Route::delete('routine/{routinePeriod}', [\App\Http\Controllers\RoutinePeriodController::class, 'destroy']);
 
-    // ââ Livewire à¦ªà§à¦ à¦°à§à¦ (bottom-nav/sidebar à¦à¦° à¦à¦¾à¦°à§à¦à§à¦, à¦¨à¦¾à¦® à¦à¦à¦¨ à¦à¦à¦¨à¦¿à¦) ââ
+    // ── Livewire পেজ রুট (bottom-nav/sidebar এর টার্গেট, নাম এখন ইউনিক) ──
     Route::get('/students-page', \App\Livewire\StudentList::class)->name('students.index');
     Route::get('/students-page/{student}', \App\Livewire\StudentProfile::class)->name('students.profile');
     Route::get('/teachers-page', \App\Livewire\TeacherList::class)->name('teachers.index');
