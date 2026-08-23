@@ -70,9 +70,9 @@
                         <input type="text" wire:model.live.debounce.300ms="search" placeholder="নাম বা আইডি দিয়ে খুঁজুন...">
                     </div>
 
-                    @if ($selectedStudent)
+                    @if ($this->selectedStudent)
                         <div class="info-box" style="background:rgba(108,92,231,.08);border-color:rgba(108,92,231,.3);margin-bottom:12px;">
-                            নির্বাচিত: <strong>{{ $selectedStudent->name }}</strong> ({{ $selectedStudent->student_id_no }})
+                            নির্বাচিত: <strong>{{ $this->selectedStudent->name }}</strong> ({{ $this->selectedStudent->student_id_no }})
                         </div>
                     @elseif ($this->students->count())
                         <div style="max-height:160px;overflow-y:auto;border:1px solid var(--line);border-radius:10px;margin-bottom:12px;">
