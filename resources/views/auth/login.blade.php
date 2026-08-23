@@ -175,11 +175,11 @@
             </div>
 
             {{-- Role tabs --}}
-            <div class="mb-6 flex flex-wrap gap-1.5">
+            <div class="mb-6 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
                 <template x-for="(data, key) in roles" :key="key">
                     <button type="button" @click="role = key"
                         :style="role === key ? 'border-color:' + data.color + ';color:' + data.color + ';background:' + data.color + '1A' : ''"
-                        class="flex items-center gap-1.5 rounded-full border border-[var(--color-line)] px-3.5 py-1.5 text-[13px] font-medium text-[var(--color-ink-muted)]">
+                        class="flex w-full items-center justify-center gap-1.5 rounded-full border border-[var(--color-line)] px-3.5 py-1.5 text-[13px] font-medium text-[var(--color-ink-muted)] sm:w-auto">
                         <span class="h-1.5 w-1.5 rounded-full" :style="'background:' + data.color"></span>
                         <span x-text="{admin:'এডমিন',teacher:'শিক্ষক/স্টাফ',guardian:'অভিভাবক',student:'শিক্ষার্থী'}[key]"></span>
                     </button>
@@ -306,7 +306,7 @@
 
                 <div class="mb-4">
                     <label class="mb-1.5 block text-sm font-medium text-[var(--color-ink)]" x-text="roles[role].idLabel">এডমিন আইডি অথবা ইমেইল</label>
-                    <div class="flex items-center gap-2.5 rounded-lg border border-[var(--color-line)] bg-white px-3.5 py-2.5 focus-within:border-[var(--color-gold)] focus-within:ring-2 focus-within:ring-[var(--color-gold)]/20">
+                    <div class="flex items-center gap-2.5 rounded-xl border border-[var(--color-line)] bg-white px-3.5 py-3 focus-within:border-[var(--color-gold)] focus-within:ring-2 focus-within:ring-[var(--color-gold)]/20">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="h-[18px] w-[18px] shrink-0 text-[var(--color-ink-soft)]"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c1.2-3.6 4-5.4 7-5.4s5.8 1.8 7 5.4"/></svg>
                         <input type="email" name="email" required placeholder="ইমেইল লিখুন"
                             class="w-full border-0 bg-transparent text-[15px] text-[var(--color-ink)] outline-none">
@@ -315,7 +315,7 @@
 
                 <div class="mb-4">
                     <label class="mb-1.5 block text-sm font-medium text-[var(--color-ink)]">পাসওয়ার্ড</label>
-                    <div class="flex items-center gap-2.5 rounded-lg border border-[var(--color-line)] bg-white px-3.5 py-2.5 focus-within:border-[var(--color-gold)] focus-within:ring-2 focus-within:ring-[var(--color-gold)]/20"
+                    <div class="flex items-center gap-2.5 rounded-xl border border-[var(--color-line)] bg-white px-3.5 py-3 focus-within:border-[var(--color-gold)] focus-within:ring-2 focus-within:ring-[var(--color-gold)]/20"
                          x-data="{ show: false }">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="h-[18px] w-[18px] shrink-0 text-[var(--color-ink-soft)]"><rect x="5" y="10.5" width="14" height="9" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
                         <input :type="show ? 'text' : 'password'" name="password" required placeholder="••••••••"
@@ -334,7 +334,7 @@
                 </div>
 
                 <button type="submit"
-                    class="flex items-center justify-center gap-2 rounded-lg bg-[var(--color-maroon)] py-3 font-medium text-white transition hover:brightness-110"
+                    class="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-maroon)] py-3.5 font-medium text-white shadow-md shadow-black/10 transition hover:brightness-110 hover:shadow-lg active:scale-[0.99]"
                     :style="'background:' + roles[role].color">
                     লগইন করুন
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
@@ -345,7 +345,7 @@
                 <span class="h-px flex-1 bg-[var(--color-line)]"></span> অথবা <span class="h-px flex-1 bg-[var(--color-line)]"></span>
             </div>
 
-            <button type="button" class="flex items-center justify-center gap-2 rounded-lg border border-[var(--color-line)] py-2.5 text-sm text-[var(--color-ink-muted)] hover:bg-[var(--color-paper-deep)]">
+                            <button type="button" class="flex items-center justify-center gap-2 rounded-xl border border-[var(--color-line)] py-3 text-sm text-[var(--color-ink-muted)] transition hover:border-[var(--color-maroon)]/40 hover:bg-[var(--color-paper-deep)]">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="2.5" width="12" height="19" rx="2"/><path d="M10.5 18.5h3"/></svg>
                 মোবাইল OTP দিয়ে লগইন করুন
             </button>
