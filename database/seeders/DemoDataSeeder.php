@@ -192,6 +192,9 @@ class DemoDataSeeder extends Seeder
             'admission_applications', 'academic_sessions',
             'homeworks', 'lesson_plans', 'question_bank_items', 'scholarships',
             'sections', 'classes', 'subjects', 'teachers', 'students',
+            'exam_seat_assignments', 'exam_seat_plans', 'routine_periods',
+            'support_tickets', 'visitors', 'inventory_items', 'hifz_progress',
+            'monthly_honors', 'budgets', 'fee_installment_plans', 'departments',
         ];
         foreach ($tables as $t) {
             DB::table($t)->where('institution_id', $instId)->delete();
