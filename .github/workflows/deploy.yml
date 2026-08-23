@@ -43,6 +43,7 @@ jobs:
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
+            chmod -R 777 storage/fonts || true
 
             # ⚠️ ডিপ্লয়ের ঠিক পরে লাইভ URL গুলো নিজেই চেক করে নিশ্চিত হচ্ছে
             # সাইট আসলেই সাড়া দিচ্ছে (৫xx না)। ব্যর্থ হলে ডিপ্লয় ব্যর্থ
