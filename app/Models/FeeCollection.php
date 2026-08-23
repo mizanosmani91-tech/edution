@@ -36,6 +36,8 @@ class FeeCollection extends Model
         'guardian_claim_note',
         'guardian_claimed_at',
         'guardian_claim_status', // pending / confirmed / rejected
+        'installment_plan_id',
+        'installment_number',
     ];
 
     protected $casts = [
@@ -50,6 +52,11 @@ class FeeCollection extends Model
     public function student()
     {
         return $this->belongsTo(Student::class);
+    }
+
+    public function installmentPlan()
+    {
+        return $this->belongsTo(FeeInstallmentPlan::class, 'installment_plan_id');
     }
 
     public function institution()

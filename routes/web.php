@@ -148,6 +148,7 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/teachers-page', \App\Livewire\TeacherList::class)->name('teachers.index');
     Route::get('/teachers-page/{teacher}', \App\Livewire\TeacherProfile::class)->name('teachers.profile');
     Route::get('/fees-page', \App\Livewire\FeeCollectionList::class)->name('fees.index');
+    Route::get('/fee-installment-plans', \App\Livewire\FeeInstallmentPlans::class)->name('fee-installments.index');
     Route::get('/attendance-page', \App\Livewire\AttendanceTaker::class)->name('attendance.index');
     Route::get('/staff-attendance-page', \App\Livewire\StaffAttendanceTaker::class)->name('staff-attendance.index');
     Route::get('/chat-page', \App\Livewire\ChatWindow::class)->name('chat.index');

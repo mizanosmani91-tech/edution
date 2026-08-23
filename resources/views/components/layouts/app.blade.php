@@ -211,6 +211,7 @@
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('fee-structures.index') }}" class="sub-item {{ request()->routeIs('fee-structures.*') ? 'active' : '' }}">ফি স্ট্রাকচার সেটআপ</a>
                     <a href="{{ route('fees.index') }}" class="sub-item {{ request()->routeIs('fees.*') ? 'active' : '' }}">ফি সংগ্রহ</a>
+                    <a href="{{ route('fee-installments.index') }}" class="sub-item {{ request()->routeIs('fee-installments.*') ? 'active' : '' }}">ফি কিস্তি প্ল্যান</a>
                     <a href="{{ route('payment-gateway.index') }}" class="sub-item {{ request()->routeIs('payment-gateway.*') ? 'active' : '' }}">অনলাইন পেমেন্ট গেটওয়ে</a>
                     <a href="{{ route('fees.index') }}" class="sub-item">বকেয়া তালিকা</a>
                     <a href="{{ route('scholarships.index') }}" class="sub-item {{ request()->routeIs('scholarships.*') ? 'active' : '' }}">বৃত্তি/মওকুফ</a>
