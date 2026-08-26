@@ -32,6 +32,13 @@ Route::middleware(['auth', 'superadmin', 'password.change'])->domain('panel.edut
 // থেকে অ্যাক্সেসযোগ্য হতে হবে (লগইন পেজ থেকেও ইনস্টল করা যাবে বলে)
 Route::get('/manifest.webmanifest', [\App\Http\Controllers\PwaController::class, 'manifest'])->name('pwa.manifest');
 
+Route::get('/locale/{locale}', function (string $locale) {
+        if (in_array($locale, ['bn', 'en'], true)) {
+                    session(['locale' => $locale]);
+        }
+                return back();
+})->name('locale.switch');
+
 // প্রতিষ্ঠানের পাবলিক প্রোফাইল পেজ (লগইন ছাড়াই দেখা যায়) — Facebook/গুগলে
 // শেয়ার করার জন্য। মূল '/' রুট ইচ্ছাকৃতভাবে বদলানো হয়নি, এটা আলাদা path।
 Route::get('/school-profile', [\App\Http\Controllers\PublicSiteController::class, 'show'])->name('public-site.show');
