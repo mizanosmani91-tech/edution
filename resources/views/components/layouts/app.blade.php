@@ -416,17 +416,17 @@
                 @if ($inst && $inst->billing_suspended)
                     <div class="info-box" style="margin-bottom:16px;background:#FCE4E4;border-color:#D9534F;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-                        বিলিং বকেয়ার কারণে আপনার অ্যাকাউন্ট সাসপেন্ড করা হয়েছে। <a href="{{ route('billing.index') }}" style="font-weight:700;text-decoration:underline;">এখনই পরিশোধ করুন →</a>
+                        {{ __('বিলিং বকেয়ার কারণে আপনার অ্যাকাউন্ট সাসপেন্ড করা হয়েছে।') }} <a href="{{ route('billing.index') }}" style="font-weight:700;text-decoration:underline;">{{ __('এখনই পরিশোধ করুন') }} →</a>
                     </div>
                 @elseif ($inst && $inst->isPostpaid() && $inst->billing_grace_ends_at && $inst->graceDaysLeft() !== null && $inst->graceDaysLeft() <= 5)
                     <div class="info-box" style="margin-bottom:16px;background:#FFF4E5;border-color:#F0B429;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-                        এই মাসের বিল এখনো বকেয়া — আর {{ $inst->graceDaysLeft() }} দিন পর অ্যাক্সেস বন্ধ হয়ে যাবে। <a href="{{ route('billing.index') }}" style="font-weight:700;text-decoration:underline;">বিলিং পেজে যান →</a>
+                        {{ __('এই মাসের বিল এখনো বকেয়া — আর') }} {{ $inst->graceDaysLeft() }} {{ __('দিন পর অ্যাক্সেস বন্ধ হয়ে যাবে।') }} <a href="{{ route('billing.index') }}" style="font-weight:700;text-decoration:underline;">{{ __('বিলিং পেজে যান') }} →</a>
                     </div>
                 @elseif ($inst && $inst->isPrepaid() && (float) $inst->prepaid_balance < 500)
                     <div class="info-box" style="margin-bottom:16px;background:#FFF4E5;border-color:#F0B429;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-                        প্রিপেইড ব্যালেন্স কমে যাচ্ছে (বর্তমান ৳{{ number_format((float) $inst->prepaid_balance) }})। <a href="{{ route('billing.index') }}" style="font-weight:700;text-decoration:underline;">এখনই টপ-আপ করুন →</a>
+                        {{ __('প্রিপেইড ব্যালেন্স কমে যাচ্ছে (বর্তমান') }} ৳{{ number_format((float) $inst->prepaid_balance) }})। <a href="{{ route('billing.index') }}" style="font-weight:700;text-decoration:underline;">{{ __('এখনই টপ-আপ করুন') }} →</a>
                     </div>
                 @endif
             @endif
