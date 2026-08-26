@@ -214,7 +214,7 @@
             </div>
             <div class="card">
                 <div class="card-head">
-                    <div><h3>আজকের শিক্ষক/স্টাফ হাজিরা</h3><p>উপস্থিত/অনুপস্থিত/দেরি</p></div>
+                    <div><h3>{{ __('আজকের শিক্ষক/স্টাফ হাজিরা') }}</h3><p>{{ __('উপস্থিত/অনুপস্থিত/দেরি') }}</p></div>
                 </div>
                 <div class="chart-box small" style="position:relative;">
                     <canvas id="staffAttendanceDonut"></canvas>
@@ -294,7 +294,7 @@
         @if ($widgets['attendance_trend'] ?? true)
             <div class="card">
                 <div class="card-head">
-                    <div><h3>উপস্থিতির প্রবণতা</h3><p>শেষ ১৪ দিনের হার</p></div>
+                    <div><h3>{{ __('উপস্থিতির প্রবণতা') }}</h3><p>{{ __('শেষ ১৪ দিনের হার') }}</p></div>
                 </div>
                 <div class="chart-box"><canvas id="attendanceChart"></canvas></div>
             </div>
@@ -303,7 +303,7 @@
         @if ($widgets['fee_chart'] ?? true)
             <div class="card">
                 <div class="card-head">
-                    <div><h3>ফি আদায়ের অবস্থা</h3><p>চলতি মাস</p></div>
+                    <div><h3>{{ __('ফি আদায়ের অবস্থা') }}</h3><p>{{ __('চলতি মাস') }}</p></div>
                 </div>
                 <div class="chart-box small" style="position:relative;">
                     <canvas id="feeDonut"></canvas>
@@ -317,7 +317,7 @@
         <div class="row-2">
             <div class="card">
                 <div class="card-head">
-                    <div><h3>পরীক্ষার ফলাফল বিভাজন</h3><p>{{ $examChart['exam_name'] }}</p></div>
+                    <div><h3>{{ __('পরীক্ষার ফলাফল বিভাজন') }}</h3><p>{{ $examChart['exam_name'] }}</p></div>
                 </div>
                 <div class="chart-box"><canvas id="examGradeBar"></canvas></div>
             </div>
@@ -359,7 +359,7 @@
     {{-- BOTTOM: NOTICES + DEFAULTERS --}}
     <div class="bottom-grid">
         <div class="card">
-            <div class="card-head"><div><h3>সাম্প্রতিক নোটিশ ও কার্যক্রম</h3></div></div>
+            <div class="card-head"><div><h3>{{ __('সাম্প্রতিক নোটিশ ও কার্যক্রম') }}</h3></div></div>
             <div class="ledger-list">
                 <div class="ledger-row">
                     <div class="date-badge"><div class="d">{{ now()->translatedFormat('d') }}</div><div class="m">{{ now()->translatedFormat('M') }}</div></div>
