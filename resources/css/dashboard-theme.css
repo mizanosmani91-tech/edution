@@ -39,7 +39,7 @@ button{font-family:inherit;}
    @media ব্লকে। */
 .mobile-backdrop{display:none;}
 
-.sidebar{background:linear-gradient(180deg,var(--cover-maroon),var(--cover-maroon-deep));color:rgba(255,255,255,.9);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:hidden;border-right:1px solid rgba(255,255,255,.1);box-shadow:8px 0 30px -20px rgba(75,63,196,.55);}
+.sidebar{background:linear-gradient(180deg,#6C5CE7,#4B3FC4);color:rgba(255,255,255,.9);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:hidden;border-right:1px solid rgba(255,255,255,.1);box-shadow:8px 0 30px -20px rgba(75,63,196,.55);}
 .sidebar-head{display:flex;align-items:center;gap:11px;padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
 .sidebar-emblem{width:40px;height:40px;border-radius:12px;border:0;background:linear-gradient(135deg,#8B7CF6,#5B4FE0);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 14px -6px rgba(91,79,224,.6);}
 .sidebar-emblem svg{width:19px;height:19px;color:#fff;}
