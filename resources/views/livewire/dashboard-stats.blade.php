@@ -51,7 +51,7 @@
             <div class="pc-text">
                 <h3>{{ __('শেখার পরিধি বাড়ান') }}</h3>
                 <p>{{ __('অনলাইন MCQ পরীক্ষা, হোমওয়ার্ক ট্র্যাকিং ও লার্নিং ম্যাটেরিয়াল দিয়ে শিক্ষার্থীদের আরও এগিয়ে রাখুন।') }}</p>
-                <a href="{{ route('quizzes.index') }}" class="btn-primary" style="background:linear-gradient(180deg,var(--gold-light),var(--gold));">
+                <a href="{{ route('quizzes.index') }}" class="btn-primary">
                     এখনই দেখুন
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
                 </a>
@@ -97,7 +97,7 @@
     @if ($widgets['honors'] ?? true)
         <div class="honor-grid">
             @if ($honorStudent && $honorStudent->student)
-                <div class="honor-card" @click="honorModal = 'student'">
+                <div class="honor-card" style="--accent:var(--admin)" @click="honorModal = 'student'">
                     <div class="medal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="m9 13-2 8 5-3 5 3-2-8"/></svg></div>
                     <div>
                         <div class="hc-label">মাসের সেরা শিক্ষার্থী</div>
@@ -110,7 +110,7 @@
             @endif
 
             @if ($honorTeacher && $honorTeacher->teacher)
-                <div class="honor-card" @click="honorModal = 'teacher'">
+                <div class="honor-card" style="--accent:var(--teacher)" @click="honorModal = 'teacher'">
                     <div class="medal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="m9 13-2 8 5-3 5 3-2-8"/></svg></div>
                     <div>
                         <div class="hc-label">মাসের সেরা শিক্ষক/স্টাফ</div>
