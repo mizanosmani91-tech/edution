@@ -1,4 +1,471 @@
 <!DOCTYPE html>
+<html lang="{{ app()->getLocale() }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#6C5CE7">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+        }
+    </script>
+    <title>{{ ($title ?? __('ড্যাশবোর্ড')) }} — {{ auth()->user()->institution?->name ?? 'EDUTION' }}</title>
+    @if (auth()->user()->institution?->favicon_path)
+        <link rel="icon" href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url(auth()->user()->institution->favicon_path) }}">
+    @endif
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
+    @php
+        $__settings = auth()->user()->institution?->settings;
+        $__primary = $__settings->theme_primary_color ?? null;
+        $__accent = $__settings->theme_accent_color ?? null;
+        $__darken = function (string $hex, float $pct): string {
+            $hex = ltrim($hex, '#');
+            if (strlen($hex) !== 6) { return '#' . $hex; }
+            [$r, $g, $b] = array_map(fn ($c) => (int) min(255, max(0, hexdec($c) * (1 - $pct))), str_split($hex, 2));
+            return sprintf('#%02x%02x%02x', $r, $g, $b);
+        };
+    @endphp
+    @if ($__primary || $__accent)
+        <style>
+            :root {
+                @if ($__primary)
+                    --cover-maroon: {{ $__primary }};
+                    --cover-maroon-deep: {{ $__darken($__primary, 0.35) }};
+                @endif
+                @if ($__accent)
+                    --gold: {{ $__accent }};
+                    --gold-light: {{ $__darken($__accent, -0.25) }};
+                @endif
+            }
+        </style>
+    @endif
+</head>
+<body>
+<div class="app" id="app" x-data="{ collapsed: false, mobileOpen: false }" :class="{ collapsed: collapsed, 'mobile-open': mobileOpen }">
+
+    <div class="mobile-backdrop" @click="mobileOpen = false"></div>
+
+    {{-- ============ SIDEBAR ============ --}}
+    <aside class="sidebar">
+        <div class="sidebar-head">
+            <div class="sidebar-emblem" style="overflow:hidden;">
+                @if (auth()->user()->institution?->logo_path)
+                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url(auth()->user()->institution->logo_path) }}" alt="{{ auth()->user()->institution->name }}" style="height:100%;width:100%;object-fit:cover;">
+                @else
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#6C5CE7" stroke-width="1.6"><path d="M4 6.5c2.8-1.4 5.6-1.4 8 0v11c-2.4-1.4-5.2-1.4-8 0v-11Z"/><path d="M20 6.5c-2.8-1.4-5.6-1.4-8 0v11c2.4-1.4 5.2-1.4 8 0v-11Z"/></svg>
+                @endif
+            </div>
+            <div class="sidebar-brand">
+                <div class="name">EDUTION</div>
+                <div class="inst">{{ auth()->user()->institution?->name ?? '' }}</div>
+            </div>
+        </div>
+
+        <nav class="nav-scroll">
+            <div class="nav-single {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <a href="{{ route('dashboard') }}" class="nav-btn">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 12 12 4l8 8"/><path d="M6 10v9h12v-9"/></svg></span>
+                    <span class="lbl">{{ __('ড্যাশবোর্ড') }}</span>
+                </a>
+            </div>
+
+            @php
+                $stub = fn($label) => route('stub', urlencode($label));
+                $activeIf = fn(...$patterns) => request()->routeIs($patterns) ? 'open active' : '';
+            @endphp
+
+            @if (auth()->user()->role !== 'teacher')
+            {{-- একাডেমিক --}}
+            <div class="nav-module {{ $activeIf('academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*','live-class-monitor.*','quizzes.*','hifz-progress.*') }}" x-data="{ open: {{ request()->routeIs(['academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*','live-class-monitor.*','quizzes.*','hifz-progress.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2 2 0 0 1 6 4h13v14H6a2 2 0 0 0-2 2V5.5Z"/><path d="M19 18v3"/></svg></span>
+                    <span class="lbl">{{ __('একাডেমিক') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('academic.classes') }}" class="sub-item {{ request()->routeIs('academic.classes') ? 'active' : '' }}">{{ __('ক্লাস ও সেকশন') }}</a>
+                    <a href="{{ route('academic.departments') }}" class="sub-item {{ request()->routeIs('academic.departments') ? 'active' : '' }}">{{ __('বিভাগ') }}</a>
+                    <a href="{{ route('academic.subjects') }}" class="sub-item {{ request()->routeIs('academic.subjects') ? 'active' : '' }}">{{ __('বিষয় ও সিলেবাস') }}</a>
+                    <a href="{{ route('routine.index') }}" class="sub-item {{ request()->routeIs('routine.*') ? 'active' : '' }}">{{ __('ক্লাস রুটিন') }}</a>
+                    <a href="{{ route('live-class-monitor.index') }}" class="sub-item {{ request()->routeIs('live-class-monitor.*') ? 'active' : '' }}">{{ __('লাইভ ক্লাস মনিটর') }}</a>
+                    <a href="{{ route('academic-sessions.index') }}" class="sub-item {{ request()->routeIs('academic-sessions.*') ? 'active' : '' }}">{{ __('একাডেমিক সেশন') }}</a>
+                    <a href="{{ route('homework.index') }}" class="sub-item {{ request()->routeIs('homework.*') ? 'active' : '' }}">{{ __('হোশওয়ার্ক/অ্যাসাইনমেন্ট') }}</a>
+                    <a href="{{ route('lesson-plans.index') }}" class="sub-item {{ request()->routeIs('lesson-plans.*') ? 'active' : '' }}">{{ __('লেসন প্ল্যান') }}</a>
+                    <a href="{{ route('question-bank.index') }}" class="sub-item {{ request()->routeIs('question-bank.*') ? 'active' : '' }}">{{ __('প্রশ্ন ব্যাংক') }}</a>
+                    <a href="{{ route('quizzes.index') }}" class="sub-item {{ request()->routeIs('quizzes.*') ? 'active' : '' }}">{{ __('অনলাইন কুইজ (তৈরি করুন)') }}</a>
+                    <a href="{{ route('hifz-progress.index') }}" class="sub-item {{ request()->routeIs('hifz-progress.*') ? 'active' : '' }}">{{ __('হিফজ/কুরআন অগ্রগতি') }}</a>
+                </div></div></div>
+            </div>
+
+            {{-- ভর্তি --}}
+            <div class="nav-module {{ $activeIf('students.admission','admission-applications.*','seat-management.*','entrance-test.*','admission-waiting.*') }}" x-data="{ open: {{ request()->routeIs(['students.admission','admission-applications.*','seat-management.*','entrance-test.*','admission-waiting.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.3"/><path d="M3 20c1-3.6 3.4-5.4 6-5.4s5 1.8 6 5.4"/><path d="M17 8h4M19 6v4"/></svg></span>
+                    <span class="lbl">{{ __('ভর্তি') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('students.admission') }}" class="sub-item {{ request()->routeIs('students.admission') ? 'active' : '' }}">{{ __('অনলাইন ভর্তি ফর্ম') }}</a>
+                    <a href="{{ route('admission-applications.index') }}" class="sub-item {{ request()->routeIs('admission-applications.*') ? 'active' : '' }}">{{ __('ভর্তি আবেদন তালিকা') }}</a>
+                    <a href="{{ route('seat-management.index') }}" class="sub-item {{ request()->routeIs('seat-management.*') ? 'active' : '' }}">{{ __('আসন ব্যবস্থাপনা') }}</a>
+                    <a href="{{ route('entrance-test.index') }}" class="sub-item {{ request()->routeIs('entrance-test.*') ? 'active' : '' }}">{{ __('ভর্তি পরীক্ষা/ইন্টারভিউ') }}</a>
+                    <a href="{{ route('admission-waiting.index') }}" class="sub-item {{ request()->routeIs('admission-waiting.*') ? 'active' : '' }}">{{ __('Waiting List') }}</a>
+                </div></div></div>
+            </div>
+
+            {{-- শিক্ষার্থী --}}
+            <div class="nav-module {{ $activeIf('students.*','id-cards.*','student-promotion.*','certificates.*','discipline.*','student-health.*','alumni.*','import.students') }}" x-data="{ open: {{ request()->routeIs(['students.*','id-cards.*','student-promotion.*','certificates.*','discipline.*','student-health.*','alumni.*','import.students']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4.5 5-6.5 8-6.5s6.5 2 8 6.5"/></svg></span>
+                    <span class="lbl">{{ __('শিক্ষার্থী') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('students.index') }}" class="sub-item {{ request()->routeIs('students.*') ? 'active' : '' }}">{{ __('শিক্ষার্থী তালিকা') }}</a>
+                    <a href="{{ route('id-cards.index') }}" class="sub-item {{ request()->routeIs('id-cards.*') ? 'active' : '' }}">{{ __('আইডি কার্ড জেনারেশন') }}</a>
+                    <a href="{{ route('student-promotion.index') }}" class="sub-item {{ request()->routeIs('student-promotion.*') ? 'active' : '' }}">{{ __('প্রমোশন') }}</a>
+                    <a href="{{ route('certificates.transfer') }}" class="sub-item {{ request()->routeIs('certificates.transfer') ? 'active' : '' }}">{{ __('Transfer Certificate') }}</a>
+                    <a href="{{ route('certificates.character') }}" class="sub-item {{ request()->routeIs('certificates.character') ? 'active' : '' }}">{{ __('Character Certificate') }}</a>
+                    <a href="{{ route('discipline.index') }}" class="sub-item {{ request()->routeIs('discipline.*') ? 'active' : '' }}">{{ __('Discipline/আচরণ রেকর্ড') }}</a>
+                    <a href="{{ route('student-health.index') }}" class="sub-item {{ request()->routeIs('student-health.*') ? 'active' : '' }}">{{ __('স্বাস্থ্য তথ্য') }}</a>
+                    <a href="{{ route('alumni.index') }}" class="sub-item {{ request()->routeIs('alumni.*') ? 'active' : '' }}">{{ __('Alumni') }}</a>
+                </div></div></div>
+            </div>
+
+            {{-- শিক্ষক ও স্টাফ --}}
+            <div class="nav-module {{ $activeIf('teachers.*','payroll.*','performance.*','leave-requests.*','import.teachers') }}" x-data="{ open: {{ request()->routeIs(['teachers.*','payroll.*','performance.*','leave-requests.*','import.teachers']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8"/></svg></span>
+                    <span class="lbl">{{ __('শিক্ষক ও স্টাফ') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('teachers.index') }}" class="sub-item {{ request()->routeIs('teachers.*') ? 'active' : '' }}">{{ __('শিক্ষক তালিকা') }}</a>
+                    <a href="{{ route('teachers.hire') }}" class="sub-item {{ request()->routeIs('teachers.hire') ? 'active' : '' }}">{{ __('নিয়োগ') }}</a>
+                    <a href="{{ route('payroll.index') }}" class="sub-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">{{ __('পে-রোল/বেতন') }}</a>
+                    <a href="{{ route('leave-requests.index') }}" class="sub-item {{ request()->routeIs('leave-requests.*') ? 'active' : '' }}">{{ __('ছুটি ব্যবস্থাপনা') }}</a>
+                    <a href="{{ route('performance.index') }}" class="sub-item {{ request()->routeIs('performance.*') ? 'active' : '' }}">{{ __('Performance/মূল্যায়ন') }}</a>
+                </div></div></div>
+            </div>
+
+            @endif
+
+            {{-- হাজিরা --}}
+            <div class="nav-module {{ $activeIf('attendance.*','staff-attendance.*','attendance-report.*','leave-requests.*','import.attendance-device') }}" x-data="{ open: {{ request()->routeIs(['attendance.*','staff-attendance.*','attendance-report.*','leave-requests.*','import.attendance-device']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12 2.3 2.3L16 9.7"/></svg></span>
+                    <span class="lbl">{{ __('হাজিরা') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('attendance.index') }}" class="sub-item {{ request()->routeIs('attendance.*') ? 'active' : '' }}">{{ __('শিক্ষার্থী হাজিরা') }}</a>
+                    <a href="{{ route('staff-attendance.index') }}" class="sub-item {{ request()->routeIs('staff-attendance.*') ? 'active' : '' }}">{{ __('স্টাফ হশজিরা') }}</a>
+                    <a href="{{ route('leave-requests.index') }}" class="sub-item {{ request()->routeIs('leave-requests.*') ? 'active' : '' }}">{{ __('ছুটির আবেদন') }}</a>
+                    <a href="{{ route('attendance-report.index') }}" class="sub-item {{ request()->routeIs('attendance-report.*') ? 'active' : '' }}">{{ __('হাজিরা রিপোর্ট') }}</a>
+                    <a href="{{ route('import.attendance-device') }}" class="sub-item {{ request()->routeIs('import.attendance-device') ? 'active' : '' }}">{{ __('অ্যাটেন্ডেন্স ডিভাইস ইমপোর্ট') }}</a>
+                </div></div></div>
+            </div>
+
+            @if (auth()->user()->role === 'teacher')
+                <div class="nav-single {{ request()->routeIs('homework.*') ? 'active' : '' }}">
+                    <a href="{{ route('homework.index') }}" class="nav-btn">
+                        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2 2 0 0 1 6 4h13v14H6a2 2 0 0 0-2 2V5.5Z"/><path d="M19 18v3"/></svg></span>
+                        <span class="lbl">{{ __('হোমওয়ার্ক') }}</span>
+                    </a>
+                </div>
+            @endif
+
+            {{-- পরীক্ষা ও ফলাফল --}}
+            <div class="nav-module {{ $activeIf('exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*','exam-seat-plan.*','exam-documents.*','question-papers.*') }}" x-data="{ open: {{ request()->routeIs(['exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*','exam-seat-plan.*','exam-documents.*','question-papers.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3h6l1 3H8l1-3Z"/><rect x="5" y="6" width="14" height="15" rx="2"/><path d="M9 12h6M9 16h6"/></svg></span>
+                    <span class="lbl">{{ __('পরীক্ষা ও ফলাফল') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('exam-schedule.index') }}" class="sub-item {{ request()->routeIs('exam-schedule.*') ? 'active' : '' }}">{{ __('পরীক্ষার সময়সূচি') }}</a>
+                    <a href="{{ route('marks-entry.index') }}" class="sub-item {{ request()->routeIs('marks-entry.*') ? 'active' : '' }}">{{ __('মার্কস এন্ট্রি') }}</a>
+                    <a href="{{ route('result-weighting.index') }}" class="sub-item {{ request()->routeIs('result-weighting.*') ? 'active' : '' }}">{{ __('Result Weighting') }}</a>
+                    <a href="{{ route('merit-list.index') }}" class="sub-item {{ request()->routeIs('merit-list.*') ? 'active' : '' }}">{{ __('GPA/গ্রেড ক্যালকুলেশন') }}</a>
+                    <a href="{{ route('exam-seat-plan.index') }}" class="sub-item {{ request()->routeIs('exam-seat-plan.*') ? 'active' : '' }}">{{ __('সিট প্ল্যান') }}</a>
+                    <a href="{{ route('report-cards.index') }}" class="sub-item {{ request()->routeIs('report-cards.*') ? 'active' : '' }}">{{ __('ট্যাবুলেশন শীট') }}</a>
+                    <a href="{{ route('report-cards.index') }}" class="sub-item {{ request()->routeIs('report-cards.*') ? 'active' : '' }}">{{ __('রিপোর্ট কার্ড/মার্কশিট') }}</a>
+                    <a href="{{ route('report-cards.index') }}" class="sub-item {{ request()->routeIs('report-cards.*') ? 'active' : '' }}">{{ __('প্রবেশপত্র (Admit Card)') }}</a>
+                    <a href="{{ route('qawmi-grading.index') }}" class="sub-item {{ request()->routeIs('qawmi-grading.*') ? 'active' : '' }}">{{ __('কওমি গ্রেডিং') }}</a>
+                    <a href="{{ route('question-papers.index') }}" class="sub-item {{ request()->routeIs('question-papers.*') ? 'active' : '' }}">{{ __('প্রশ্নপত্র') }}</a>
+                    <a href="{{ route('exam-documents.index') }}" class="sub-item {{ request()->routeIs('exam-documents.*') ? 'active' : '' }}">{{ __('ডকুমেন্ট সেন্টার') }}</a>
+                </div></div></div>
+            </div>
+
+            @if (auth()->user()->role !== 'teacher')
+            {{-- ফি/অর্থ --}}
+            <div class="nav-module {{ $activeIf('fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees','scholarships.*','budget.*') }}" x-data="{ open: {{ request()->routeIs(['fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees','scholarships.*','budget.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/><circle cx="16.5" cy="15" r="1.4"/></svg></span>
+                    <span class="lbl">{{ __('ফি/অর্থ') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('fee-structures.index') }}" class="sub-item {{ request()->routeIs('fee-structures.*') ? 'active' : '' }}">{{ __('ফি স্ট্রাকচার সেটআপ') }}</a>
+                    <a href="{{ route('fees.index') }}" class="sub-item {{ request()->routeIs('fees.*') ? 'active' : '' }}">{{ __('ফি সংগ্রহ') }}</a>
+                    <a href="{{ route('fee-installments.index') }}" class="sub-item {{ request()->routeIs('fee-installments.*') ? 'active' : '' }}">{{ __('ফি কিস্তি প্ল্যান') }}</a>
+                    <a href="{{ route('payment-gateway.index') }}" class="sub-item {{ request()->routeIs('payment-gateway.*') ? 'active' : '' }}">{{ __('অনলাইন পেমেন্ট গেটওয়ে') }}</a>
+                    <a href="{{ route('fees.index') }}" class="sub-item">{{ __('বকেয়া তালিকা') }}</a>
+                    <a href="{{ route('scholarships.index') }}" class="sub-item {{ request()->routeIs('scholarships.*') ? 'active' : '' }}">{{ __('বৃত্তি/মওকুফ') }}</a>
+                    <a href="{{ route('expenses.index') }}" class="sub-item {{ request()->routeIs('expenses.*') ? 'active' : '' }}">{{ __('খরচ/ব্যয় ট্র্যাকিং') }}</a>
+                    <a href="{{ route('income-expense-report.index') }}" class="sub-item {{ request()->routeIs('income-expense-report.*') ? 'active' : '' }}">{{ __('আয়-ব্যয় রিপোর্ট') }}</a>
+                    <a href="{{ route('budget.index') }}" class="sub-item {{ request()->routeIs('budget.*') ? 'active' : '' }}">{{ __('বাজেট পরিকল্পনা') }}</a>
+                </div></div></div>
+            </div>
+
+            {{-- লাইব্রেরি --}}
+            <div class="nav-module {{ $activeIf('books.*','book-issues.*','book-fines.*') }}" x-data="{ open: {{ request()->routeIs(['books.*','book-issues.*','book-fines.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h6a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4V4Z"/><path d="M20 4h-6a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6V4Z"/></svg></span>
+                    <span class="lbl">{{ __('লাইব্রেরি') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('books.index') }}" class="sub-item {{ request()->routeIs('books.*') ? 'active' : '' }}">{{ __('বই তালিকা') }}</a>
+                    <a href="{{ route('book-issues.index') }}" class="sub-item {{ request()->routeIs('book-issues.*') ? 'active' : '' }}">{{ __('ইস্যু/রিটার্ন') }}</a>
+                    <a href="{{ route('book-fines.index') }}" class="sub-item {{ request()->routeIs('book-fines.*') ? 'active' : '' }}">{{ __('জরিমানা') }}</a>
+                </div></div></div>
+            </div>
+
+            {{-- পরিবহন --}}
+            <div class="nav-module {{ $activeIf('transport.*','transport-assignment.*','transport-tracking.*') }}" x-data="{ open: {{ request()->routeIs(['transport.*','transport-assignment.*','transport-tracking.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="9" width="18" height="8" rx="2"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg></span>
+                    <span class="lbl">{{ __('পরিবহন') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('transport.index') }}" class="sub-item {{ request()->routeIs('transport.*') ? 'active' : '' }}">{{ __('রুট ও গাড়ি') }}</a>
+                    <a href="{{ route('transport-assignment.index') }}" class="sub-item {{ request()->routeIs('transport-assignment.*') ? 'active' : '' }}">{{ __('ছাত্র-পরিবহন সংযুক্তি') }}</a>
+                    <a href="{{ route('transport-tracking.index') }}" class="sub-item {{ request()->routeIs('transport-tracking.*') ? 'active' : '' }}">{{ __('লাইভ GPS ট্র্যাকিং') }}</a>
+                </div></div></div>
+            </div>
+
+            {{-- হোস্টেল --}}
+            <div class="nav-module {{ $activeIf('hostel.*','hostel-fees.*') }}" x-data="{ open: {{ request()->routeIs(['hostel.*','hostel-fees.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg></span>
+                    <span class="lbl">{{ __('হোস্টেল') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('hostel.index') }}" class="sub-item {{ request()->routeIs('hostel.*') ? 'active' : '' }}">{{ __('রুম/সিট বরাদ্দ') }}</a>
+                    <a href="{{ route('hostel-fees.index') }}" class="sub-item {{ request()->routeIs('hostel-fees.*') ? 'active' : '' }}">{{ __('হোস্টেল ফি') }}</a>
+                </div></div></div>
+            </div>
+
+            @endif
+
+            {{-- যোগাযোগ --}}
+            <div class="nav-module {{ $activeIf('chat.*','notice-board.*','complaints.*','notification-gateway.*','support-tickets.*') }}" x-data="{ open: {{ request()->routeIs(['chat.*','notice-board.*','complaints.*','notification-gateway.*','support-tickets.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16v11H8l-4 4V5Z"/></svg></span>
+                    <span class="lbl">{{ __('যোগাযোগ') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('notice-board.index') }}" class="sub-item {{ request()->routeIs('notice-board.*') ? 'active' : '' }}">{{ __('নোট ��শ বোর্ড') }}</a>
+                    <a href="{{ route('chat.index') }}" class="sub-item {{ request()->routeIs('chat.*') ? 'active' : '' }}">{{ __('মেসেজিং/চ্যাট') }}</a>
+                    <a href="{{ route('notification-gateway.index') }}" class="sub-item {{ request()->routeIs('notification-gateway.*') ? 'active' : '' }}">{{ __('SMS Gateway') }}</a>
+                    <a href="{{ route('notification-gateway.index') }}" class="sub-item {{ request()->routeIs('notification-gateway.*') ? 'active' : '' }}">{{ __('Email Notification') }}</a>
+                    <a href="{{ route('complaints.index') }}" class="sub-item {{ request()->routeIs('complaints.*') ? 'active' : '' }}">{{ __('Complaint/Suggestion') }}</a>
+                    <a href="{{ route('support-tickets.index') }}" class="sub-item {{ request()->routeIs('support-tickets.*') ? 'active' : '' }}">{{ __('সাপোর্ট টিকেট') }}</a>
+                </div></div></div>
+            </div>
+
+            @if (auth()->user()->role !== 'teacher')
+            {{-- ভিজিটর --}}
+            <div class="nav-module {{ $activeIf('visitors.*') }}" x-data="{ open: {{ request()->routeIs(['visitors.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M4 20c0-3.5 3.5-6 8-6s8 2.5 8 6"/></svg></span>
+                    <span class="lbl">{{ __('ভিজিটর') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('visitors.index') }}" class="sub-item {{ request()->routeIs('visitors.*') ? 'active' : '' }}">{{ __('ভিজিটর লগ/গেট পাস') }}</a>
+                </div></div></div>
+            </div>
+
+            {{-- ইনভেন্টরি --}}
+            <div class="nav-module {{ $activeIf('inventory.*','inventory-issues.*') }}" x-data="{ open: {{ request()->routeIs(['inventory.*','inventory-issues.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 8 12 3 3 8l9 5 9-5Z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></span>
+                    <span class="lbl">{{ __('ইনভেন্টরি') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('inventory.index') }}" class="sub-item {{ request()->routeIs('inventory.index') ? 'active' : '' }}">{{ __('আইটেম তালিকা') }}</a>
+                    <a href="{{ route('inventory-issues.index') }}" class="sub-item {{ request()->routeIs('inventory-issues.*') ? 'active' : '' }}">{{ __('ইস্যু ও রিটার্ন') }}</a>
+                </div></div></div>
+            </div>
+            @endif
+
+            {{-- পোর্টাল --}}
+            <div class="nav-module {{ $activeIf('portal.*') }}" x-data="{ open: {{ request()->routeIs(['portal.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg></span>
+                    <span class="lbl">{{ __('পোর্টাল') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('portal.guardian') }}" class="sub-item {{ request()->routeIs('portal.guardian') ? 'active' : '' }}">{{ __('অভিভাবক পোর্টাল') }}</a>
+                    <a href="{{ route('portal.student') }}" class="sub-item {{ request()->routeIs('portal.student') ? 'active' : '' }}">{{ __('শিক্ষার্থী পোর্টাল') }}</a>
+                    <a href="{{ route('portal.teacher') }}" class="sub-item {{ request()->routeIs('portal.teacher') ? 'active' : '' }}">{{ __('শিক্ষক পোর্টাল') }}</a>
+                    <a href="{{ route('student-quizzes.index') }}" class="sub-item {{ request()->routeIs('student-quizzes.*') ? 'active' : '' }}">{{ __('আমার কুইজ (শিক্ষার্থী)') }}</a>
+                </div></div></div>
+            </div>
+
+            @if (auth()->user()->role !== 'teacher')
+            {{-- রিপোর্ট --}}
+            <div class="nav-module {{ $activeIf('export.*') }}" x-data="{ open: {{ request()->routeIs(['export.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+                <button class="nav-btn" @click="open = !open" type="button">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 19V5M4 19h16M8 15v-4m4 4V9m4 6v-8"/></svg></span>
+                    <span class="lbl">{{ __('রিপোর্ট') }}</span>
+                    <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </button>
+                <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    <a href="{{ route('export.students') }}" class="sub-item {{ request()->routeIs('export.students') ? 'active' : '' }}">{{ __('শিক্ষার্থী রিপোর্ট (Export)') }}</a>
+                    <a href="{{ route('export.attendance') }}" class="sub-item {{ request()->routeIs('export.attendance') ? 'active' : '' }}">{{ __('হাজিরা রিপোর্ট (Export)') }}</a>
+                    <a href="{{ route('export.fees') }}" class="sub-item {{ request()->routeIs('export.fees') ? 'active' : '' }}">{{ __('ফি রিপোর্ট (Export)') }}</a>
+                </div></div></div>
+            </div>
+
+            @endif
+
+            @if (auth()->user()->role === 'admin')
+              <div class="nav-single {{ request()->routeIs('billing.*') ? 'active' : '' }}">
+                <a href="{{ route('billing.index') }}" class="nav-btn">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/></svg></span>
+                    <span class="lbl">{{ __('বিলিং') }}</span>
+                </a>
+              </div>
+            @endif
+
+            <div class="nav-single {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                <a href="{{ route('settings.index') }}" class="nav-btn">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></span>
+                    <span class="lbl">{{ __('সেটিংস') }}</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-foot">
+            <button class="collapse-btn" @click="collapsed = !collapsed" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 4v16M15 8l-4 4 4 4"/></svg>
+                <span>{{ __('সাইডবার সংকুচিত করুন') }}</span>
+            </button>
+            <form method="POST" action="{{ route('logout') }}" class="mt-1">
+                @csrf
+                <button type="submit" class="collapse-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+                    <span>{{ __('লগআউট') }}</span>
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    {{-- ============ MAIN ============ --}}
+    <main class="main">
+        <div class="topbar">
+            <button class="menu-toggle" @click="mobileOpen = !mobileOpen" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <div class="breadcrumb">
+                <div class="path">{{ auth()->user()->institution?->name ?? '' }}</div>
+                <h1>{{ $title ?? __('ড্যাশবোর্ড') }}</h1>
+            </div>
+            <div class="topbar-actions">
+                <div class="search-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input type="text" placeholder="{{ __('খুঁজুন...') }}">
+                </div>
+                <a href="{{ route('locale.switch', app()->getLocale() === 'bn' ? 'en' : 'bn') }}" class="lang-toggle" title="{{ __('ভাষা পরিবর্তন করুন') }}">
+                    {{ app()->getLocale() === 'bn' ? 'EN' : 'বাং' }}
+                </a>
+                @livewire('notification-bell')
+                <div class="profile-chip">
+                    <div class="avatar">{{ mb_substr(auth()->user()->name, 0, 1) }}</div>
+                    <div class="who">
+                        <div>{{ auth()->user()->name }}</div>
+                        <div class="role">{{ ucfirst(auth()->user()->role) }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            @if (session('guard_notice'))
+                <div class="info-box" style="margin-bottom:16px;background:#FFF4E5;border-color:#F0B429;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+                    {{ session('guard_notice') }}
+                </div>
+            @endif
+
+            @if (auth()->user()->role === 'admin' && !request()->routeIs('billing.*'))
+                @php $inst = auth()->user()->institution; @endphp
+                @if ($inst && $inst->billing_suspended)
+                    <div class="info-box" style="margin-bottom:16px;background:#FCE4E4;border-color:#D9534F;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+                        বিলিং বকেয়ার কারণে আপনার অ্যাকাউন্ট সাসপেন্ড করা হয়েছে। <a href="{{ route('billing.index') }}" style="font-weight:700;text-decoration:underline;">এখনই পরিশোধ করুন →</a>
+                    </div>
+                @elseif ($inst && $inst->isPostpaid() && $inst->billing_grace_ends_at && $inst->graceDaysLeft() !== null && $inst->graceDaysLeft() <= 5)
+                    <div class="info-box" style="margin-bottom:16px;background:#FFF4E5;border-color:#F0B429;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+                        এই মাসের বিল এখনো বকেয়া — আর {{ $inst->graceDaysLeft() }} দিন পর অ্যাক্সেস বন্ধ হয়ে যাবে। <a href="{{ route('billing.index') }}" style="font-weight:700;text-decoration:underline;">বিলিং পেজে যান →</a>
+                    </div>
+                @elseif ($inst && $inst->isPrepaid() && (float) $inst->prepaid_balance < 500)
+                    <div class="info-box" style="margin-bottom:16px;background:#FFF4E5;border-color:#F0B429;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+                        প্রিপেইড ব্যালেন্স কমে যাচ্ছে (বর্তমান ৳{{ number_format((float) $inst->prepaid_balance) }})। <a href="{{ route('billing.index') }}" style="font-weight:700;text-decoration:underline;">এখনই টপ-আপ করুন →</a>
+                    </div>
+                @endif
+            @endif
+
+            {{ $slot }}
+        </div>
+    </main>
+
+    {{-- ============ মোবাইল কুইক অ্যাকশন বার ============ --}}
+    <nav class="mobile-bottom-nav">
+        <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12 12 4l8 8"/><path d="M6 10v9h12v-9"/></svg>
+            <span>{{ __('ড্যাশবোর্ড') }}</span>
+        </a>
+        <a href="{{ route('students.admission') }}" class="{{ request()->routeIs('students.admission') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.3"/><path d="M3 20c1-3.6 3.4-5.4 6-5.4s5 1.8 6 5.4"/><path d="M17 8h4M19 6v4"/></svg>
+            <span>{{ __('ভর্তি') }}</span>
+        </a>
+        <a href="{{ route('attendance.index') }}" class="mid {{ request()->routeIs('attendance.index') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12 2.3 2.3L16 9.7"/></svg>
+            <span>{{ __('হাজিরা') }}</span>
+        </a>
+        <a href="{{ route('fees.index') }}" class="{{ request()->routeIs('fees.index') ? 'active' : '' }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/></svg>
+            <span>{{ __('ফি') }}</span>
+        </a>
+        <button type="button" @click="mobileOpen = !mobileOpen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            <span>{{ __('মেনু') }}</span>
+        </button>
+    </nav>
+</div>
+
+<livewire:support-widget />
+
+@livewireScripts
+</body>
+</html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="utf-8">
