@@ -374,7 +374,7 @@
 
         @if ($widgets['defaulters'] ?? true)
             <div class="card">
-                <div class="card-head"><div><h3>ফি বকেয়া — শীর্ষ তালিকা</h3></div></div>
+                <div class="card-head"><div><h3>{{ __('ফি বকেয়া — শীর্ষ তালিকা') }}</h3></div></div>
 
                 {{-- ডেস্কটপ টেবিল --}}
                 <table class="swap-table">
