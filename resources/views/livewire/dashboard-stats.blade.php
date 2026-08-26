@@ -49,8 +49,8 @@
         </div>
         <div class="promo-card">
             <div class="pc-text">
-                <h3>শেখার পরিধি বাড়ান</h3>
-                <p>অনলাইন MCQ পরীক্ষা, হোমওয়ার্ক ট্র্যাকিং ও লার্নিং ম্যাটেরিয়াল দিয়ে শিক্ষার্থীদের আরও এগিয়ে রাখুন।</p>
+                <h3>{{ __('শেখার পরিধি বাড়ান') }}</h3>
+                <p>{{ __('অনলাইন MCQ পরীক্ষা, হোমওয়ার্ক ট্র্যাকিং ও লার্নিং ম্যাটেরিয়াল দিয়ে শিক্ষার্থীদের আরও এগিয়ে রাখুন।') }}</p>
                 <a href="{{ route('quizzes.index') }}" class="btn-primary" style="background:linear-gradient(180deg,var(--gold-light),var(--gold));">
                     এখনই দেখুন
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
@@ -199,7 +199,7 @@
         <div class="charts-grid">
             <div class="card">
                 <div class="card-head">
-                    <div><h3>আজকের শিক্ষার্থী হাজিরা</h3><p>উপস্থিত/অনুপস্থিত/দেরি/ছুটি — মাউস নিলে বিস্তারিত</p></div>
+                    <div><h3>{{ __('আজকের শিক্ষার্থী হাজিরা') }}</h3><p>{{ __('উপস্থিত/অনুপস্থিত/দেরি/ছুটি — মাউস নিলে বিস্তারিত') }}</p></div>
                 </div>
                 <div class="chart-box small" style="position:relative;">
                     <canvas id="studentAttendanceDonut"></canvas>
