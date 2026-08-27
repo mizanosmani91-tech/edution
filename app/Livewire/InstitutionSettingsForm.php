@@ -19,6 +19,9 @@ class InstitutionSettingsForm extends Component
     public string $themePrimaryColor = '#6C5CE7';
     public string $themeAccentColor = '#F59E0B';
 
+    // সিস্টেমের সাথে মিলে এমন একটা নির্দিষ্ট প্রিসেট প্যালেট—ফ্রি কালার পিকার নয়
+    public array $presetColors = ['#8C4AF2', '#6B56F6', '#F4901F', '#FF394B', '#1D1B23', '#5DF888', '#1BD084'];
+
     // চেক-ইন/চেক-আউট geofence
     public ?string $institutionLatitude = null;
     public ?string $institutionLongitude = null;
@@ -50,6 +53,15 @@ class InstitutionSettingsForm extends Component
     {
         $this->institutionLatitude = $lat;
         $this->institutionLongitude = $lng;
+    }
+
+    public function selectColor(string $hex): void
+    {
+        if (! in_array(strtoupper($hex), array_map('strtoupper', $this->presetColors), true)) {
+            return;
+        }
+        $this->themePrimaryColor = $hex;
+        $this->themeAccentColor = $hex;
     }
 
     public function save(): void
