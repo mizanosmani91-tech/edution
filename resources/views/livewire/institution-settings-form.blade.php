@@ -98,16 +98,11 @@
         <h3>ব্র্যান্ড কালার</h3>
         <p class="sub">আপনার প্রতিষ্ঠানের নিজস্ব রং সেট করুন (ভবিষ্যতে white-labeling-এ ব্যবহৃত হবে)</p>
 
-        <div class="color-row">
-            <div class="color-field">
-                <label>প্রাইমারি রং</label>
-                <input type="color" wire:model="themePrimaryColor">
-            </div>
-            <div class="color-field">
-                <label>অ্যাকসেন্ট রং</label>
-                <input type="color" wire:model="themeAccentColor">
-            </div>
-        </div>
+<div class="preset-color-row">
+    @foreach ($presetColors as $preset)
+    <button type="button" wire:click="selectColor('{{ $preset }}')" class="preset-swatch {{ strtoupper($themePrimaryColor) === strtoupper($preset) ? 'active' : '' }}" style="background:{{ $preset }};" title="{{ $preset }}"></button>
+    @endforeach
+</div>
     </div>
 
     <div class="settings-section">
