@@ -9,11 +9,11 @@
 /* ==========================================================
    EDUTION ডিজাইন সিস্টেম — মেরুন+সোনালি "রেজিস্টার খাতা" থিম
    ========================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@400;600;700&display=swap');
 
 @theme {
-    --font-sans: 'Hind Siliguri', ui-sans-serif, system-ui, sans-serif;
-    --font-serif: 'Tiro Bangla', serif;
+    --font-sans: 'Kanit', 'Hind Siliguri', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'Kanit', 'Noto Serif Bengali', serif;
 
     --color-maroon: #6C5CE7;
     --color-maroon-deep: #4B3FC4;
@@ -43,6 +43,6 @@ body {
 
 .font-serif-bn {
     /* v2 থিমে হেডিং আর সেরিফ "খাতা" ফন্টে নয় — ক্লিন, আধুনিক সানস-সেরিফ */
-    font-family: 'Hind Siliguri', ui-sans-serif, system-ui, sans-serif;
+    font-family: 'Kanit', 'Hind Siliguri', ui-sans-serif, system-ui, sans-serif;
     font-weight: 700;
 }
