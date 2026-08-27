@@ -16,7 +16,7 @@ class InstitutionSettingsForm extends Component
     public bool $consecutivePeriodBlocking = true;
 
     // ব্র্যান্ডিং
-    public string $themePrimaryColor = '#6C5CE7';
+    public string $themePrimaryColor = '#8C4AF2';
     public string $themeAccentColor = '#F59E0B';
 
     // সিস্টেমের সাথে মিলে এমন একটা নির্দিষ্ট প্রিসেট প্যালেট—ফ্রি কালার পিকার নয়
@@ -41,7 +41,7 @@ class InstitutionSettingsForm extends Component
         $this->institutionAddress = $institution->address ?? '';
 
         $this->consecutivePeriodBlocking = (bool) ($settings->consecutive_period_blocking ?? true);
-        $this->themePrimaryColor = $settings->theme_primary_color ?? '#6C5CE7';
+        $this->themePrimaryColor = $settings->theme_primary_color ?? '#8C4AF2';
         $this->themeAccentColor = $settings->theme_accent_color ?? '#F59E0B';
 
         $this->institutionLatitude = $institution->latitude !== null ? (string) $institution->latitude : null;
