@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="manifest" href="/manifest.webmanifest">
-    <meta name="theme-color" content="#6C5CE7">
+    <meta name="theme-color" content="#8C4AF2">
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
     <script>
         if ('serviceWorker' in navigator) {
