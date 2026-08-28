@@ -6,7 +6,7 @@ use App\Models\Department;
 use App\Models\SchoolClass;
 use App\Models\Section;
 use App\Models\Teacher;
-use Livewire\Component;
+use Illuminate\Validation\Rule; use Livewire\Component;
 
 class ClassSectionManager extends Component
 {
@@ -75,7 +75,7 @@ class ClassSectionManager extends Component
 
     public function saveSection(): void
     {
-        $this->validate(['sectionName' => 'required|string|max:255']);
+        $this->validate(['sectionName' => ['required', 'string', 'max:255', Rule::unique('sections', 'name')->where(fn ($q) => $q->where('class_id', $this->activeClassId))]], ['sectionName.unique' => 'এই ক্লাসে এই নামে আরেকটা শাখা আগে থেকেই আছে।']);
 
         Section::create([
             'class_id' => $this->activeClassId,
