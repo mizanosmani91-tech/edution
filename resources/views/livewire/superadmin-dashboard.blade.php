@@ -733,7 +733,7 @@
               <p style="font-size:12.5px;color:var(--ink-muted);margin:0 0 10px;line-height:1.7;">
                 এই প্রতিষ্ঠান ও এর সকল ডেটা (শিক্ষার্থী, শিক্ষক, হাজিরা, ফি, পরীক্ষা — সবকিছু) <b>স্থায়ীভাবে</b> ডিলিট হয়ে যাবে। এটা আর ফেরানো যাবে না। নিশ্চিত করতে নিচে স্লাগ (<b>{{ $purgeInst->slug }}</b>) হুবুহু টাইপ করুন।
               </p>
-              <input type="text" wire:model="purgeConfirmText" placeholder="{{ $purgeInst->slug }}" style="width:100%;">
+              <input type="text" wire:model.live.debounce.150ms="purgeConfirmText" placeholder="{{ $purgeInst->slug }}" style="width:100%;">
             </div>
           </div>
           <div class="modal-foot">
