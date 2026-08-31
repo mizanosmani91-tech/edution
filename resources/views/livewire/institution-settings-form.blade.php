@@ -96,9 +96,9 @@
     {{-- ব্র্যান্ডিং --}}
     <div class="settings-section">
         <h3>ব্র্যান্ড কালার</h3>
-        <p class="sub">আপনার প্রতিষ্ঠানের নিজস্ব রং সেট করুন (ভবিষ্যতে white-labeling-এ ব্যবহৃত হবে)</p>
+        <p class="sub">সিস্টেমের ব্র্যান্ড কালার এখন সব প্রতিষ্ঠানের জন্য অভিন্ন — এটি প্রতিষ্ঠানভেদে পরিবর্তনযোগ্য নয়।</p>
 
-<div class="preset-color-row">
+<div class="preset-color-row" style="display:none">
     @foreach ($presetColors as $preset)
     <button type="button" wire:click="selectColor('{{ $preset }}')" class="preset-swatch {{ strtoupper($themePrimaryColor) === strtoupper($preset) ? 'active' : '' }}" style="background:{{ $preset }};" title="{{ $preset }}"></button>
     @endforeach
