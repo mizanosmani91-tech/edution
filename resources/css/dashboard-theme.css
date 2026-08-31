@@ -3,8 +3,8 @@
      EDUTION ডিজাইন সিস্টেম v2 — সাদা ব্যাকগ্রাউন্ড, কালারফুল ক্লিন UI
      (পুরনো মেরুন+গোল্ড "রেজিস্টার খাতা" থিম প্রতিস্থাপন করা হয়েছে)
      ========================================================== */
-  --cover-maroon:#0D9488;
-  --cover-maroon-deep:#115E59;
+  --cover-maroon:#0F766E;
+  --cover-maroon-deep:#134E4A;
   --gold:#F59E0B;
   --gold-light:#FBBF24;
   --paper:#F7F8FC;
@@ -45,11 +45,11 @@ button{font-family:inherit;}
 .sidebar-emblem svg{width:19px;height:19px;color:#fff;}
 .sidebar-brand{overflow:hidden;white-space:nowrap;}
 .sidebar-brand .name{font-family:'Kanit','Hind Siliguri',sans-serif;font-weight:700;font-size:19px;color:#fff;line-height:1.1;}
-.sidebar-brand .inst{font-size:11.5px;color:rgba(255,255,255,.45);margin-top:2px;}
+.sidebar-brand .inst{font-size:11.5px;color:rgba(255,255,255,.7);margin-top:2px;}
 
 .nav-scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding:14px 12px 10px;}
 .nav-single,.nav-module{margin-bottom:3px;}
-.nav-btn{width:100%;display:flex;align-items:center;gap:12px;padding:10px 10px;background:none;border:0;cursor:pointer;border-radius:10px;color:rgba(255,255,255,.55);font-size:14.5px;font-weight:500;text-align:right;position:relative;transition:background .15s ease,color .15s ease;}
+.nav-btn{width:100%;display:flex;align-items:center;gap:12px;padding:10px 10px;background:none;border:0;cursor:pointer;border-radius:10px;color:rgba(255,255,255,.8);font-size:14.5px;font-weight:500;text-align:right;position:relative;transition:background .15s ease,color .15s ease;}
 .nav-btn .ic{width:19px;height:19px;flex-shrink:0;display:flex;}
 .nav-btn .lbl{flex:1;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .nav-btn .chev{width:14px;height:14px;flex-shrink:0;transition:transform .2s ease;opacity:.65;}
@@ -61,7 +61,7 @@ button{font-family:inherit;}
 .nav-module.open .sub-wrap{grid-template-rows:1fr;}
 .sub-inner{overflow:hidden;}
 .sub-list{display:flex;flex-direction:column;padding:2px 8px 8px 39px;gap:1px;}
-.sub-item{display:block;padding:8px 10px;font-size:13.5px;color:rgba(255,255,255,.5);border-radius:8px;cursor:pointer;border-right:2px solid transparent;transition:background .15s ease,color .15s ease;}
+.sub-item{display:block;padding:8px 10px;font-size:13.5px;color:rgba(255,255,255,.75);border-radius:8px;cursor:pointer;border-right:2px solid transparent;transition:background .15s ease,color .15s ease;}
 .sub-item:hover{background:rgba(255,255,255,.06);color:#fff;}
 .sub-item.active{color:var(--teacher);background:#fff;border-right-color:var(--teacher);font-weight:700;}
 
@@ -259,7 +259,7 @@ tbody tr:last-child td{border-bottom:0;}
 }
 
 /* ===== Student List Page ===== */
-.btn-primary{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:11px;padding:11px 18px;background:linear-gradient(135deg,#2DD4BF,#0D9488);color:#fff;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 8px 18px -8px rgba(91,79,224,.45);white-space:nowrap;}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:11px;padding:11px 18px;background:linear-gradient(135deg,#2DD4BF,#0D9488);color:#fff;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 8px 18px -8px rgba(13,148,136,.45);white-space:nowrap;}
 .btn-primary:hover{filter:brightness(1.03);}
 .btn-primary svg{width:16px;height:16px;}
 
@@ -368,7 +368,7 @@ tbody tr:last-child td{border-bottom:0;}
 .fee-note{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px dashed var(--line);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--ink-muted);margin-top:4px;}
 .fee-note b{color:var(--ink);font-size:13.5px;}
 
-.id-box{background:linear-gradient(135deg,#8B7CF6,var(--cover-maroon-deep));border-radius:16px;padding:20px 22px;color:#fff;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+.id-box{background:linear-gradient(135deg,#2DD4BF,var(--cover-maroon-deep));border-radius:16px;padding:20px 22px;color:#fff;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
 .id-box .lbl{font-size:12px;color:rgba(255,255,255,.7);margin-bottom:5px;}
 .id-box .val{font-family:'Tiro Bangla',serif;font-size:24px;letter-spacing:.03em;color:var(--gold-light);}
 
@@ -435,7 +435,7 @@ tbody tr:last-child td{border-bottom:0;}
 .check-pill input{accent-color:var(--gold);}
 
 /* ===== Profile Pages (Teacher / Student / Staff) ===== */
-.profile-header{background:linear-gradient(120deg,#8B7CF6,var(--cover-maroon) 55%,var(--cover-maroon-deep));border-radius:20px;padding:26px 28px;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;position:relative;overflow:hidden;}
+.profile-header{background:linear-gradient(120deg,#2DD4BF,var(--cover-maroon) 55%,var(--cover-maroon-deep));border-radius:20px;padding:26px 28px;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;position:relative;overflow:hidden;}
 .profile-header::before{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.02) 0px,rgba(255,255,255,.02) 1px,transparent 1px,transparent 3px);pointer-events:none;}
 .ph-photo{width:86px;height:86px;border-radius:20px;flex-shrink:0;position:relative;z-index:1;background:linear-gradient(135deg,var(--gold-light),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Kanit','Hind Siliguri',sans-serif;font-size:30px;color:#fff;font-weight:700;border:3px solid rgba(255,255,255,.4);overflow:hidden;}
 .ph-photo img{width:100%;height:100%;object-fit:cover;}
@@ -569,7 +569,7 @@ tbody tr:last-child td{border-bottom:0;}
 
 .honor-modal-backdrop{position:fixed;inset:0;background:rgba(31,36,50,.45);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;}
 .honor-modal{background:#fff;border-radius:18px;padding:26px;max-width:380px;width:100%;text-align:center;}
-.honor-modal .medal{width:70px;height:70px;margin:0 auto 14px;border-radius:20px;background:linear-gradient(135deg,#2DD4BF,#0D9488);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 20px -8px rgba(91,79,224,.5);}
+.honor-modal .medal{width:70px;height:70px;margin:0 auto 14px;border-radius:20px;background:linear-gradient(135deg,#2DD4BF,#0D9488);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 20px -8px rgba(13,148,136,.5);}
 .honor-modal .medal svg{width:34px;height:34px;color:#fff;}
 .honor-modal h3{font-family:'Tiro Bangla',serif;font-size:20px;margin:0 0 4px;}
 .honor-modal .role{font-size:12.5px;color:var(--ink-muted);margin-bottom:16px;}
