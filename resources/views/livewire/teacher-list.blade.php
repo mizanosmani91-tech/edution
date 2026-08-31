@@ -101,7 +101,7 @@
                                 <a href="{{ route('teachers.profile', $teacher) }}" title="প্রোফাইল দেখুন">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
                                 </a>
-                                <a href="{{ route('stub', urlencode('শিক্ষক সম্পাদনা')) }}" title="সম্পাদনা">
+                                <a href="{{ route('teachers.edit', $teacher) }}" title="সম্পাদনা">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                                 </a>
                             </div>
