@@ -158,6 +158,7 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/students-page/{student}', \App\Livewire\StudentProfile::class)->name('students.profile');
     Route::get('/teachers-page', \App\Livewire\TeacherList::class)->name('teachers.index');
     Route::get('/teachers-page/{teacher}', \App\Livewire\TeacherProfile::class)->name('teachers.profile');
+    Route::get('/teachers-page/{teacher}/edit', \App\Livewire\TeacherEditForm::class)->name('teachers.edit');
     Route::get('/fees-page', \App\Livewire\FeeCollectionList::class)->name('fees.index');
     Route::get('/fee-installment-plans', \App\Livewire\FeeInstallmentPlans::class)->name('fee-installments.index');
     Route::get('/attendance-page', \App\Livewire\AttendanceTaker::class)->name('attendance.index');
@@ -255,4 +256,3 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/leave-requests', \App\Livewire\LeaveRequestsList::class)->name('leave-requests.index');
     Route::get('/coming-soon/{title}', [\App\Http\Controllers\ComingSoonController::class, 'show'])->name('stub');
 });
-
