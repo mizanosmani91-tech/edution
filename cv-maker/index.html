@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>১ ক্লিক সিভি মেকার</title>
+  <meta name="description" content="বার বার টাইপ না করে, এক ক্লিকে প্রফেশনাল সিভি বানান এবং সরাসরি শেয়ার করুন — সম্পূর্ণ অফলাইন, ডেটা থাকে শুধু আপনার ফোনে।" />
+  <meta name="theme-color" content="#0f766e" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-brand">
+      <img src="icons/icon.svg" alt="" class="brand-logo" />
+      <span>১ ক্লিক সিভি মেকার</span>
+    </div>
+    <div class="topbar-actions">
+      <button id="btnDownload" class="btn btn-ghost" type="button">⬇️ ডাউনলোড</button>
+      <button id="btnShare" class="btn btn-primary" type="button">📤 শেয়ার করুন</button>
+    </div>
+  </header>
+
+  <nav class="mobile-tabs" aria-label="ভিউ পরিবর্তন">
+    <button class="tab-btn is-active" data-tab="form" type="button">✏️ ফর্ম</button>
+    <button class="tab-btn" data-tab="preview" type="button">👁️ প্রিভিউ</button>
+  </nav>
+
+  <main class="app-layout">
+    <!-- ================= FORM PANEL ================= -->
+    <section class="panel panel-form" id="panelForm">
+      <p class="autosave-hint">✅ আপনার তথ্য এই ফোনেই সেভ থাকছে — পরের বার অ্যাপ খুললে আবার টাইপ করা লাগবে না।</p>
+
+      <details class="section" open>
+        <summary>👤 ব্যক্তিগত তথ্য</summary>
+        <div class="field-grid">
+          <label class="field">
+            <span>ছবি</span>
+            <input type="file" id="fPhoto" accept="image/*" />
+          </label>
+          <div class="field photo-preview-wrap">
+            <img id="photoPreview" alt="" hidden />
+            <button id="btnRemovePhoto" class="btn btn-tiny" type="button" hidden>ছবি মুছুন</button>
+          </div>
+          <label class="field">
+            <span>পূর্ণ নাম *</span>
+            <input type="text" id="fName" placeholder="যেমন: মোঃ রাকিব হাসান" />
+          </label>
+          <label class="field">
+            <span>পদবি / যে পদে আবেদন করছেন</span>
+            <input type="text" id="fTitle" placeholder="যেমন: জুনিয়র সফটওয়্যার ডেভেলপার" />
+          </label>
+          <label class="field">
+            <span>মোবাইল নম্বর</span>
+            <input type="tel" id="fPhone" placeholder="01XXXXXXXXX" />
+          </label>
+          <label class="field">
+            <span>ইমেইল</span>
+            <input type="email" id="fEmail" placeholder="example@gmail.com" />
+          </label>
+          <label class="field field-wide">
+            <span>ঠিকানা</span>
+            <input type="text" id="fAddress" placeholder="গ্রাম/উপজেলা, জেলা" />
+          </label>
+          <label class="field">
+            <span>জন্ম তারিখ</span>
+            <input type="date" id="fDob" />
+          </label>
+          <label class="field">
+            <span>জাতীয় পরিচয়পত্র / জন্মনিবন্ধন নং</span>
+            <input type="text" id="fNid" placeholder="ঐচ্ছিক" />
+          </label>
+        </div>
+      </details>
+
+      <details class="section" open>
+        <summary>🎯 ক্যারিয়ার অবজেক্টিভ</summary>
+        <div class="field-grid">
+          <label class="field field-wide">
+            <span>আপনার পেশার ক্যাটাগরি বেছে নিন — অটো-ফিল হবে</span>
+            <select id="fCategory">
+              <option value="">— নির্বাচন করুন —</option>
+            </select>
+          </label>
+          <label class="field field-wide">
+            <span>অবজেক্টিভ (প্রয়োজনে এডিট করুন)</span>
+            <textarea id="fObjective" rows="4" placeholder="ক্যাটাগরি বেছে নিলে এখানে প্রস্তুত টেক্সট চলে আসবে"></textarea>
+          </label>
+        </div>
+      </details>
+
+      <details class="section" open>
+        <summary>🎓 শিক্ষাগত যোগ্যতা</summary>
+        <div id="listEducation" class="repeat-list"></div>
+        <button class="btn btn-add" type="button" data-add="education">+ শিক্ষাগত যোগ্যতা যোগ করুন</button>
+      </details>
+
+      <details class="section">
+        <summary>💼 অভিজ্ঞতা</summary>
+        <div id="listExperience" class="repeat-list"></div>
+        <button class="btn btn-add" type="button" data-add="experience">+ অভিজ্ঞতা যোগ করুন</button>
+      </details>
+
+      <details class="section" open>
+        <summary>🛠️ দক্ষতা</summary>
+        <div id="skillChips" class="chip-suggestions"></div>
+        <div class="field field-wide">
+          <input type="text" id="fSkillInput" placeholder="নিজের স্কিল লিখে Enter চাপুন" />
+        </div>
+        <div id="skillSelected" class="chip-selected"></div>
+      </details>
+
+      <details class="section">
+        <summary>🌐 ভাষা দক্ষতা</summary>
+        <div id="listLanguage" class="repeat-list"></div>
+        <button class="btn btn-add" type="button" data-add="language">+ ভাষা যোগ করুন</button>
+      </details>
+
+      <details class="section">
+        <summary>📜 প্রশিক্ষণ / সার্টিফিকেট</summary>
+        <div id="listCertification" class="repeat-list"></div>
+        <button class="btn btn-add" type="button" data-add="certification">+ সার্টিফিকেট যোগ করুন</button>
+      </details>
+
+      <details class="section">
+        <summary>🤝 রেফারেন্স</summary>
+        <label class="field-checkbox">
+          <input type="checkbox" id="fRefOnRequest" />
+          <span>"অনুরোধ সাপেক্ষে প্রদান করা হবে" লিখুন (টাইপ কম করতে)</span>
+        </label>
+        <div id="listReference" class="repeat-list"></div>
+        <button class="btn btn-add" type="button" data-add="reference">+ রেফারেন্স যোগ করুন</button>
+      </details>
+
+      <details class="section">
+        <summary>🎨 টেমপ্লেট বাছাই</summary>
+        <div class="template-picker" id="templatePicker">
+          <button class="tpl-swatch tpl-modern is-active" data-template="modern" type="button">Modern</button>
+          <button class="tpl-swatch tpl-classic" data-template="classic" type="button">Classic</button>
+          <button class="tpl-swatch tpl-minimal" data-template="minimal" type="button">Minimal</button>
+        </div>
+      </details>
+
+      <button id="btnClear" class="btn btn-danger-ghost" type="button">🗑️ সব তথ্য মুছে নতুন শুরু করুন</button>
+    </section>
+
+    <!-- ================= PREVIEW PANEL ================= -->
+    <section class="panel panel-preview" id="panelPreview">
+      <div class="preview-scroll">
+        <div id="cvPreview" class="cv-page tpl-modern">
+          <!-- জাভাস্ক্রিপ্ট দিয়ে রেন্ডার হবে -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="js/vendor/html2canvas.min.js"></script>
+  <script src="js/vendor/jspdf.umd.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

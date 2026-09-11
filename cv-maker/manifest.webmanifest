@@ -1,0 +1,15 @@
+{
+  "name": "১ ক্লিক সিভি মেকার",
+  "short_name": "CV মেকার",
+  "description": "বার বার টাইপ না করে এক ক্লিকে প্রফেশনাল সিভি বানান ও শেয়ার করুন — সম্পূর্ণ অফলাইন।",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f7",
+  "theme_color": "#0f766e",
+  "lang": "bn",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
