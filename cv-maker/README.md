@@ -25,3 +25,4 @@ python3 -m http.server 8080
 - `js/data.js` — পেশাভিত্তিক প্রি-ফিল কন্টেন্ট লাইব্রেরি
 - `js/app.js` — স্টেট, localStorage, প্রিভিউ রেন্ডার, PDF জেনারেশন ও শেয়ার লজিক
 - `manifest.webmanifest`, `sw.js`, `icons/` — PWA ইনস্টল ও অফলাইন সাপোর্ট
+
