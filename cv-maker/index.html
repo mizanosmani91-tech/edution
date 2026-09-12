@@ -3,164 +3,286 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>১ ক্লিক সিভি মেকার</title>
+  <title>Vitae — ১ ক্লিক সিভি মেকার</title>
   <meta name="description" content="বার বার টাইপ না করে, এক ক্লিকে প্রফেশনাল সিভি বানান এবং সরাসরি শেয়ার করুন — সম্পূর্ণ অফলাইন, ডেটা থাকে শুধু আপনার ফোনে।" />
-  <meta name="theme-color" content="#0f766e" />
+  <meta name="theme-color" content="#242C4D" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar-brand">
-      <img src="icons/icon.svg" alt="" class="brand-logo" />
-      <span>১ ক্লিক সিভি মেকার</span>
+<div class="app-shell">
+
+  <!-- ============ ONBOARDING ============ -->
+  <section class="screen ob-screen" id="scrOnboarding" hidden>
+    <div class="ob-glow"></div><div class="ob-glow2"></div>
+    <div class="ob-logo">
+      <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V10l8-6 8 6v9"/><path d="M9 21v-6h6v6"/></svg></div>
+      <div class="wm">Vitae</div>
     </div>
-    <div class="topbar-actions">
-      <button id="btnDownload" class="btn btn-ghost" type="button">⬇️ ডাউনলোড</button>
-      <button id="btnShare" class="btn btn-primary" type="button">📤 শেয়ার করুন</button>
+    <div class="ob-illus">
+      <svg viewBox="0 0 200 200" fill="none">
+        <rect x="46" y="26" width="108" height="148" rx="14" fill="#fff" opacity=".08"/>
+        <rect x="56" y="36" width="88" height="128" rx="10" fill="#fff" opacity=".95"/>
+        <circle cx="80" cy="58" r="11" fill="#00C2A8"/>
+        <rect x="98" y="52" width="34" height="5" rx="2.5" fill="#242C4D"/>
+        <rect x="98" y="61" width="24" height="4" rx="2" fill="#C7CCDA"/>
+        <rect x="66" y="82" width="68" height="4" rx="2" fill="#E7E9F2"/>
+        <rect x="66" y="91" width="56" height="4" rx="2" fill="#E7E9F2"/>
+        <rect x="66" y="100" width="62" height="4" rx="2" fill="#E7E9F2"/>
+        <rect x="66" y="114" width="30" height="14" rx="7" fill="#EAF7F4"/>
+        <rect x="100" y="114" width="30" height="14" rx="7" fill="#FFF1EF"/>
+        <rect x="66" y="134" width="68" height="4" rx="2" fill="#E7E9F2"/>
+        <rect x="66" y="143" width="48" height="4" rx="2" fill="#E7E9F2"/>
+        <circle cx="150" cy="150" r="22" fill="#FF6B5D"/>
+        <path d="m141 150 6 6 12-12" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
     </div>
-  </header>
+    <div class="ob-text">
+      <h2>নিজের সেরা সিভিটা<br>তৈরি করুন</h2>
+      <p>প্রফেশনাল টেমপ্লেট, স্মার্ট সাজেশন আর এক-ক্লিক PDF এক্সপোর্ট — সব একটা অ্যাপে, সম্পূর্ণ অফলাইন</p>
+    </div>
+    <div class="ob-field">
+      <label>আপনার নাম লিখুন</label>
+      <input type="text" id="obName" placeholder="যেমন: আরিফ হাসান" />
+    </div>
+    <div class="ob-actions">
+      <button class="btn btn-primary" id="btnObStart" type="button">
+        শুরু করুন
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+      </button>
+      <div class="ob-note">কোনো পাসওয়ার্ড লাগবে না — সব তথ্য শুধু এই ফোনেই থাকবে।</div>
+    </div>
+  </section>
 
-  <nav class="mobile-tabs" aria-label="ভিউ পরিবর্তন">
-    <button class="tab-btn is-active" data-tab="form" type="button">✏️ ফর্ম</button>
-    <button class="tab-btn" data-tab="preview" type="button">👁️ প্রিভিউ</button>
-  </nav>
+  <!-- ============ HOME ============ -->
+  <section class="screen" id="scrHome" hidden>
+    <div class="screen-body">
+      <div class="home-top">
+        <div class="home-greet"><div class="hi" id="homeGreetTime">শুভ সকাল 👋</div><h2 id="homeUserName">—</h2></div>
+        <button class="home-bell" id="btnSettingsShortcut" type="button" aria-label="সেটিংস">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1.3-3.8 4.2-5.7 7-5.7s5.7 1.9 7 5.7"/></svg>
+        </button>
+      </div>
 
-  <main class="app-layout">
-    <!-- ================= FORM PANEL ================= -->
-    <section class="panel panel-form" id="panelForm">
-      <p class="autosave-hint">✅ আপনার তথ্য এই ফোনেই সেভ থাকছে — পরের বার অ্যাপ খুললে আবার টাইপ করা লাগবে না।</p>
+      <div class="cta-card">
+        <div class="lbl">নতুন CV তৈরি করুন</div>
+        <div class="sub">২ মিনিটে প্রফেশনাল সিভি বানিয়ে ফেলুন</div>
+        <button class="btn btn-primary" id="btnNewCv" type="button">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+          শুরু করুন
+        </button>
+      </div>
 
-      <details class="section" open>
-        <summary>👤 ব্যক্তিগত তথ্য</summary>
-        <div class="field-grid">
-          <label class="field">
-            <span>ছবি</span>
-            <input type="file" id="fPhoto" accept="image/*" />
-          </label>
-          <div class="field photo-preview-wrap">
-            <img id="photoPreview" alt="" hidden />
-            <button id="btnRemovePhoto" class="btn btn-tiny" type="button" hidden>ছবি মুছুন</button>
-          </div>
-          <label class="field">
-            <span>পূর্ণ নাম *</span>
-            <input type="text" id="fName" placeholder="যেমন: মোঃ রাকিব হাসান" />
-          </label>
-          <label class="field">
-            <span>পদবি / যে পদে আবেদন করছেন</span>
-            <input type="text" id="fTitle" placeholder="যেমন: জুনিয়র সফটওয়্যার ডেভেলপার" />
-          </label>
-          <label class="field">
-            <span>মোবাইল নম্বর</span>
-            <input type="tel" id="fPhone" placeholder="01XXXXXXXXX" />
-          </label>
-          <label class="field">
-            <span>ইমেইল</span>
-            <input type="email" id="fEmail" placeholder="example@gmail.com" />
-          </label>
-          <label class="field field-wide">
-            <span>ঠিকানা</span>
-            <input type="text" id="fAddress" placeholder="গ্রাম/উপজেলা, জেলা" />
-          </label>
-          <label class="field">
-            <span>জন্ম তারিখ</span>
-            <input type="date" id="fDob" />
-          </label>
-          <label class="field">
-            <span>জাতীয় পরিচয়পত্র / জন্মনিবন্ধন নং</span>
-            <input type="text" id="fNid" placeholder="ঐচ্ছিক" />
-          </label>
-        </div>
-      </details>
+      <div class="home-sec-head"><h3 id="homeCvCount">আমার সিভি (০)</h3></div>
+      <div id="cvList"></div>
+      <div class="empty-hint" id="homeEmptyHint" hidden>এখনো কোনো CV তৈরি হয়নি। উপরের বাটনে চাপ দিয়ে প্রথমটা বানিয়ে ফেলুন।</div>
+    </div>
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-nav="home" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg><span>হোম</span>
+      </button>
+      <button class="nav-item" data-nav="templates" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>টেমপ্লেট</span>
+      </button>
+      <button class="nav-fab" id="btnFabNew" type="button" aria-label="নতুন CV">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <button class="nav-item" data-nav="settings" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1.3-3.8 4.2-5.7 7-5.7s5.7 1.9 7 5.7"/></svg><span>সেটিংস</span>
+      </button>
+    </nav>
+  </section>
 
-      <details class="section" open>
-        <summary>🎯 ক্যারিয়ার অবজেক্টিভ</summary>
-        <div class="field-grid">
-          <label class="field field-wide">
-            <span>আপনার পেশার ক্যাটাগরি বেছে নিন — অটো-ফিল হবে</span>
-            <select id="fCategory">
-              <option value="">— নির্বাচন করুন —</option>
-            </select>
-          </label>
-          <label class="field field-wide">
-            <span>অবজেক্টিভ (প্রয়োজনে এডিট করুন)</span>
-            <textarea id="fObjective" rows="4" placeholder="ক্যাটাগরি বেছে নিলে এখানে প্রস্তুত টেক্সট চলে আসবে"></textarea>
-          </label>
-        </div>
-      </details>
+  <!-- ============ TEMPLATE GALLERY ============ -->
+  <section class="screen" id="scrTemplates" hidden>
+    <div class="screen-body">
+      <div class="tpl-head">
+        <div class="ed-back" data-back="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 6-6 6 6 6"/></svg></div>
+        <div><h2>টেমপ্লেট বেছে নিন</h2><p>একটা বেছে নিলেই এডিটরে চলে যাবেন</p></div>
+      </div>
+      <div class="tpl-grid" id="tplGrid"></div>
+    </div>
+    <nav class="bottom-nav">
+      <button class="nav-item" data-nav="home" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg><span>হোম</span>
+      </button>
+      <button class="nav-item active" data-nav="templates" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>টেমপ্লেট</span>
+      </button>
+      <button class="nav-fab" id="btnFabNew2" type="button" aria-label="নতুন CV">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <button class="nav-item" data-nav="settings" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1.3-3.8 4.2-5.7 7-5.7s5.7 1.9 7 5.7"/></svg><span>সেটিংস</span>
+      </button>
+    </nav>
+  </section>
 
-      <details class="section" open>
-        <summary>🎓 শিক্ষাগত যোগ্যতা</summary>
-        <div id="listEducation" class="repeat-list"></div>
-        <button class="btn btn-add" type="button" data-add="education">+ শিক্ষাগত যোগ্যতা যোগ করুন</button>
-      </details>
-
-      <details class="section">
-        <summary>💼 অভিজ্ঞতা</summary>
-        <div id="listExperience" class="repeat-list"></div>
-        <button class="btn btn-add" type="button" data-add="experience">+ অভিজ্ঞতা যোগ করুন</button>
-      </details>
-
-      <details class="section" open>
-        <summary>🛠️ দক্ষতা</summary>
-        <div id="skillChips" class="chip-suggestions"></div>
-        <div class="field field-wide">
-          <input type="text" id="fSkillInput" placeholder="নিজের স্কিল লিখে Enter চাপুন" />
-        </div>
-        <div id="skillSelected" class="chip-selected"></div>
-      </details>
-
-      <details class="section">
-        <summary>🌐 ভাষা দক্ষতা</summary>
-        <div id="listLanguage" class="repeat-list"></div>
-        <button class="btn btn-add" type="button" data-add="language">+ ভাষা যোগ করুন</button>
-      </details>
-
-      <details class="section">
-        <summary>📜 প্রশিক্ষণ / সার্টিফিকেট</summary>
-        <div id="listCertification" class="repeat-list"></div>
-        <button class="btn btn-add" type="button" data-add="certification">+ সার্টিফিকেট যোগ করুন</button>
-      </details>
-
-      <details class="section">
-        <summary>🤝 রেফারেন্স</summary>
-        <label class="field-checkbox">
-          <input type="checkbox" id="fRefOnRequest" />
-          <span>"অনুরোধ সাপেক্ষে প্রদান করা হবে" লিখুন (টাইপ কম করতে)</span>
-        </label>
-        <div id="listReference" class="repeat-list"></div>
-        <button class="btn btn-add" type="button" data-add="reference">+ রেফারেন্স যোগ করুন</button>
-      </details>
-
-      <details class="section">
-        <summary>🎨 টেমপ্লেট বাছাই</summary>
-        <div class="template-picker" id="templatePicker">
-          <button class="tpl-swatch tpl-modern is-active" data-template="modern" type="button">Modern</button>
-          <button class="tpl-swatch tpl-classic" data-template="classic" type="button">Classic</button>
-          <button class="tpl-swatch tpl-minimal" data-template="minimal" type="button">Minimal</button>
-        </div>
-      </details>
-
-      <button id="btnClear" class="btn btn-danger-ghost" type="button">🗑️ সব তথ্য মুছে নতুন শুরু করুন</button>
-    </section>
-
-    <!-- ================= PREVIEW PANEL ================= -->
-    <section class="panel panel-preview" id="panelPreview">
-      <div class="preview-scroll">
-        <div id="cvPreview" class="cv-page tpl-modern">
-          <!-- জাভাস্ক্রিপ্ট দিয়ে রেন্ডার হবে -->
+  <!-- ============ EDITOR ============ -->
+  <section class="screen" id="scrEditor" hidden>
+    <div class="screen-body">
+      <div class="ed-top">
+        <div class="ed-back" data-back="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 6-6 6 6 6"/></svg></div>
+        <div class="ed-title" id="edTitle">নতুন CV</div>
+        <div class="ed-actions">
+          <button class="ed-icon-btn" id="btnEdPreview" type="button" aria-label="প্রিভিউ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5c-5 0-9 4-10 7 1 3 5 7 10 7s9-4 10-7c-1-3-5-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
         </div>
       </div>
-    </section>
-  </main>
 
-  <div id="toast" class="toast" hidden></div>
+      <div class="progress-row">
+        <div class="top"><span>প্রোফাইল সম্পূর্ণতা</span><b id="edProgressPct">০%</b></div>
+        <div class="progress-track"><div class="progress-fill" id="edProgressFill" style="width:0%"></div></div>
+      </div>
 
-  <script src="js/vendor/html2canvas.min.js"></script>
-  <script src="js/vendor/jspdf.umd.min.js"></script>
-  <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
+      <div class="acc-item open" data-acc="personal">
+        <div class="acc-head"><div class="acc-ic" style="background:var(--mint-dim);"><svg viewBox="0 0 24 24" fill="none" stroke="#00816F" stroke-width="1.8"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1.3-3.8 4.2-5.7 7-5.7s5.7 1.9 7 5.7"/></svg></div><div class="nm">ব্যক্তিগত তথ্য ও অবজেক্টিভ</div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="acc-body">
+          <div class="photo-upload">
+            <div class="photo-circle" id="photoCircle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h3l2-3h6l2 3h3v13H4V7Z"/><circle cx="12" cy="13" r="4"/></svg>
+              <img id="photoPreview" alt="" hidden />
+              <div class="photo-cam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></div>
+            </div>
+            <input type="file" id="fPhoto" accept="image/*" hidden />
+            <div class="lbl">প্রোফাইল ছবি যোগ করুন</div>
+          </div>
+
+          <div class="field"><label>পূর্ণ নাম *</label><input type="text" id="fName" placeholder="যেমন: আরিফ হাসান" /></div>
+          <div class="field"><label>পদবি / টাইটেল</label><input type="text" id="fTitle" placeholder="যেমন: সিনিয়র গ্রাফিক ডিজাইনার" /></div>
+          <div class="field-row">
+            <div class="field"><label>মোবাইল</label><input type="tel" id="fPhone" placeholder="01XXXXXXXXX" /></div>
+            <div class="field"><label>ইমেইল</label><input type="email" id="fEmail" placeholder="example@gmail.com" /></div>
+          </div>
+          <div class="field"><label>ঠিকানা</label><input type="text" id="fAddress" placeholder="গ্রাম/উপজেলা, জেলা" /></div>
+          <div class="field-row">
+            <div class="field"><label>জন্ম তারিখ</label><input type="date" id="fDob" /></div>
+            <div class="field"><label>NID/জন্মনিবন্ধন</label><input type="text" id="fNid" placeholder="ঐচ্ছিক" /></div>
+          </div>
+          <div class="field"><label>পেশার ক্যাটাগরি — বেছে নিলে অবজেক্টিভ অটো-ফিল হবে</label>
+            <select id="fCategory"><option value="">— নির্বাচন করুন —</option></select>
+          </div>
+          <div class="field"><label>ক্যারিয়ার অবজেক্টিভ</label><textarea id="fObjective" rows="4" placeholder="ক্যাটাগরি বেছে নিলে প্রস্তুত টেক্সট চলে আসবে"></textarea></div>
+        </div>
+      </div>
+
+      <div class="acc-item" data-acc="experience">
+        <div class="acc-head"><div class="acc-ic" style="background:var(--coral-dim);"><svg viewBox="0 0 24 24" fill="none" stroke="#D8503F" stroke-width="1.8"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div><div class="nm">কর্ম অভিজ্ঞতা</div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="acc-body"><div id="listExperience" class="repeat-list"></div><button class="add-entry-btn" type="button" data-add="experience"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>আরেকটি অভিজ্ঞতা যোগ করুন</button></div>
+      </div>
+
+      <div class="acc-item" data-acc="education">
+        <div class="acc-head"><div class="acc-ic" style="background:#EFF1FA;"><svg viewBox="0 0 24 24" fill="none" stroke="#5B6489" stroke-width="1.8"><path d="M22 10 12 4 2 10l10 6 10-6Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg></div><div class="nm">শিক্ষাগত যোগ্যতা</div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="acc-body"><div id="listEducation" class="repeat-list"></div><button class="add-entry-btn" type="button" data-add="education"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>আরেকটি যোগ্যতা যোগ করুন</button></div>
+      </div>
+
+      <div class="acc-item" data-acc="skills">
+        <div class="acc-head"><div class="acc-ic" style="background:#FFF8E8;"><svg viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="1.8"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><div class="nm">দক্ষতা</div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="acc-body">
+          <div id="skillChips" class="chip-suggestions"></div>
+          <input type="text" id="fSkillInput" placeholder="নিজের স্কিল লিখে Enter চাপুন" />
+          <div id="skillSelected" class="chip-selected"></div>
+        </div>
+      </div>
+
+      <div class="acc-item" data-acc="extra">
+        <div class="acc-head"><div class="acc-ic" style="background:#F0F7FF;"><svg viewBox="0 0 24 24" fill="none" stroke="#2E6FE0" stroke-width="1.8"><path d="M4 5h16M4 12h16M4 19h10"/></svg></div><div class="nm">ভাষা, সার্টিফিকেট ও রেফারেন্স</div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="acc-body">
+          <div class="sub-head">ভাষা দক্ষতা</div>
+          <div id="listLanguage" class="repeat-list"></div>
+          <button class="add-entry-btn" type="button" data-add="language"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>ভাষা যোগ করুন</button>
+
+          <div class="sub-head">প্রশিক্ষণ / সার্টিফিকেট</div>
+          <div id="listCertification" class="repeat-list"></div>
+          <button class="add-entry-btn" type="button" data-add="certification"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>সার্টিফিকেট যোগ করুন</button>
+
+          <div class="sub-head">রেফারেন্স</div>
+          <label class="field-checkbox"><input type="checkbox" id="fRefOnRequest" /><span>"অনুরোধ সাপেক্ষে প্রদান করা হবে" লিখুন</span></label>
+          <div id="listReference" class="repeat-list"></div>
+          <button class="add-entry-btn" type="button" data-add="reference"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>রেফারেন্স যোগ করুন</button>
+        </div>
+      </div>
+
+      <button class="btn btn-danger-ghost" id="btnDeleteCv" type="button">🗑️ এই CV মুছে ফেলুন</button>
+    </div>
+  </section>
+
+  <!-- ============ PREVIEW / EXPORT ============ -->
+  <section class="screen" id="scrPreview" hidden>
+    <div class="screen-body">
+      <div class="pv-top">
+        <div class="ed-back" data-back="editor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 6-6 6 6 6"/></svg></div>
+        <div class="tpl-name" id="pvTplName">টেমপ্লেট</div>
+        <div class="ed-icon-btn" data-nav-to="templates" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>
+      </div>
+
+      <div class="preview-scroll">
+        <div id="cvPreview" class="cv-page tpl-modern"></div>
+      </div>
+
+      <div class="pv-actions">
+        <button class="btn btn-ghost pv-icon-only" id="btnPvEdit" type="button" aria-label="এডিট করুন"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+        <button class="btn btn-ghost" id="btnDownload" type="button" style="flex:1;">⬇️ ডাউনলোড</button>
+        <button class="btn btn-primary" id="btnShare" type="button" style="flex:2;">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="m8.3 10.7 7.4-4.2M8.3 13.3l7.4 4.2"/></svg>
+          শেয়ার করুন
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SETTINGS ============ -->
+  <section class="screen" id="scrSettings" hidden>
+    <div class="screen-body">
+      <div class="set-top"><div class="ed-back set-back-abs" data-back="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 6-6 6 6 6"/></svg></div><h2>সেটিংস</h2></div>
+
+      <div class="set-profile">
+        <div class="avatar" id="setAvatarInitial">?</div>
+        <div class="info"><div class="nm" id="setProfileName">—</div><div class="em">লোকাল প্রোফাইল · এই ফোনেই সেভ থাকে</div></div>
+        <button class="edit" id="btnEditName" type="button">এডিট</button>
+      </div>
+
+      <div class="set-group">
+        <div class="set-group-title">ডেটা</div>
+        <div class="set-list">
+          <div class="set-row"><div class="set-ic" style="background:var(--mint-dim);"><svg viewBox="0 0 24 24" fill="none" stroke="#00816F" stroke-width="1.8"><path d="M22 10 12 4 2 10l10 6 10-6Z"/></svg></div><div class="lbl">মোট সংরক্ষিত CV</div><span class="val" id="setCvCount">০</span></div>
+          <div class="set-row"><div class="set-ic" style="background:#F0F7FF;"><svg viewBox="0 0 24 24" fill="none" stroke="#2E6FE0" stroke-width="1.8"><rect x="5" y="10.5" width="14" height="9" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg></div><div class="lbl">প্রাইভেসি</div><span class="val">কোনো সার্ভার নেই</span></div>
+        </div>
+      </div>
+
+      <button class="set-logout" id="btnLogout" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+        এই ফোন থেকে প্রোফাইল ও সব CV মুছে ফেলুন
+      </button>
+      <div class="set-version">Vitae CV Maker v1.0</div>
+    </div>
+    <nav class="bottom-nav">
+      <button class="nav-item" data-nav="home" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg><span>হোম</span>
+      </button>
+      <button class="nav-item" data-nav="templates" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>টেমপ্লেট</span>
+      </button>
+      <button class="nav-fab" id="btnFabNew3" type="button" aria-label="নতুন CV">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <button class="nav-item active" data-nav="settings" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1.3-3.8 4.2-5.7 7-5.7s5.7 1.9 7 5.7"/></svg><span>সেটিংস</span>
+      </button>
+    </nav>
+  </section>
+
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="js/vendor/html2canvas.min.js"></script>
+<script src="js/vendor/jspdf.umd.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
