@@ -165,6 +165,7 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/staff-attendance-page', \App\Livewire\StaffAttendanceTaker::class)->name('staff-attendance.index');
     Route::get('/chat-page', \App\Livewire\ChatWindow::class)->name('chat.index');
     Route::get('/notice-board-page', \App\Livewire\NoticeBoard::class)->name('notice-board.index');
+    Route::get('/academic-calendar', \App\Livewire\AcademicCalendar::class)->name('academic-calendar.index');
     Route::get('/id-cards-page', \App\Livewire\IdCardGenerator::class)->name('id-cards.index');
     Route::get('/attendance-report-page', \App\Livewire\AttendanceReport::class)->name('attendance-report.index');
     Route::get('/fee-structures-page', \App\Livewire\FeeStructureManager::class)->name('fee-structures.index');
