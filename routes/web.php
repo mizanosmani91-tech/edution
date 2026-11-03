@@ -202,6 +202,7 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/payment-gateway-settings', \App\Livewire\PaymentGatewaySettings::class)->name('payment-gateway.index');
     Route::get('/notification-gateway-settings', \App\Livewire\NotificationGatewaySettings::class)->name('notification-gateway.index');
     Route::get('/settings-page', \App\Livewire\InstitutionSettingsForm::class)->name('settings.index');
+    Route::get('/audit-log', \App\Livewire\AuditLogViewer::class)->name('audit-log.index');
     Route::get('/billing', \App\Livewire\BillingCenter::class)->name('billing.index');
     Route::get('/routine-page', \App\Livewire\RoutineBoard::class)->name('routine.index');
     Route::get('/live-class-monitor', \App\Livewire\LiveClassMonitor::class)->name('live-class-monitor.index');

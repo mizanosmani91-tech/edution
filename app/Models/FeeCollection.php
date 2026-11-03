@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\Auditable;
 use App\Models\Concerns\BelongsToTenant;
 use App\Models\Concerns\UuidPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class FeeCollection extends Model
 {
-    use HasFactory, BelongsToTenant, UuidPrimaryKey;
+    use HasFactory, BelongsToTenant, UuidPrimaryKey, Auditable;
 
     protected $fillable = [
         'institution_id',
@@ -67,5 +68,10 @@ class FeeCollection extends Model
     public function getDueAmountAttribute(): float
     {
         return (float) $this->amount_due + (float) $this->fine_amount - (float) $this->amount_paid;
+    }
+
+    public function auditLabel(): string
+    {
+        return trim(($this->fee_type ?? 'ফি') . ' ' . ($this->due_month ?? ''));
     }
 }
