@@ -7,6 +7,7 @@ use App\Models\Conversation;
 use App\Models\ConversationParticipant;
 use App\Models\FeeCollection;
 use App\Models\HifzProgress;
+use App\Models\ClassDiaryEntry;
 use App\Models\Homework;
 use App\Models\IntegrationSetting;
 use App\Models\HomeworkCompletion;
@@ -237,6 +238,7 @@ class GuardianPortal extends Component
         $headmasterName = null;
         $notices = collect();
         $homeworks = collect();
+        $diaryEntries = collect();
 
         if ($child) {
             $last30Days = Attendance::where('student_id', $child->id)
@@ -327,6 +329,16 @@ class GuardianPortal extends Component
             ]);
         }
 
+        if ($child) {
+            // সন্তানের ক্লাস/সেকশনের সাম্প্রতিক ক্লাস ডায়েরি
+            $diaryEntries = ClassDiaryEntry::with(['subject', 'teacher'])
+                ->forStudent($child)
+                ->latest('entry_date')
+                ->latest('created_at')
+                ->limit(30)
+                ->get();
+        }
+
         $recentHifz = collect();
         if ($child) {
             $recentHifz = HifzProgress::where('student_id', $child->id)->latest('date')->limit(5)->get();
@@ -359,6 +371,7 @@ class GuardianPortal extends Component
             'headmasterUser' => $headmasterUser,
             'notices' => $notices,
             'homeworks' => $homeworks,
+            'diaryEntries' => $diaryEntries,
             'unreadCount' => $unreadCount,
             'bkashEnabled' => $bkashEnabled,
             'nagadEnabled' => $nagadEnabled,

@@ -233,6 +233,7 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/import/{entity}/sample', [\App\Http\Controllers\ImportSampleController::class, 'download'])->name('import.sample');
     Route::get('/academic-sessions', \App\Livewire\AcademicSessionManager::class)->name('academic-sessions.index');
     Route::get('/homework', \App\Livewire\HomeworkManager::class)->name('homework.index');
+    Route::get('/class-diary', \App\Livewire\ClassDiaryManager::class)->name('class-diary.index');
     Route::get('/lesson-plans', \App\Livewire\LessonPlanManager::class)->name('lesson-plans.index');
     Route::get('/hifz-progress', \App\Livewire\HifzProgressManager::class)->name('hifz-progress.index');
     Route::get('/question-bank', \App\Livewire\QuestionBankManager::class)->name('question-bank.index');
