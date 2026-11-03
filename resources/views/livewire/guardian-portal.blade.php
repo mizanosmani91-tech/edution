@@ -28,6 +28,7 @@
             <button type="button" class="tab-btn {{ $activeTab === 'overview' ? 'active' : '' }}" wire:click="setTab('overview')">ওভারভিউ</button>
             <button type="button" class="tab-btn {{ $activeTab === 'fees' ? 'active' : '' }}" wire:click="setTab('fees')">ফি</button>
             <button type="button" class="tab-btn {{ $activeTab === 'homework' ? 'active' : '' }}" wire:click="setTab('homework')">হোমওয়ার্ক</button>
+            <button type="button" class="tab-btn {{ $activeTab === 'diary' ? 'active' : '' }}" wire:click="setTab('diary')">ক্লাস ডায়েরি</button>
             <button type="button" class="tab-btn {{ $activeTab === 'messages' ? 'active' : '' }}" wire:click="setTab('messages')">বার্তা @if($unreadCount > 0)<span class="cnt">{{ $unreadCount }}</span>@endif</button>
             <button type="button" class="tab-btn {{ $activeTab === 'notices' ? 'active' : '' }}" wire:click="setTab('notices')">নোটিশ</button>
             <button type="button" class="tab-btn {{ $activeTab === 'leave' ? 'active' : '' }}" wire:click="setTab('leave')">ছুটির আবেদন</button>
@@ -222,6 +223,25 @@
                         </tbody>
                     </table>
                 </div>
+            @endif
+
+            {{-- ================= ক্লাস ডায়েরি ================= --}}
+            @if ($activeTab === 'diary')
+                @forelse ($diaryEntries as $d)
+                    <div class="settings-section" wire:key="diary-{{ $d->id }}">
+                        <h3>{{ $d->topic }}</h3>
+                        <p class="sub">
+                            {{ $d->entry_date->format('d M, Y') }}
+                            @if ($d->subject) · {{ $d->subject->name }}@endif
+                            @if ($d->teacher) · {{ $d->teacher->name }}@endif
+                        </p>
+                        @if ($d->classwork)<p><strong>ক্লাসে যা হয়েছে:</strong> {!! nl2br(e($d->classwork)) !!}</p>@endif
+                        @if ($d->homework)<p><strong>বাড়ির কাজ:</strong> {!! nl2br(e($d->homework)) !!}</p>@endif
+                        @if ($d->remarks)<p style="color:var(--ink-soft);"><strong>শিক্ষকের মন্তব্য:</strong> {!! nl2br(e($d->remarks)) !!}</p>@endif
+                    </div>
+                @empty
+                    <div class="settings-section"><p class="sub" style="text-align:center;padding:24px 0;">এখনো কোনো ক্লাস ডায়েরি লেখা হয়নি</p></div>
+                @endforelse
             @endif
 
             {{-- ================= বার্তা ================= --}}
