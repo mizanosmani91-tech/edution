@@ -19,8 +19,8 @@ Route::post('/login', [ApiLoginController::class, 'store']);
 Route::middleware(['auth:sanctum', 'tenant.context'])->group(function () {
     Route::post('/logout', [ApiLoginController::class, 'destroy']);
 
-    Route::apiResource('students', StudentController::class)->names('mobile.students');
-    Route::apiResource('teachers', TeacherController::class)->names('mobile.teachers');
+    Route::apiResource('students', StudentController::class)->names('mobile.students')->middleware('permission:students.manage');
+    Route::apiResource('teachers', TeacherController::class)->names('mobile.teachers')->middleware('permission:teachers.manage');
 
     // বাকি সব মডিউল web.php এর একই pattern এ এখানেও যোগ করুন (নাম prefix সহ):
     // fee-collections, attendance, exam-weightings, chat, settings, routine

@@ -63,6 +63,20 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * এই ইউজার কোনো পারমিশন চাবি পায় কিনা (config/permissions.php)।
+     * প্ল্যাটফর্ম সুপারঅ্যাডমিন সব পায়; বাকিরা রোলের ডিফল্ট অনুযায়ী,
+     * অচেনা রোল কিছুই পায় না।
+     */
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return \App\Support\Permissions::isKnown($permission);
+        }
+
+        return \App\Support\Permissions::roleHas($this->role, $permission);
+    }
+
+    /**
      * এই ইউজার guardian হলে তার সন্তানরা — guardian portal এখান থেকেই
      * child-selector বানাবে
      */

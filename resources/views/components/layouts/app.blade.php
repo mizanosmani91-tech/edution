@@ -67,20 +67,24 @@
         </div>
 
         <nav class="nav-scroll">
+            @if ($nav('dashboard'))
             <div class="nav-single {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <a href="{{ route('dashboard') }}" class="nav-btn">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 12 12 4l8 8"/><path d="M6 10v9h12v-9"/></svg></span>
                     <span class="lbl">{{ __('ড্যাশবোর্ড') }}</span>
                 </a>
             </div>
+            @endif
 
             @php
                 $stub = fn($label) => route('stub', urlencode($label));
+                $nav = fn (string $routeName) => \App\Support\Permissions::routeAllowed($routeName);
                 $activeIf = fn(...$patterns) => request()->routeIs($patterns) ? 'open active' : '';
             @endphp
 
             @if (auth()->user()->role !== 'teacher')
             {{-- একাডেমিক --}}
+            @if ($nav('academic.classes') || $nav('academic-calendar.index') || $nav('class-diary.index') || $nav('academic.departments') || $nav('academic.subjects') || $nav('routine.index') || $nav('live-class-monitor.index') || $nav('academic-sessions.index') || $nav('homework.index') || $nav('lesson-plans.index') || $nav('question-bank.index') || $nav('quizzes.index') || $nav('hifz-progress.index'))
             <div class="nav-module {{ $activeIf('academic.*','academic-calendar.*','class-diary.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*','live-class-monitor.*','quizzes.*','hifz-progress.*') }}" x-data="{ open: {{ request()->routeIs(['academic.*','academic-calendar.*','class-diary.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*','live-class-monitor.*','quizzes.*','hifz-progress.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2 2 0 0 1 6 4h13v14H6a2 2 0 0 0-2 2V5.5Z"/><path d="M19 18v3"/></svg></span>
@@ -88,23 +92,51 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('academic.classes'))
                     <a href="{{ route('academic.classes') }}" class="sub-item {{ request()->routeIs('academic.classes') ? 'active' : '' }}">{{ __('ক্লাস ও সেকশন') }}</a>
+                    @endif
+                    @if ($nav('academic-calendar.index'))
                     <a href="{{ route('academic-calendar.index') }}" class="sub-item {{ request()->routeIs('academic-calendar.*') ? 'active' : '' }}">{{ __('অ্যাকাডেমিক ক্যালেন্ডার') }}</a>
+                    @endif
+                    @if ($nav('class-diary.index'))
                     <a href="{{ route('class-diary.index') }}" class="sub-item {{ request()->routeIs('class-diary.*') ? 'active' : '' }}">{{ __('ক্লাস ডায়েরি') }}</a>
+                    @endif
+                    @if ($nav('academic.departments'))
                     <a href="{{ route('academic.departments') }}" class="sub-item {{ request()->routeIs('academic.departments') ? 'active' : '' }}">{{ __('বিভাগ') }}</a>
+                    @endif
+                    @if ($nav('academic.subjects'))
                     <a href="{{ route('academic.subjects') }}" class="sub-item {{ request()->routeIs('academic.subjects') ? 'active' : '' }}">{{ __('বিষয় ও সিলেবাস') }}</a>
+                    @endif
+                    @if ($nav('routine.index'))
                     <a href="{{ route('routine.index') }}" class="sub-item {{ request()->routeIs('routine.*') ? 'active' : '' }}">{{ __('ক্লাস রুটিন') }}</a>
+                    @endif
+                    @if ($nav('live-class-monitor.index'))
                     <a href="{{ route('live-class-monitor.index') }}" class="sub-item {{ request()->routeIs('live-class-monitor.*') ? 'active' : '' }}">{{ __('লাইভ ক্লাস মনিটর') }}</a>
+                    @endif
+                    @if ($nav('academic-sessions.index'))
                     <a href="{{ route('academic-sessions.index') }}" class="sub-item {{ request()->routeIs('academic-sessions.*') ? 'active' : '' }}">{{ __('একাডেমিক সেশন') }}</a>
+                    @endif
+                    @if ($nav('homework.index'))
                     <a href="{{ route('homework.index') }}" class="sub-item {{ request()->routeIs('homework.*') ? 'active' : '' }}">{{ __('হোশওয়ার্ক/অ্যাসাইনমেন্ট') }}</a>
+                    @endif
+                    @if ($nav('lesson-plans.index'))
                     <a href="{{ route('lesson-plans.index') }}" class="sub-item {{ request()->routeIs('lesson-plans.*') ? 'active' : '' }}">{{ __('লেসন প্ল্যান') }}</a>
+                    @endif
+                    @if ($nav('question-bank.index'))
                     <a href="{{ route('question-bank.index') }}" class="sub-item {{ request()->routeIs('question-bank.*') ? 'active' : '' }}">{{ __('প্রশ্ন ব্যাংক') }}</a>
+                    @endif
+                    @if ($nav('quizzes.index'))
                     <a href="{{ route('quizzes.index') }}" class="sub-item {{ request()->routeIs('quizzes.*') ? 'active' : '' }}">{{ __('অনলাইন কুইজ (তৈরি করুন)') }}</a>
+                    @endif
+                    @if ($nav('hifz-progress.index'))
                     <a href="{{ route('hifz-progress.index') }}" class="sub-item {{ request()->routeIs('hifz-progress.*') ? 'active' : '' }}">{{ __('হিফজ/কুরআন অগ্রগতি') }}</a>
+                    @endif
                 </div></div></div>
             </div>
+            @endif
 
             {{-- ভর্তি --}}
+            @if ($nav('students.admission') || $nav('admission-applications.index') || $nav('seat-management.index') || $nav('entrance-test.index') || $nav('admission-waiting.index'))
             <div class="nav-module {{ $activeIf('students.admission','admission-applications.*','seat-management.*','entrance-test.*','admission-waiting.*') }}" x-data="{ open: {{ request()->routeIs(['students.admission','admission-applications.*','seat-management.*','entrance-test.*','admission-waiting.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.3"/><path d="M3 20c1-3.6 3.4-5.4 6-5.4s5 1.8 6 5.4"/><path d="M17 8h4M19 6v4"/></svg></span>
@@ -112,15 +144,27 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('students.admission'))
                     <a href="{{ route('students.admission') }}" class="sub-item {{ request()->routeIs('students.admission') ? 'active' : '' }}">{{ __('অনলাইন ভর্তি ফর্ম') }}</a>
+                    @endif
+                    @if ($nav('admission-applications.index'))
                     <a href="{{ route('admission-applications.index') }}" class="sub-item {{ request()->routeIs('admission-applications.*') ? 'active' : '' }}">{{ __('ভর্তি আবেদন তালিকা') }}</a>
+                    @endif
+                    @if ($nav('seat-management.index'))
                     <a href="{{ route('seat-management.index') }}" class="sub-item {{ request()->routeIs('seat-management.*') ? 'active' : '' }}">{{ __('আসন ব্যবস্থাপনা') }}</a>
+                    @endif
+                    @if ($nav('entrance-test.index'))
                     <a href="{{ route('entrance-test.index') }}" class="sub-item {{ request()->routeIs('entrance-test.*') ? 'active' : '' }}">{{ __('ভর্তি পরীক্ষা/ইন্টারভিউ') }}</a>
+                    @endif
+                    @if ($nav('admission-waiting.index'))
                     <a href="{{ route('admission-waiting.index') }}" class="sub-item {{ request()->routeIs('admission-waiting.*') ? 'active' : '' }}">{{ __('Waiting List') }}</a>
+                    @endif
                 </div></div></div>
             </div>
+            @endif
 
             {{-- শিক্ষার্থী --}}
+            @if ($nav('students.index') || $nav('id-cards.index') || $nav('student-promotion.index') || $nav('certificates.transfer') || $nav('certificates.character') || $nav('discipline.index') || $nav('student-health.index') || $nav('alumni.index'))
             <div class="nav-module {{ $activeIf('students.*','id-cards.*','student-promotion.*','certificates.*','discipline.*','student-health.*','alumni.*','import.students') }}" x-data="{ open: {{ request()->routeIs(['students.*','id-cards.*','student-promotion.*','certificates.*','discipline.*','student-health.*','alumni.*','import.students']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4.5 5-6.5 8-6.5s6.5 2 8 6.5"/></svg></span>
@@ -128,18 +172,36 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('students.index'))
                     <a href="{{ route('students.index') }}" class="sub-item {{ request()->routeIs('students.*') ? 'active' : '' }}">{{ __('শিক্ষার্থী তালিকা') }}</a>
+                    @endif
+                    @if ($nav('id-cards.index'))
                     <a href="{{ route('id-cards.index') }}" class="sub-item {{ request()->routeIs('id-cards.*') ? 'active' : '' }}">{{ __('আইডি কার্ড জেনারেশন') }}</a>
+                    @endif
+                    @if ($nav('student-promotion.index'))
                     <a href="{{ route('student-promotion.index') }}" class="sub-item {{ request()->routeIs('student-promotion.*') ? 'active' : '' }}">{{ __('প্রমোশন') }}</a>
+                    @endif
+                    @if ($nav('certificates.transfer'))
                     <a href="{{ route('certificates.transfer') }}" class="sub-item {{ request()->routeIs('certificates.transfer') ? 'active' : '' }}">{{ __('Transfer Certificate') }}</a>
+                    @endif
+                    @if ($nav('certificates.character'))
                     <a href="{{ route('certificates.character') }}" class="sub-item {{ request()->routeIs('certificates.character') ? 'active' : '' }}">{{ __('Character Certificate') }}</a>
+                    @endif
+                    @if ($nav('discipline.index'))
                     <a href="{{ route('discipline.index') }}" class="sub-item {{ request()->routeIs('discipline.*') ? 'active' : '' }}">{{ __('Discipline/আচরণ রেকর্ড') }}</a>
+                    @endif
+                    @if ($nav('student-health.index'))
                     <a href="{{ route('student-health.index') }}" class="sub-item {{ request()->routeIs('student-health.*') ? 'active' : '' }}">{{ __('স্বাস্থ্য তথ্য') }}</a>
+                    @endif
+                    @if ($nav('alumni.index'))
                     <a href="{{ route('alumni.index') }}" class="sub-item {{ request()->routeIs('alumni.*') ? 'active' : '' }}">{{ __('Alumni') }}</a>
+                    @endif
                 </div></div></div>
             </div>
+            @endif
 
             {{-- শিক্ষক ও স্টাফ --}}
+            @if ($nav('teachers.index') || $nav('teachers.hire') || $nav('payroll.index') || $nav('leave-requests.index') || $nav('performance.index'))
             <div class="nav-module {{ $activeIf('teachers.*','payroll.*','performance.*','leave-requests.*','import.teachers') }}" x-data="{ open: {{ request()->routeIs(['teachers.*','payroll.*','performance.*','leave-requests.*','import.teachers']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8"/></svg></span>
@@ -147,17 +209,29 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('teachers.index'))
                     <a href="{{ route('teachers.index') }}" class="sub-item {{ request()->routeIs('teachers.*') ? 'active' : '' }}">{{ __('শিক্ষক তালিকা') }}</a>
+                    @endif
+                    @if ($nav('teachers.hire'))
                     <a href="{{ route('teachers.hire') }}" class="sub-item {{ request()->routeIs('teachers.hire') ? 'active' : '' }}">{{ __('নিয়োগ') }}</a>
+                    @endif
+                    @if ($nav('payroll.index'))
                     <a href="{{ route('payroll.index') }}" class="sub-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">{{ __('পে-রোল/বেতন') }}</a>
+                    @endif
+                    @if ($nav('leave-requests.index'))
                     <a href="{{ route('leave-requests.index') }}" class="sub-item {{ request()->routeIs('leave-requests.*') ? 'active' : '' }}">{{ __('ছুটি ব্যবস্থাপনা') }}</a>
+                    @endif
+                    @if ($nav('performance.index'))
                     <a href="{{ route('performance.index') }}" class="sub-item {{ request()->routeIs('performance.*') ? 'active' : '' }}">{{ __('Performance/মূল্যায়ন') }}</a>
+                    @endif
                 </div></div></div>
             </div>
+            @endif
 
             @endif
 
             {{-- হাজিরা --}}
+            @if ($nav('attendance.index') || $nav('staff-attendance.index') || $nav('leave-requests.index') || $nav('attendance-report.index') || $nav('import.attendance-device'))
             <div class="nav-module {{ $activeIf('attendance.*','staff-attendance.*','attendance-report.*','leave-requests.*','import.attendance-device') }}" x-data="{ open: {{ request()->routeIs(['attendance.*','staff-attendance.*','attendance-report.*','leave-requests.*','import.attendance-device']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12 2.3 2.3L16 9.7"/></svg></span>
@@ -165,24 +239,49 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('attendance.index'))
                     <a href="{{ route('attendance.index') }}" class="sub-item {{ request()->routeIs('attendance.*') ? 'active' : '' }}">{{ __('শিক্ষার্থী হাজিরা') }}</a>
+                    @endif
+                    @if ($nav('staff-attendance.index'))
                     <a href="{{ route('staff-attendance.index') }}" class="sub-item {{ request()->routeIs('staff-attendance.*') ? 'active' : '' }}">{{ __('স্টাফ হশজিরা') }}</a>
+                    @endif
+                    @if ($nav('leave-requests.index'))
                     <a href="{{ route('leave-requests.index') }}" class="sub-item {{ request()->routeIs('leave-requests.*') ? 'active' : '' }}">{{ __('ছুটির আবেদন') }}</a>
+                    @endif
+                    @if ($nav('attendance-report.index'))
                     <a href="{{ route('attendance-report.index') }}" class="sub-item {{ request()->routeIs('attendance-report.*') ? 'active' : '' }}">{{ __('হাজিরা রিপোর্ট') }}</a>
+                    @endif
+                    @if ($nav('import.attendance-device'))
                     <a href="{{ route('import.attendance-device') }}" class="sub-item {{ request()->routeIs('import.attendance-device') ? 'active' : '' }}">{{ __('অ্যাটেন্ডেন্স ডিভাইস ইমপোর্ট') }}</a>
+                    @endif
                 </div></div></div>
             </div>
+            @endif
 
             @if (auth()->user()->role === 'teacher')
+                @if ($nav('homework.index'))
                 <div class="nav-single {{ request()->routeIs('homework.*') ? 'active' : '' }}">
                     <a href="{{ route('homework.index') }}" class="nav-btn">
                         <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2 2 0 0 1 6 4h13v14H6a2 2 0 0 0-2 2V5.5Z"/><path d="M19 18v3"/></svg></span>
                         <span class="lbl">{{ __('হোমওয়ার্ক') }}</span>
                     </a>
                 </div>
+                @endif
+            @endif
+
+            @if (auth()->user()->role === 'teacher')
+              @if ($nav('class-diary.index'))
+                <div class="nav-single {{ request()->routeIs('class-diary.*') ? 'active' : '' }}">
+                    <a href="{{ route('class-diary.index') }}" class="nav-btn">
+                        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4Z"/><path d="M9 9h6M9 13h6"/></svg></span>
+                        <span class="lbl">{{ __('ক্লাস ডায়েরি') }}</span>
+                    </a>
+                </div>
+              @endif
             @endif
 
             {{-- পরীক্ষা ও ফলাফল --}}
+            @if ($nav('exam-schedule.index') || $nav('marks-entry.index') || $nav('result-weighting.index') || $nav('merit-list.index') || $nav('exam-seat-plan.index') || $nav('report-cards.index') || $nav('qawmi-grading.index') || $nav('question-papers.index') || $nav('exam-documents.index'))
             <div class="nav-module {{ $activeIf('exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*','exam-seat-plan.*','exam-documents.*','question-papers.*') }}" x-data="{ open: {{ request()->routeIs(['exam-schedule.*','marks-entry.*','merit-list.*','qawmi-grading.*','marksheet.*','admit-cards.*','report-cards.*','import.exam-results','result-weighting.*','exam-seat-plan.*','exam-documents.*','question-papers.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3h6l1 3H8l1-3Z"/><rect x="5" y="6" width="14" height="15" rx="2"/><path d="M9 12h6M9 16h6"/></svg></span>
@@ -190,22 +289,46 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('exam-schedule.index'))
                     <a href="{{ route('exam-schedule.index') }}" class="sub-item {{ request()->routeIs('exam-schedule.*') ? 'active' : '' }}">{{ __('পরীক্ষার সময়সূচি') }}</a>
+                    @endif
+                    @if ($nav('marks-entry.index'))
                     <a href="{{ route('marks-entry.index') }}" class="sub-item {{ request()->routeIs('marks-entry.*') ? 'active' : '' }}">{{ __('মার্কস এন্ট্রি') }}</a>
+                    @endif
+                    @if ($nav('result-weighting.index'))
                     <a href="{{ route('result-weighting.index') }}" class="sub-item {{ request()->routeIs('result-weighting.*') ? 'active' : '' }}">{{ __('Result Weighting') }}</a>
+                    @endif
+                    @if ($nav('merit-list.index'))
                     <a href="{{ route('merit-list.index') }}" class="sub-item {{ request()->routeIs('merit-list.*') ? 'active' : '' }}">{{ __('GPA/গ্রেড ক্যালকুলেশন') }}</a>
+                    @endif
+                    @if ($nav('exam-seat-plan.index'))
                     <a href="{{ route('exam-seat-plan.index') }}" class="sub-item {{ request()->routeIs('exam-seat-plan.*') ? 'active' : '' }}">{{ __('সিট প্ল্যান') }}</a>
+                    @endif
+                    @if ($nav('report-cards.index'))
                     <a href="{{ route('report-cards.index') }}" class="sub-item {{ request()->routeIs('report-cards.*') ? 'active' : '' }}">{{ __('ট্যাবুলেশন শীট') }}</a>
+                    @endif
+                    @if ($nav('report-cards.index'))
                     <a href="{{ route('report-cards.index') }}" class="sub-item {{ request()->routeIs('report-cards.*') ? 'active' : '' }}">{{ __('রিপোর্ট কার্ড/মার্কশিট') }}</a>
+                    @endif
+                    @if ($nav('report-cards.index'))
                     <a href="{{ route('report-cards.index') }}" class="sub-item {{ request()->routeIs('report-cards.*') ? 'active' : '' }}">{{ __('প্রবেশপত্র (Admit Card)') }}</a>
+                    @endif
+                    @if ($nav('qawmi-grading.index'))
                     <a href="{{ route('qawmi-grading.index') }}" class="sub-item {{ request()->routeIs('qawmi-grading.*') ? 'active' : '' }}">{{ __('কওমি গ্রেডিং') }}</a>
+                    @endif
+                    @if ($nav('question-papers.index'))
                     <a href="{{ route('question-papers.index') }}" class="sub-item {{ request()->routeIs('question-papers.*') ? 'active' : '' }}">{{ __('প্রশ্নপত্র') }}</a>
+                    @endif
+                    @if ($nav('exam-documents.index'))
                     <a href="{{ route('exam-documents.index') }}" class="sub-item {{ request()->routeIs('exam-documents.*') ? 'active' : '' }}">{{ __('ডকুমেন্ট সেন্টার') }}</a>
+                    @endif
                 </div></div></div>
             </div>
+            @endif
 
             @if (auth()->user()->role !== 'teacher')
             {{-- ফি/অর্থ --}}
+            @if ($nav('fee-structures.index') || $nav('fees.index') || $nav('fee-installments.index') || $nav('payment-gateway.index') || $nav('scholarships.index') || $nav('expenses.index') || $nav('income-expense-report.index') || $nav('budget.index'))
             <div class="nav-module {{ $activeIf('fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees','scholarships.*','budget.*') }}" x-data="{ open: {{ request()->routeIs(['fees.*','fee-structures.*','expenses.*','income-expense-report.*','payment-gateway.*','import.fees','scholarships.*','budget.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/><circle cx="16.5" cy="15" r="1.4"/></svg></span>
@@ -213,19 +336,39 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('fee-structures.index'))
                     <a href="{{ route('fee-structures.index') }}" class="sub-item {{ request()->routeIs('fee-structures.*') ? 'active' : '' }}">{{ __('ফি স্ট্রাকচার সেটআপ') }}</a>
+                    @endif
+                    @if ($nav('fees.index'))
                     <a href="{{ route('fees.index') }}" class="sub-item {{ request()->routeIs('fees.*') ? 'active' : '' }}">{{ __('ফি সংগ্রহ') }}</a>
+                    @endif
+                    @if ($nav('fee-installments.index'))
                     <a href="{{ route('fee-installments.index') }}" class="sub-item {{ request()->routeIs('fee-installments.*') ? 'active' : '' }}">{{ __('ফি কিস্তি প্ল্যান') }}</a>
+                    @endif
+                    @if ($nav('payment-gateway.index'))
                     <a href="{{ route('payment-gateway.index') }}" class="sub-item {{ request()->routeIs('payment-gateway.*') ? 'active' : '' }}">{{ __('অনলাইন পেমেন্ট গেটওয়ে') }}</a>
+                    @endif
+                    @if ($nav('fees.index'))
                     <a href="{{ route('fees.index') }}" class="sub-item">{{ __('বকেয়া তালিকা') }}</a>
+                    @endif
+                    @if ($nav('scholarships.index'))
                     <a href="{{ route('scholarships.index') }}" class="sub-item {{ request()->routeIs('scholarships.*') ? 'active' : '' }}">{{ __('বৃত্তি/মওকুফ') }}</a>
+                    @endif
+                    @if ($nav('expenses.index'))
                     <a href="{{ route('expenses.index') }}" class="sub-item {{ request()->routeIs('expenses.*') ? 'active' : '' }}">{{ __('খরচ/ব্যয় ট্র্যাকিং') }}</a>
+                    @endif
+                    @if ($nav('income-expense-report.index'))
                     <a href="{{ route('income-expense-report.index') }}" class="sub-item {{ request()->routeIs('income-expense-report.*') ? 'active' : '' }}">{{ __('আয়-ব্যয় রিপোর্ট') }}</a>
+                    @endif
+                    @if ($nav('budget.index'))
                     <a href="{{ route('budget.index') }}" class="sub-item {{ request()->routeIs('budget.*') ? 'active' : '' }}">{{ __('বাজেট পরিকল্পনা') }}</a>
+                    @endif
                 </div></div></div>
             </div>
+            @endif
 
             {{-- লাইব্রেরি --}}
+            @if ($nav('books.index') || $nav('book-issues.index') || $nav('book-fines.index'))
             <div class="nav-module {{ $activeIf('books.*','book-issues.*','book-fines.*') }}" x-data="{ open: {{ request()->routeIs(['books.*','book-issues.*','book-fines.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h6a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4V4Z"/><path d="M20 4h-6a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6V4Z"/></svg></span>
@@ -233,13 +376,21 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('books.index'))
                     <a href="{{ route('books.index') }}" class="sub-item {{ request()->routeIs('books.*') ? 'active' : '' }}">{{ __('বই তালিকা') }}</a>
+                    @endif
+                    @if ($nav('book-issues.index'))
                     <a href="{{ route('book-issues.index') }}" class="sub-item {{ request()->routeIs('book-issues.*') ? 'active' : '' }}">{{ __('ইস্যু/রিটার্ন') }}</a>
+                    @endif
+                    @if ($nav('book-fines.index'))
                     <a href="{{ route('book-fines.index') }}" class="sub-item {{ request()->routeIs('book-fines.*') ? 'active' : '' }}">{{ __('জরিমানা') }}</a>
+                    @endif
                 </div></div></div>
             </div>
+            @endif
 
             {{-- পরিবহন --}}
+            @if ($nav('transport.index') || $nav('transport-assignment.index') || $nav('transport-tracking.index'))
             <div class="nav-module {{ $activeIf('transport.*','transport-assignment.*','transport-tracking.*') }}" x-data="{ open: {{ request()->routeIs(['transport.*','transport-assignment.*','transport-tracking.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="9" width="18" height="8" rx="2"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg></span>
@@ -247,13 +398,21 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('transport.index'))
                     <a href="{{ route('transport.index') }}" class="sub-item {{ request()->routeIs('transport.*') ? 'active' : '' }}">{{ __('রুট ও গাড়ি') }}</a>
+                    @endif
+                    @if ($nav('transport-assignment.index'))
                     <a href="{{ route('transport-assignment.index') }}" class="sub-item {{ request()->routeIs('transport-assignment.*') ? 'active' : '' }}">{{ __('ছাত্র-পরিবহন সংযুক্তি') }}</a>
+                    @endif
+                    @if ($nav('transport-tracking.index'))
                     <a href="{{ route('transport-tracking.index') }}" class="sub-item {{ request()->routeIs('transport-tracking.*') ? 'active' : '' }}">{{ __('লাইভ GPS ট্র্যাকিং') }}</a>
+                    @endif
                 </div></div></div>
             </div>
+            @endif
 
             {{-- হোস্টেল --}}
+            @if ($nav('hostel.index') || $nav('hostel-fees.index'))
             <div class="nav-module {{ $activeIf('hostel.*','hostel-fees.*') }}" x-data="{ open: {{ request()->routeIs(['hostel.*','hostel-fees.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg></span>
@@ -261,14 +420,20 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('hostel.index'))
                     <a href="{{ route('hostel.index') }}" class="sub-item {{ request()->routeIs('hostel.*') ? 'active' : '' }}">{{ __('রুম/সিট বরাদ্দ') }}</a>
+                    @endif
+                    @if ($nav('hostel-fees.index'))
                     <a href="{{ route('hostel-fees.index') }}" class="sub-item {{ request()->routeIs('hostel-fees.*') ? 'active' : '' }}">{{ __('হোস্টেল ফি') }}</a>
+                    @endif
                 </div></div></div>
             </div>
+            @endif
 
             @endif
 
             {{-- যোগাযোগ --}}
+            @if ($nav('notice-board.index') || $nav('chat.index') || $nav('notification-gateway.index') || $nav('complaints.index') || $nav('support-tickets.index'))
             <div class="nav-module {{ $activeIf('chat.*','notice-board.*','complaints.*','notification-gateway.*','support-tickets.*') }}" x-data="{ open: {{ request()->routeIs(['chat.*','notice-board.*','complaints.*','notification-gateway.*','support-tickets.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16v11H8l-4 4V5Z"/></svg></span>
@@ -276,17 +441,31 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('notice-board.index'))
                     <a href="{{ route('notice-board.index') }}" class="sub-item {{ request()->routeIs('notice-board.*') ? 'active' : '' }}">{{ __('নোট ��শ বোর্ড') }}</a>
+                    @endif
+                    @if ($nav('chat.index'))
                     <a href="{{ route('chat.index') }}" class="sub-item {{ request()->routeIs('chat.*') ? 'active' : '' }}">{{ __('মেসেজিং/চ্যাট') }}</a>
+                    @endif
+                    @if ($nav('notification-gateway.index'))
                     <a href="{{ route('notification-gateway.index') }}" class="sub-item {{ request()->routeIs('notification-gateway.*') ? 'active' : '' }}">{{ __('SMS Gateway') }}</a>
+                    @endif
+                    @if ($nav('notification-gateway.index'))
                     <a href="{{ route('notification-gateway.index') }}" class="sub-item {{ request()->routeIs('notification-gateway.*') ? 'active' : '' }}">{{ __('Email Notification') }}</a>
+                    @endif
+                    @if ($nav('complaints.index'))
                     <a href="{{ route('complaints.index') }}" class="sub-item {{ request()->routeIs('complaints.*') ? 'active' : '' }}">{{ __('Complaint/Suggestion') }}</a>
+                    @endif
+                    @if ($nav('support-tickets.index'))
                     <a href="{{ route('support-tickets.index') }}" class="sub-item {{ request()->routeIs('support-tickets.*') ? 'active' : '' }}">{{ __('সাপোর্ট টিকেট') }}</a>
+                    @endif
                 </div></div></div>
             </div>
+            @endif
 
             @if (auth()->user()->role !== 'teacher')
             {{-- ভিজিটর --}}
+            @if ($nav('visitors.index'))
             <div class="nav-module {{ $activeIf('visitors.*') }}" x-data="{ open: {{ request()->routeIs(['visitors.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M4 20c0-3.5 3.5-6 8-6s8 2.5 8 6"/></svg></span>
@@ -294,11 +473,15 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('visitors.index'))
                     <a href="{{ route('visitors.index') }}" class="sub-item {{ request()->routeIs('visitors.*') ? 'active' : '' }}">{{ __('ভিজিটর লগ/গেট পাস') }}</a>
+                    @endif
                 </div></div></div>
             </div>
+            @endif
 
             {{-- ইনভেন্টরি --}}
+            @if ($nav('inventory.index') || $nav('inventory-issues.index'))
             <div class="nav-module {{ $activeIf('inventory.*','inventory-issues.*') }}" x-data="{ open: {{ request()->routeIs(['inventory.*','inventory-issues.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 8 12 3 3 8l9 5 9-5Z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></span>
@@ -306,13 +489,19 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('inventory.index'))
                     <a href="{{ route('inventory.index') }}" class="sub-item {{ request()->routeIs('inventory.index') ? 'active' : '' }}">{{ __('আইটেম তালিকা') }}</a>
+                    @endif
+                    @if ($nav('inventory-issues.index'))
                     <a href="{{ route('inventory-issues.index') }}" class="sub-item {{ request()->routeIs('inventory-issues.*') ? 'active' : '' }}">{{ __('ইস্যু ও রিটার্ন') }}</a>
+                    @endif
                 </div></div></div>
             </div>
             @endif
+            @endif
 
             {{-- পোর্টাল --}}
+            @if ($nav('portal.guardian') || $nav('portal.student') || $nav('portal.teacher') || $nav('student-quizzes.index'))
             <div class="nav-module {{ $activeIf('portal.*') }}" x-data="{ open: {{ request()->routeIs(['portal.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg></span>
@@ -320,15 +509,25 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('portal.guardian'))
                     <a href="{{ route('portal.guardian') }}" class="sub-item {{ request()->routeIs('portal.guardian') ? 'active' : '' }}">{{ __('অভিভাবক পোর্টাল') }}</a>
+                    @endif
+                    @if ($nav('portal.student'))
                     <a href="{{ route('portal.student') }}" class="sub-item {{ request()->routeIs('portal.student') ? 'active' : '' }}">{{ __('শিক্ষার্থী পোর্টাল') }}</a>
+                    @endif
+                    @if ($nav('portal.teacher'))
                     <a href="{{ route('portal.teacher') }}" class="sub-item {{ request()->routeIs('portal.teacher') ? 'active' : '' }}">{{ __('শিক্ষক পোর্টাল') }}</a>
+                    @endif
+                    @if ($nav('student-quizzes.index'))
                     <a href="{{ route('student-quizzes.index') }}" class="sub-item {{ request()->routeIs('student-quizzes.*') ? 'active' : '' }}">{{ __('আমার কুইজ (শিক্ষার্থী)') }}</a>
+                    @endif
                 </div></div></div>
             </div>
+            @endif
 
             @if (auth()->user()->role !== 'teacher')
             {{-- রিপোর্ট --}}
+            @if ($nav('export.students') || $nav('export.attendance') || $nav('export.fees'))
             <div class="nav-module {{ $activeIf('export.*') }}" x-data="{ open: {{ request()->routeIs(['export.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 19V5M4 19h16M8 15v-4m4 4V9m4 6v-8"/></svg></span>
@@ -336,38 +535,51 @@
                     <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
+                    @if ($nav('export.students'))
                     <a href="{{ route('export.students') }}" class="sub-item {{ request()->routeIs('export.students') ? 'active' : '' }}">{{ __('শিক্ষার্থী রিপোর্ট (Export)') }}</a>
+                    @endif
+                    @if ($nav('export.attendance'))
                     <a href="{{ route('export.attendance') }}" class="sub-item {{ request()->routeIs('export.attendance') ? 'active' : '' }}">{{ __('হাজিরা রিপোর্ট (Export)') }}</a>
+                    @endif
+                    @if ($nav('export.fees'))
                     <a href="{{ route('export.fees') }}" class="sub-item {{ request()->routeIs('export.fees') ? 'active' : '' }}">{{ __('ফি রিপোর্ট (Export)') }}</a>
+                    @endif
                 </div></div></div>
             </div>
+            @endif
 
             @endif
 
             @if (auth()->user()->role === 'admin')
+              @if ($nav('billing.index'))
               <div class="nav-single {{ request()->routeIs('billing.*') ? 'active' : '' }}">
                 <a href="{{ route('billing.index') }}" class="nav-btn">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/></svg></span>
                     <span class="lbl">{{ __('বিলিং') }}</span>
                 </a>
               </div>
+              @endif
             @endif
 
             @if (auth()->user()->role === 'admin')
+              @if ($nav('audit-log.index'))
               <div class="nav-single {{ request()->routeIs('audit-log.*') ? 'active' : '' }}">
                 <a href="{{ route('audit-log.index') }}" class="nav-btn">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 5 6v5c0 4.5 3 8.2 7 10 4-1.8 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
                     <span class="lbl">{{ __('অডিট লগ') }}</span>
                 </a>
               </div>
+              @endif
             @endif
 
+            @if ($nav('settings.index'))
             <div class="nav-single {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                 <a href="{{ route('settings.index') }}" class="nav-btn">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></span>
                     <span class="lbl">{{ __('সেটিংস') }}</span>
                 </a>
             </div>
+            @endif
         </nav>
 
         <div class="sidebar-foot">

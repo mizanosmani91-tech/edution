@@ -33,6 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'tenant.context' => \App\Http\Middleware\SetTenantContext::class,
             'superadmin' => \App\Http\Middleware\EnsureSuperAdmin::class,
             'password.change' => \App\Http\Middleware\EnsurePasswordChanged::class,
+            'permission' => \App\Http\Middleware\EnsurePermission::class,
         ]);
 
         $middleware->priority([

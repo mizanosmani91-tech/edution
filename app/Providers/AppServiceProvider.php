@@ -42,6 +42,16 @@ class AppServiceProvider extends ServiceProvider
                 ->middleware(['web', 'auth', 'tenant.context']);
         });
 
+        // পেজ লোডের `permission:` চেক Livewire-এর প্রতিটা আপডেট রিকোয়েস্টেও আবার চলবে —
+        // নাহলে খোলা থাকা পেজ থেকে পারমিশন তুলে নেওয়ার পরও অ্যাকশন চালানো যেত।
+        Livewire::addPersistentMiddleware([\App\Http\Middleware\EnsurePermission::class]);
+
+        // @can('fees.manage') ও auth()->user()->can(...) পারমিশন চাবির জন্য কাজ করবে।
+        // অচেনা ability-তে null = অন্য Gate/Policy-র হাতে ছেড়ে দেওয়া।
+        \Illuminate\Support\Facades\Gate::before(function ($user, string $ability) {
+            return \App\Support\Permissions::isKnown($ability) ? $user->hasPermission($ability) : null;
+        });
+
         $this->registerPdfFonts();
     }
 
