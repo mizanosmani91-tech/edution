@@ -28,11 +28,20 @@ class PermissionAccessTest extends TestCase
 
     private function loginAs(string $role): User
     {
+        // বাস্তবে শিক্ষকের teacher_id ও শিক্ষার্থীর student_id থাকে; কিছু কম্পোনেন্ট
+        // (MarksEntry, StudentPortal, StudentQuizList) নিজেই এগুলো না থাকলে ৪০৩ দেয় — সেটা
+        // পারমিশন-ব্যবস্থার বিষয় নয়, তাই টেস্ট ইউজারকেও সেভাবেই বানানো হয়।
+        $links = match ($role) {
+            'teacher' => ['teacher_id' => \App\Models\Teacher::factory()->create(['institution_id' => $this->institution->id])->id],
+            'student' => ['student_id' => \App\Models\Student::factory()->create(['institution_id' => $this->institution->id])->id],
+            default => [],
+        };
+
         $user = User::factory()->create([
             'institution_id' => $this->institution->id,
             'role' => $role,
             'must_change_password' => false,
-        ]);
+        ] + $links);
 
         $this->actingAs($user);
 
@@ -48,7 +57,7 @@ class PermissionAccessTest extends TestCase
         $matrix = [
             'teacher' => ['/payroll', '/fees-page', '/students-page', '/teachers-page', '/payment-gateway-settings', '/settings-page', '/audit-log', '/export/students', '/import/students', '/staff-attendance-page', '/inventory', '/portal/guardian', '/portal/student'],
             'guardian' => ['/payroll', '/fees-page', '/students-page', '/teachers-page', '/marks-entry', '/homework', '/attendance-page', '/audit-log', '/export/fees', '/portal/teacher', '/portal/student', '/notice-board-page'],
-            'student' => ['/payroll', '/fees-page', '/students-page', '/marks-entry', '/homework', '/audit-log', '/portal/guardian', '/portal/teacher', '/online-payment/00000000-0000-0000-0000-000000000000/initiate'],
+            'student' => ['/payroll', '/fees-page', '/students-page', '/marks-entry', '/homework', '/audit-log', '/portal/guardian', '/portal/teacher'],
         ];
 
         foreach ($matrix as $role => $urls) {
@@ -67,6 +76,21 @@ class PermissionAccessTest extends TestCase
         $this->loginAs($role);
 
         $this->get($url)->assertForbidden();
+    }
+
+    #[Test]
+    public function student_and_teacher_are_blocked_from_starting_an_online_payment(): void
+    {
+        // আসল ফি দিয়ে — নাহলে রাউট-বাইন্ডিং ৪০৪ দেয়, পারমিশন মিডলওয়্যার পর্যন্ত পৌঁছায় না
+        $fee = \App\Models\FeeCollection::factory()->create([
+            'institution_id' => $this->institution->id,
+            'student_id' => \App\Models\Student::factory()->create(['institution_id' => $this->institution->id])->id,
+        ]);
+
+        foreach (['student', 'teacher'] as $role) {
+            $this->loginAs($role);
+            $this->get("/online-payment/{$fee->id}/initiate")->assertForbidden();
+        }
     }
 
     #[Test]
