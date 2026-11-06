@@ -155,8 +155,9 @@ class ClassDiaryTest extends TestCase
     public function for_student_scope_matches_class_and_section_or_whole_class(): void
     {
         $class = SchoolClass::factory()->create(['institution_id' => $this->a->id]);
-        $sectionA = Section::factory()->create(['institution_id' => $this->a->id, 'class_id' => $class->id]);
-        $sectionB = Section::factory()->create(['institution_id' => $this->a->id, 'class_id' => $class->id]);
+        // একই শ্রেণিতে (class_id, name) ইউনিক — তাই নাম আলাদা দিতে হয়
+        $sectionA = Section::factory()->create(['institution_id' => $this->a->id, 'class_id' => $class->id, 'name' => 'ক']);
+        $sectionB = Section::factory()->create(['institution_id' => $this->a->id, 'class_id' => $class->id, 'name' => 'খ']);
         $otherClass = SchoolClass::factory()->create(['institution_id' => $this->a->id]);
 
         $student = Student::factory()->create([
