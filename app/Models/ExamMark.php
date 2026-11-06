@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\Auditable;
 use App\Models\Concerns\BelongsToTenant;
 use App\Models\Concerns\UuidPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ExamMark extends Model
 {
-    use HasFactory, BelongsToTenant, UuidPrimaryKey;
+    use HasFactory, BelongsToTenant, UuidPrimaryKey, Auditable;
 
     protected $fillable = [
         'institution_id',

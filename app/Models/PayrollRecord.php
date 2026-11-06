@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\Auditable;
 use App\Models\Concerns\BelongsToTenant;
 use App\Models\Concerns\UuidPrimaryKey;
 use Illuminate\Database\Eloquent\Model;
 
 class PayrollRecord extends Model
 {
-    use BelongsToTenant, UuidPrimaryKey;
+    use BelongsToTenant, UuidPrimaryKey, Auditable;
 
     protected $fillable = [
         'institution_id', 'teacher_id', 'month', 'year', 'base_salary',
@@ -30,5 +31,10 @@ class PayrollRecord extends Model
         $months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
 
         return ($months[$this->month - 1] ?? '') . ' ' . $this->year;
+    }
+
+    public function auditLabel(): string
+    {
+        return 'বেতন ' . ($this->month ?? '') . '/' . ($this->year ?? '');
     }
 }

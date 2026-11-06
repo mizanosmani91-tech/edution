@@ -33,6 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'tenant.context' => \App\Http\Middleware\SetTenantContext::class,
             'superadmin' => \App\Http\Middleware\EnsureSuperAdmin::class,
             'password.change' => \App\Http\Middleware\EnsurePasswordChanged::class,
+            'permission' => \App\Http\Middleware\EnsurePermission::class,
         ]);
 
         $middleware->priority([
@@ -43,7 +44,11 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
 
-        $middleware->validateCsrfTokens(except: ['*']);
+        // CSRF সুরক্ষা চালু; ছাড় শুধু গাড়ির লাইভ-লোকেশন শেয়ার পেজের POST-এর জন্য —
+        // ওটা লগইন ছাড়া, গোপন লিংকের টোকেন দিয়ে চালকের ফোন থেকে আসে (সেশন/CSRF টোকেন
+        // থাকে না), তাই রুটের {token}-ই তার পরিচয়। নতুন ছাড় যোগ করার আগে ভাবুন:
+        // সেশনধারী ইউজারের রুটে ছাড় দিলে CSRF ঝুঁকি ফিরে আসে।
+        $middleware->validateCsrfTokens(except: ['transport-tracking/*/update']);
         $middleware->appendToGroup('web', \App\Http\Middleware\SetLocale::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
