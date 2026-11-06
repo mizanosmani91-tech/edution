@@ -329,7 +329,8 @@ class GuardianPortal extends Component
             ]);
         }
 
-        if ($child) {
+        // ডায়েরি শুধু ওই ট্যাব খুললেই লোড হয় — বাকি পোর্টাল নতুন টেবিলের উপর নির্ভর করে না
+        if ($child && $this->activeTab === 'diary') {
             // সন্তানের ক্লাস/সেকশনের সাম্প্রতিক ক্লাস ডায়েরি
             $diaryEntries = ClassDiaryEntry::with(['subject', 'teacher'])
                 ->forStudent($child)
