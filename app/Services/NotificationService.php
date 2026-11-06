@@ -104,6 +104,46 @@ class NotificationService
         }
     }
 
+    /**
+     * নোটিশ অভিভাবকদের কাছে পাঠানো — in-app + (প্রতিষ্ঠানের SMS চালু থাকলে) SMS।
+     * নোটিশের প্রাপক তালিকা থাকলে ও তাতে 'guardian' না থাকলে কিছুই পাঠায় না।
+     *
+     * @return int কতজন অভিভাবককে পাঠানো হলো
+     */
+    public function noticePublished(\App\Models\Notice $notice): int
+    {
+        $audience = (array) $notice->audience;
+        if ($audience !== [] && ! in_array('guardian', $audience, true)) {
+            return 0;
+        }
+
+        $sent = 0;
+        $sms = 'EDUTION নোটিশ: ' . \Illuminate\Support\Str::limit($notice->title, 90);
+
+        User::where('institution_id', $notice->institution_id)
+            ->where('role', 'guardian')
+            ->where(fn ($q) => $q->where('is_active', true)->orWhereNull('is_active'))
+            ->chunkById(200, function ($guardians) use ($notice, $sms, &$sent) {
+                foreach ($guardians as $guardian) {
+                    AppNotification::create([
+                        'institution_id' => $notice->institution_id,
+                        'user_id' => $guardian->id,
+                        'type' => 'notice',
+                        'title' => $notice->title,
+                        'body' => \Illuminate\Support\Str::limit(strip_tags($notice->body), 200),
+                        'link' => '/portal/guardian',
+                    ]);
+
+                    if ($guardian->phone) {
+                        $this->tenantSms->send($notice->institution_id, $guardian->phone, $sms);
+                    }
+                    $sent++;
+                }
+            });
+
+        return $sent;
+    }
+
     private function todayBn(): string
     {
         return now()->translatedFormat('j F Y');
