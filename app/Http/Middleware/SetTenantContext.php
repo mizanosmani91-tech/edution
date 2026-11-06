@@ -30,6 +30,13 @@ class SetTenantContext
             return $next($request);
         }
 
+        // নিষ্ক্রিয় ইউজারের চলমান সেশনও বন্ধ — নতুন লগইন আগেই আটকানো হয়, কিন্তু
+        // ইতিমধ্যে লগইন থাকা ইউজারকে এখানেই বের করে দেওয়া হয়।
+        // `=== false` ইচ্ছাকৃত: কলাম না থাকলে/null হলে (মাইগ্রেশনের আগে) কাউকে আটকাবে না।
+        if ($user->is_active === false) {
+            return $this->rejectInactive($request);
+        }
+
         $institutionId = $user->institution_id ?? null;
 
         if ($institutionId === null) {
@@ -50,5 +57,23 @@ class SetTenantContext
         app()->instance('tenant.current_user_id', $user->id);
 
         return $next($request);
+    }
+
+    private function rejectInactive(Request $request): Response
+    {
+        Auth::guard('web')->logout();
+
+        if ($request->hasSession()) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
+        $message = 'এই অ্যাকাউন্টটি নিষ্ক্রিয় করা হয়েছে। প্রতিষ্ঠানের অ্যাডমিনের সাথে যোগাযোগ করুন।';
+
+        if ($request->expectsJson() || $request->hasHeader('X-Livewire')) {
+            abort(403, $message);
+        }
+
+        return redirect('/login')->withErrors(['email' => $message]);
     }
 }

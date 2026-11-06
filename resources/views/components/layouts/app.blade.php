@@ -395,13 +395,13 @@
                     {{ app()->getLocale() === 'bn' ? 'EN' : 'বাং' }}
                 </a>
                 @livewire('notification-bell')
-                <div class="profile-chip">
+                <a href="{{ route('my-profile') }}" class="profile-chip" title="{{ __('আমার প্রোফাইল') }}" style="text-decoration:none;color:inherit;">
                     <div class="avatar">{{ mb_substr(auth()->user()->name, 0, 1) }}</div>
                     <div class="who">
                         <div>{{ auth()->user()->name }}</div>
                         <div class="role">{{ ucfirst(auth()->user()->role) }}</div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
 
