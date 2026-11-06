@@ -32,7 +32,7 @@ class ClassDiaryTest extends TestCase
 
     private function actAs(string $role, Institution $institution, array $attrs = []): User
     {
-        $user = User::factory()->create(['institution_id' => $institution->id, 'role' => $role] + $attrs);
+        $user = User::factory()->create($attrs + ['institution_id' => $institution->id, 'role' => $role]);
         $this->actingAs($user);
 
         \DB::statement('SELECT set_config(?, ?, false)', ['app.current_institution_id', $institution->id]);

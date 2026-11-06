@@ -31,7 +31,7 @@ class UserManagerTest extends TestCase
 
     private function actAs(string $role, Institution $inst, array $attrs = []): User
     {
-        $user = User::factory()->create(['institution_id' => $inst->id, 'role' => $role, 'must_change_password' => false] + $attrs);
+        $user = User::factory()->create($attrs + ['institution_id' => $inst->id, 'role' => $role, 'must_change_password' => false]);
         $this->actingAs($user);
 
         \DB::statement('SELECT set_config(?, ?, false)', ['app.current_institution_id', $inst->id]);
@@ -42,7 +42,7 @@ class UserManagerTest extends TestCase
 
     private function make(Institution $inst, string $role, array $attrs = []): User
     {
-        return User::factory()->create(['institution_id' => $inst->id, 'role' => $role] + $attrs);
+        return User::factory()->create($attrs + ['institution_id' => $inst->id, 'role' => $role]);
     }
 
     #[Test]
