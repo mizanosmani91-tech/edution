@@ -170,13 +170,17 @@
     <div class="success-wrap">
         <div class="success-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><polyline points="8 12 11 15 16 9"/></svg></div>
         <h2>ধন্যবাদ! আপনার আবেদন জমা হয়েছে</h2>
-        <p>আমাদের টিম আপনার আবেদন যাচাই করবে। অনুমোদনের পর একটি সিক্রেট কোড আপনার ইমেইল/মোবাইলে পাঠানো হবে — সেটি ও নিচের ইমেইল দিয়ে আপনি আপনার নিজস্ব ঠিকানায় লগইন করতে পারবেন।</p>
+        @if (session('autoApproved'))
+            <p>আপনার আবেদন অনুমোদিত হয়েছে। লগইনের পাসওয়ার্ড আপনার ইমেইল/মোবাইলে পাঠানো হয়েছে — সেটি ও নিচের ইমেইল দিয়ে আপনার নিজস্ব ঠিকানায় লগইন করুন।</p>
+        @else
+            <p>আমাদের টিম আপনার আবেদন যাচাই করবে। অনুমোদনের পর একটি সিক্রেট কোড আপনার ইমেইল/মোবাইলে পাঠানো হবে — সেটি ও নিচের ইমেইল দিয়ে আপনি আপনার নিজস্ব ঠিকানায় লগইন করতে পারবেন।</p>
+        @endif
 
         <div class="success-box">
             <div class="row"><span class="k">প্রতিষ্ঠানের ঠিকানা (সম্ভাব্য)</span><span class="v">{{ session('successSlug') }}.edution.xyz</span></div>
             <div class="row"><span class="k">এডমিন ইমেইল</span><span class="v">{{ session('successEmail') }}</span></div>
             <div class="row"><span class="k">বিলিং ধরন</span><span class="v">{{ ['postpaid' => 'পোস্টপেইড', 'prepaid' => 'প্রিপেইড'][session('successBillingType')] ?? session('successBillingType') }}</span></div>
-            <div class="row"><span class="k">অবস্থা</span><span class="v">যাচাইয়ের অপেক্ষায়</span></div>
+            <div class="row"><span class="k">অবস্থা</span><span class="v">{{ session('autoApproved') ? 'অনুমোদিত' : 'যাচাইয়ের অপেক্ষায়' }}</span></div>
         </div>
 
         <div class="success-ctas">

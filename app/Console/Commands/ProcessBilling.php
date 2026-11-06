@@ -29,6 +29,26 @@ class ProcessBilling extends Command
         $processed = 0;
         $suspended = 0;
 
+        // "ট্রায়াল শেষে অটো-সাসপেন্ড" সুইচ (ডিফল্ট চালু): মেয়াদোত্তীর্ণ ট্রায়াল প্রতিষ্ঠান suspended হয়।
+        // এতে অ্যাক্সেস আটকায় কেবল তখনই যখন "enforce_suspension" সুইচও চালু।
+        if (\App\Models\PlatformSetting::getBool('auto_suspend_trial_end', true)) {
+            $expired = Institution::query()
+                ->where('status', 'trial')
+                ->whereNotNull('trial_ends_at')
+                ->where('trial_ends_at', '<', now())
+                ->get();
+
+            foreach ($expired as $trial) {
+                $trial->update(['status' => 'suspended']);
+                $notifications->billingAlert(
+                    $trial,
+                    'trial_ended',
+                    'ট্রায়ালের মেয়াদ শেষ',
+                    'আপনার ট্রায়ালের মেয়াদ শেষ হয়েছে। বিলিং পেজ থেকে প্ল্যান বেছে নিয়ে চালু রাখুন।'
+                );
+            }
+        }
+
         $institutions = Institution::query()
             ->whereNotIn('status', ['trial', 'pending', 'rejected'])
             ->get();

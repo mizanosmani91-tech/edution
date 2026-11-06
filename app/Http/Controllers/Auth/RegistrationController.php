@@ -116,7 +116,19 @@ class RegistrationController extends Controller
             Log::warning('রেজিস্ট্রেশন কনফার্মেশন ইমেইল পাঠাতে ব্যর্থ: ' . $e->getMessage());
         }
 
+        // সুপারঅ্যাডমিন প্যানেলের "অটো-অনুমোদন" সুইচ চালু থাকলে সাথে সাথে অনুমোদন (ডিফল্ট বন্ধ)।
+        // ব্যর্থ হলে আবেদন pending-ই থাকে — রেজিস্ট্রেশন ভাঙে না।
+        $autoApproved = false;
+        try {
+            if (\App\Models\PlatformSetting::getBool('auto_approve_institutions', false)) {
+                $autoApproved = app(\App\Services\InstitutionApprovalService::class)->approve($institution->id) !== null;
+            }
+        } catch (\Throwable $e) {
+            Log::warning('অটো-অনুমোদন ব্যর্থ, আবেদন pending থাকলো: ' . $e->getMessage());
+        }
+
         return redirect()->route('register')->with('success', true)
+            ->with('autoApproved', $autoApproved)
             ->with('successSlug', $slug)
             ->with('successEmail', $validated['email'])
             ->with('successBillingType', $validated['billing_type']);
