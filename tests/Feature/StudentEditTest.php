@@ -41,7 +41,7 @@ class StudentEditTest extends TestCase
 
     private function student(Institution $inst, array $attrs = []): Student
     {
-        return Student::factory()->create(['institution_id' => $inst->id] + $attrs);
+        return Student::factory()->create($attrs + ['institution_id' => $inst->id]);
     }
 
     #[Test]

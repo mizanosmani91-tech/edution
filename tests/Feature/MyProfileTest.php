@@ -28,12 +28,13 @@ class MyProfileTest extends TestCase
 
     private function actAs(string $role = 'admin', array $attrs = []): User
     {
-        $user = User::factory()->create([
+        // `$attrs + [ডিফল্ট]`: বাঁয়ের (পাঠানো) মান জেতে। উল্টো লিখলে ওভাররাইড চুপচাপ হারাত।
+        $user = User::factory()->create($attrs + [
             'institution_id' => $this->inst->id,
             'role' => $role,
             'password' => 'old-password-1',
             'must_change_password' => false,
-        ] + $attrs);
+        ]);
         $this->actingAs($user);
 
         \DB::statement('SELECT set_config(?, ?, false)', ['app.current_institution_id', $this->inst->id]);

@@ -27,11 +27,13 @@ class ApprovalFlowTest extends TestCase
 
     private function pending(array $attrs = []): Institution
     {
-        return Institution::factory()->create([
+        // ⚠️ `$attrs + $defaults` (বাঁয়ের মান জেতে) — উল্টো লিখলে পাঠানো status কখনো বসত না,
+        // আর "active প্রতিষ্ঠান" টেস্টগুলো আসলে pending নিয়েই চলত (CI-তে ধরা পড়েছিল)।
+        return Institution::factory()->create($attrs + [
             'status' => 'pending',
             'registration_email' => 'owner@school.test',
             'phone' => '01711111111',
-        ] + $attrs);
+        ]);
     }
 
     private function smsExpecting(int $times): void
