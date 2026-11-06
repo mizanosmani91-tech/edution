@@ -1,0 +1,26 @@
+name: Diagnose server (read-only)
+
+# শুধু পড়ে — সার্ভারে কিছুই বদলায় না। nginx কনফিগ ও সাবডোমেইন কীভাবে সাড়া দেয় তা লগে দেখায়।
+on:
+  workflow_dispatch: {}
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read nginx and probe subdomains
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            echo "=== nginx directives ==="
+            grep -rn "server_name\|return 30\|rewrite\|default_server\|listen\|ssl_certificate " /etc/nginx/sites-enabled/ /etc/nginx/conf.d/ 2>&1 | head -120
+            echo "=== http, Host: annazah ==="
+            curl -sI -H "Host: annazah.edution.xyz" http://127.0.0.1/ 2>&1 | head -12
+            echo "=== https, Host: annazah ==="
+            curl -skI -H "Host: annazah.edution.xyz" https://127.0.0.1/ 2>&1 | head -12
+            echo "=== https, Host: panel ==="
+            curl -skI -H "Host: panel.edution.xyz" https://127.0.0.1/login 2>&1 | head -8
