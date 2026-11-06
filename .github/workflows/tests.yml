@@ -1,0 +1,64 @@
+name: Tests
+
+# পুল রিকোয়েস্টে স্বয়ংক্রিয়ভাবে টেস্ট চালায় — ডিপ্লয়ে কিছুই বদলায় না (সেটা deploy.yml-এর কাজ)।
+# CI-র অস্থায়ী Postgres-এ phpunit.xml-এর টেস্ট-ডাটাবেস সেটিংই ব্যবহার হয়; এটা আসল ডাটাবেস নয়।
+on:
+  pull_request:
+  workflow_dispatch: {}
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: edution_test
+          POSTGRES_USER: edution_app
+          POSTGRES_PASSWORD: EdutionDb2026Pass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U edution_app -d edution_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo_pgsql, pgsql, gd, zip, intl, bcmath, xml, curl, fileinfo, dom
+          coverage: none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: PHP ডিপেন্ডেন্সি
+        # composer.lock পুরনো (phpspreadsheet/phpword lock-এ নেই) — ডিপ্লয় স্ক্রিপ্টের মতোই ফলব্যাক
+        run: |
+          composer install --no-interaction --prefer-dist --no-progress \
+            || composer update phpoffice/phpspreadsheet phpoffice/phpword --with-dependencies --no-interaction --prefer-dist --no-progress
+
+      - name: ফ্রন্টএন্ড বিল্ড (Blade-এর @vite-এর জন্য)
+        run: |
+          npm ci
+          npm run build
+
+      - name: এনভায়রনমেন্ট
+        run: |
+          cp .env.example .env
+          php artisan key:generate --no-interaction
+
+      - name: টেস্ট চালানো
+        run: vendor/bin/phpunit --colors=never
