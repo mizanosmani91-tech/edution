@@ -108,6 +108,8 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
 
 Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function () {
     Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
+    Route::get('/my-profile', \App\Livewire\MyProfile::class)->name('my-profile');
+    Route::get('/users', \App\Livewire\UserManager::class)->name('users.index')->middleware('permission:users.manage');
 
     // ── API-style JSON রুট — নাম আলাদা রাখা হলো 'api.' prefix দিয়ে, যেন
     Route::get('/students/admission', \App\Livewire\StudentAdmissionWizard::class)->name('students.admission')->middleware('permission:admission.manage');
@@ -156,6 +158,7 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     // ── Livewire পেজ রুট (bottom-nav/sidebar এর টার্গেট, নাম এখন ইউনিক) ──
     Route::get('/students-page', \App\Livewire\StudentList::class)->name('students.index')->middleware('permission:students.manage');
     Route::get('/students-page/{student}', \App\Livewire\StudentProfile::class)->name('students.profile')->middleware('permission:students.profile');
+    Route::get('/students-page/{student}/edit', \App\Livewire\StudentEditForm::class)->name('students.edit')->middleware('permission:students.manage');
     Route::get('/teachers-page', \App\Livewire\TeacherList::class)->name('teachers.index')->middleware('permission:teachers.manage');
     Route::get('/teachers-page/{teacher}', \App\Livewire\TeacherProfile::class)->name('teachers.profile')->middleware('permission:teachers.manage');
     Route::get('/teachers-page/{teacher}/edit', \App\Livewire\TeacherEditForm::class)->name('teachers.edit')->middleware('permission:teachers.manage');

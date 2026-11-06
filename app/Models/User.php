@@ -40,6 +40,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'teacher_id',  // role='teacher' হলে সেট থাকবে (নিজের teacher রেকর্ডের লিংক)
         'student_id',  // role='student' হলে সেট থাকবে
         'must_change_password',
+        'is_active',   // false = লগইন বন্ধ (যেমন নিষ্ক্রিয় শিক্ষক)
     ];
 
     protected $hidden = [
@@ -50,6 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_active' => 'boolean',
     ];
 
     public function institution()

@@ -28,6 +28,7 @@ class PermissionRoutesTest extends TestCase
         'GET settings' => 'প্রতিষ্ঠানের সাধারণ সেটিং পড়া (JSON); লেখা settings.manage-এ আটকানো',
         'GET routine' => 'ক্লাস রুটিন পড়া (JSON); লেখা/মোছা academic.manage-এ আটকানো',
         'GET coming-soon/{title}' => 'স্টাব পেজ, কোনো ডেটা নেই',
+        'GET my-profile' => 'প্রত্যেকে নিজের নাম/ফোন/ইমেইল/পাসওয়ার্ড বদলায়; সব রোলের জন্য, কম্পোনেন্ট শুধু নিজের ইউজারেই কাজ করে',
     ];
 
     /** @return array<int,LaravelRoute> */
@@ -129,7 +130,7 @@ class PermissionRoutesTest extends TestCase
             'payroll.manage', 'performance.manage', 'teachers.manage', 'students.manage',
             'fees.manage', 'finance.manage', 'gateway.manage', 'settings.manage',
             'billing.manage', 'audit.view', 'data.import', 'data.export',
-            'staff-attendance.manage', 'admission.manage', 'support.manage',
+            'staff-attendance.manage', 'admission.manage', 'support.manage', 'users.manage',
         ];
 
         foreach (['teacher', 'guardian', 'student'] as $role) {

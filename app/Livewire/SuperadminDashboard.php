@@ -10,12 +10,14 @@ use App\Models\PlatformSetting;
 use App\Models\SupportTicket;
 use App\Models\SupportTicketMessage;
 use App\Mail\AdminCredentialsMail;
+use App\Mail\RegistrationRejectedMail;
 use App\Models\User;
 use App\Models\WalletTransaction;
 use App\Services\BillingService;
 use App\Services\NotificationService;
 use App\Services\SmsOtpService;
 use App\Services\SystemHealthService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -71,6 +73,7 @@ class SuperadminDashboard extends Component
     public bool $settingAutoSuspendTrial = true;
     public bool $settingBillingSms = true;
     public bool $settingMaintenance = false;
+    public bool $settingEnforceSuspension = false;
 
     public string $inviteName = '';
     public string $inviteEmail = '';
@@ -94,6 +97,7 @@ class SuperadminDashboard extends Component
         $this->settingAutoSuspendTrial = PlatformSetting::getBool('auto_suspend_trial_end', true);
         $this->settingBillingSms = PlatformSetting::getBool('billing_alert_sms', true);
         $this->settingMaintenance = PlatformSetting::getBool('maintenance_mode', false);
+        $this->settingEnforceSuspension = PlatformSetting::getBool('enforce_suspension', false);
     }
 
     public function setSection(string $section): void
@@ -106,22 +110,41 @@ class SuperadminDashboard extends Component
 
     public function approvePendingInstitution(string $institutionId, SmsOtpService $sms): void
     {
-        $institution = Institution::query()->findOrFail($institutionId);
-
         // ⚠️ ৮ ক্যারেক্টার random password — শক্ত এলোমেলো, কিন্তু ফোনে
         // পড়ে শোনানোর মতো সহজ (ambiguous ক্যারেক্টার O/0, I/l বাদ)
         $tempPassword = Str::password(10, symbols: false);
 
-        User::create([
-            'institution_id' => $institution->id,
-            'name' => $institution->name . ' Admin',
-            'email' => $institution->registration_email,
-            'password' => Hash::make($tempPassword),
-            'role' => 'admin',
-            'must_change_password' => true,
-        ]);
+        // ⚠️ দুইবার "অনুমোদন" চাপলে/দুইজন একসাথে চাপলে দ্বিতীয় অ্যাডমিন ইউজার বা দ্বিতীয়
+        // ক্রেডেনশিয়াল যেন না যায় — তাই সারি লক করে অবস্থা আবার দেখা হয়; শুধু pending
+        // (বা ভুলে rejected হওয়া) প্রতিষ্ঠান অনুমোদন করা যায়।
+        $institution = DB::transaction(function () use ($institutionId, $tempPassword) {
+            $institution = Institution::query()->lockForUpdate()->findOrFail($institutionId);
 
-        $institution->update(['status' => 'active']);
+            if (! in_array($institution->status, ['pending', 'rejected'], true)) {
+                return null;
+            }
+
+            // আগের কোনো (আংশিক) অ্যাডমিন থাকলে নতুন তৈরি না করে সেটাই হালনাগাদ — ইউনিক-ভঙ্গ এড়াতে
+            User::updateOrCreate(
+                ['institution_id' => $institution->id, 'email' => $institution->registration_email],
+                [
+                    'name' => $institution->name . ' Admin',
+                    'password' => Hash::make($tempPassword),
+                    'role' => 'admin',
+                    'must_change_password' => true,
+                ]
+            );
+
+            $institution->update(['status' => 'active']);
+
+            return $institution;
+        });
+
+        if (! $institution) {
+            $this->dispatch('toast', message: 'এই প্রতিষ্ঠান আগেই অনুমোদিত হয়েছে — আবার অনুমোদন করা হয়নি');
+
+            return;
+        }
 
         $this->justApprovedSlug = $institution->slug;
         $this->justApprovedPassword = $tempPassword;
@@ -186,9 +209,31 @@ class SuperadminDashboard extends Component
         $this->dispatch('toast', message: 'নতুন পাসওয়ার্ড জেনারেট, ইমেইল ও SMS করা হয়েছে');
     }
 
-    public function rejectPendingInstitution(string $institutionId): void
+    public function rejectPendingInstitution(string $institutionId, SmsOtpService $sms): void
     {
-        Institution::query()->findOrFail($institutionId)->update(['status' => 'rejected']);
+        $institution = Institution::query()->findOrFail($institutionId);
+
+        // শুধু অপেক্ষমাণ আবেদন বাতিল করা যায় — সক্রিয় প্রতিষ্ঠান ভুলে "বাতিল" হয়ে যেন না যায়
+        if ($institution->status !== 'pending') {
+            $this->dispatch('toast', message: 'শুধু অপেক্ষমাণ আবেদন বাতিল করা যায়');
+
+            return;
+        }
+
+        $institution->update(['status' => 'rejected']);
+
+        // আবেদনকারীকে জানানো — আগে কিছুই যেত না, ফলে তিনি অনুমোদনের অপেক্ষায় থেকে যেতেন
+        try {
+            Mail::to($institution->registration_email)->send(new RegistrationRejectedMail($institution));
+        } catch (\Throwable $e) {
+            Log::warning('প্রত্যাখ্যানের ইমেইল পাঠাতে ব্যর্থ: ' . $e->getMessage());
+        }
+
+        if ($institution->phone) {
+            $sms->sendMessage($institution->phone, 'EDUTION: Your registration was not approved.');
+        }
+
+        $this->dispatch('toast', message: 'আবেদন বাতিল করা হয়েছে এবং আবেদনকারীকে জানানো হয়েছে');
     }
 
     public function openManageModal(string $institutionId): void
@@ -453,6 +498,7 @@ class SuperadminDashboard extends Component
         PlatformSetting::setBool('auto_suspend_trial_end', $this->settingAutoSuspendTrial);
         PlatformSetting::setBool('billing_alert_sms', $this->settingBillingSms);
         PlatformSetting::setBool('maintenance_mode', $this->settingMaintenance);
+        PlatformSetting::setBool('enforce_suspension', $this->settingEnforceSuspension);
 
         $this->dispatch('toast', message: 'সেটিংস সংরক্ষণ করা হয়েছে');
     }
