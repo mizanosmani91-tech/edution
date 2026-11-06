@@ -165,6 +165,7 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/staff-attendance-page', \App\Livewire\StaffAttendanceTaker::class)->name('staff-attendance.index');
     Route::get('/chat-page', \App\Livewire\ChatWindow::class)->name('chat.index');
     Route::get('/notice-board-page', \App\Livewire\NoticeBoard::class)->name('notice-board.index');
+    Route::get('/academic-calendar', \App\Livewire\AcademicCalendar::class)->name('academic-calendar.index');
     Route::get('/id-cards-page', \App\Livewire\IdCardGenerator::class)->name('id-cards.index');
     Route::get('/attendance-report-page', \App\Livewire\AttendanceReport::class)->name('attendance-report.index');
     Route::get('/fee-structures-page', \App\Livewire\FeeStructureManager::class)->name('fee-structures.index');
@@ -232,6 +233,7 @@ Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function
     Route::get('/import/{entity}/sample', [\App\Http\Controllers\ImportSampleController::class, 'download'])->name('import.sample');
     Route::get('/academic-sessions', \App\Livewire\AcademicSessionManager::class)->name('academic-sessions.index');
     Route::get('/homework', \App\Livewire\HomeworkManager::class)->name('homework.index');
+    Route::get('/class-diary', \App\Livewire\ClassDiaryManager::class)->name('class-diary.index');
     Route::get('/lesson-plans', \App\Livewire\LessonPlanManager::class)->name('lesson-plans.index');
     Route::get('/hifz-progress', \App\Livewire\HifzProgressManager::class)->name('hifz-progress.index');
     Route::get('/question-bank', \App\Livewire\QuestionBankManager::class)->name('question-bank.index');

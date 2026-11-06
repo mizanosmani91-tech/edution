@@ -81,7 +81,7 @@
 
             @if (auth()->user()->role !== 'teacher')
             {{-- একাডেমিক --}}
-            <div class="nav-module {{ $activeIf('academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*','live-class-monitor.*','quizzes.*','hifz-progress.*') }}" x-data="{ open: {{ request()->routeIs(['academic.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*','live-class-monitor.*','quizzes.*','hifz-progress.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
+            <div class="nav-module {{ $activeIf('academic.*','academic-calendar.*','class-diary.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*','live-class-monitor.*','quizzes.*','hifz-progress.*') }}" x-data="{ open: {{ request()->routeIs(['academic.*','academic-calendar.*','class-diary.*','routine.*','academic-sessions.*','homework.*','lesson-plans.*','question-bank.*','live-class-monitor.*','quizzes.*','hifz-progress.*']) ? 'true' : 'false' }} }" :class="{ open: open }">
                 <button class="nav-btn" @click="open = !open" type="button">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5A2 2 0 0 1 6 4h13v14H6a2 2 0 0 0-2 2V5.5Z"/><path d="M19 18v3"/></svg></span>
                     <span class="lbl">{{ __('একাডেমিক') }}</span>
@@ -89,6 +89,8 @@
                 </button>
                 <div class="sub-wrap"><div class="sub-inner"><div class="sub-list">
                     <a href="{{ route('academic.classes') }}" class="sub-item {{ request()->routeIs('academic.classes') ? 'active' : '' }}">{{ __('ক্লাস ও সেকশন') }}</a>
+                    <a href="{{ route('academic-calendar.index') }}" class="sub-item {{ request()->routeIs('academic-calendar.*') ? 'active' : '' }}">{{ __('অ্যাকাডেমিক ক্যালেন্ডার') }}</a>
+                    <a href="{{ route('class-diary.index') }}" class="sub-item {{ request()->routeIs('class-diary.*') ? 'active' : '' }}">{{ __('ক্লাস ডায়েরি') }}</a>
                     <a href="{{ route('academic.departments') }}" class="sub-item {{ request()->routeIs('academic.departments') ? 'active' : '' }}">{{ __('বিভাগ') }}</a>
                     <a href="{{ route('academic.subjects') }}" class="sub-item {{ request()->routeIs('academic.subjects') ? 'active' : '' }}">{{ __('বিষয় ও সিলেবাস') }}</a>
                     <a href="{{ route('routine.index') }}" class="sub-item {{ request()->routeIs('routine.*') ? 'active' : '' }}">{{ __('ক্লাস রুটিন') }}</a>
