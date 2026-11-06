@@ -28,6 +28,7 @@ class MyProfileTest extends TestCase
 
     private function actAs(string $role = 'admin', array $attrs = []): User
     {
+        // `$attrs + [ডিফল্ট]`: বাঁয়ের (পাঠানো) মান জেতে। উল্টো লিখলে ওভাররাইড চুপচাপ হারাত।
         $user = User::factory()->create($attrs + [
             'institution_id' => $this->inst->id,
             'role' => $role,
