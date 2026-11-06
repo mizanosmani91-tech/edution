@@ -103,6 +103,12 @@ class TeacherEditForm extends Component
                                                'mobile_banking' => $this->mobile_banking ?: null,
                                            ]);
 
+            // স্ট্যাটাস বদলালে এই শিক্ষকের লগইনও সেই অনুযায়ী চালু/বন্ধ হয়
+            // (User-এ global tenant scope নেই, তাই institution_id হাতে দেওয়া)
+            \App\Models\User::where('institution_id', $this->teacher->institution_id)
+                ->where('teacher_id', $this->teacher->id)
+                ->update(['is_active' => $this->status === 'active']);
+
             $this->saved = true;
               $this->dispatch('toast', message: 'শিক্ষকের তথ্য সংরক্ষণ করা হয়েছে');
     }
