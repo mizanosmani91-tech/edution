@@ -345,6 +345,15 @@
             @endif
 
             @if (auth()->user()->role === 'admin')
+              <div class="nav-single {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                <a href="{{ route('users.index') }}" class="nav-btn">
+                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 5.5a3 3 0 0 1 0 5.5M18 14.3c1.8.8 3 2.6 3 4.7"/></svg></span>
+                    <span class="lbl">{{ __('ব্যবহারকারী') }}</span>
+                </a>
+              </div>
+            @endif
+
+            @if (auth()->user()->role === 'admin')
               <div class="nav-single {{ request()->routeIs('billing.*') ? 'active' : '' }}">
                 <a href="{{ route('billing.index') }}" class="nav-btn">
                     <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="7" width="17" height="12" rx="2.5"/><path d="M3.5 11h17"/></svg></span>
