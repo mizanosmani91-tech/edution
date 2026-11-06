@@ -67,6 +67,7 @@
         </div>
 
         <nav class="nav-scroll">
+            @php $nav = fn (string $routeName) => \App\Support\Permissions::routeAllowed($routeName); @endphp
             @if ($nav('dashboard'))
             <div class="nav-single {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <a href="{{ route('dashboard') }}" class="nav-btn">
@@ -78,7 +79,6 @@
 
             @php
                 $stub = fn($label) => route('stub', urlencode($label));
-                $nav = fn (string $routeName) => \App\Support\Permissions::routeAllowed($routeName);
                 $activeIf = fn(...$patterns) => request()->routeIs($patterns) ? 'open active' : '';
             @endphp
 
