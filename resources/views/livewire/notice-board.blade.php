@@ -145,6 +145,11 @@
                 </div>
 
                 <div class="switch-row">
+                    <div class="switch-label">অভিভাবকদের অ্যাপ নোটিফিকেশন ও SMS পাঠান <span class="opt">— SMS শুধু প্রতিষ্ঠানের SMS গেটওয়ে চালু থাকলে</span></div>
+                    <label class="switch"><input type="checkbox" wire:model="notifyGuardians"><span class="switch-track"></span></label>
+                </div>
+
+                <div class="switch-row">
                     <div class="switch-label">নোটিশ বোর্ডে পিন করুন</div>
                     <label class="switch"><input type="checkbox" wire:model="isPinned"><span class="switch-track"></span></label>
                 </div>

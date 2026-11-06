@@ -24,12 +24,13 @@ class NoticeBoard extends Component
 
     public bool $isPinned = false;
     public bool $isUrgent = false;
+    public bool $notifyGuardians = false;
     public string $publishAt = '';
     public string $expiresAt = '';
 
     public function openModal(): void
     {
-        $this->reset(['title', 'body', 'audience', 'isPinned', 'isUrgent', 'expiresAt']);
+        $this->reset(['title', 'body', 'audience', 'isPinned', 'isUrgent', 'expiresAt', 'notifyGuardians']);
         $this->category = 'general';
         $this->publishAt = now()->format('Y-m-d\TH:i');
         $this->showModal = true;
@@ -39,7 +40,7 @@ class NoticeBoard extends Component
     {
         $this->validate();
 
-        Notice::create([
+        $notice = Notice::create([
             'title' => $this->title,
             'body' => $this->body,
             'category' => $this->isUrgent ? 'urgent' : $this->category,
@@ -50,6 +51,16 @@ class NoticeBoard extends Component
             'expires_at' => $this->expiresAt ?: null,
             'created_by' => auth()->id(),
         ]);
+
+        // অভিভাবকদের জানানো (ঐচ্ছিক) — এখনই প্রকাশ হলে। ব্যর্থ হলেও নোটিশ সেভ থাকে।
+        if ($this->notifyGuardians && $notice->publish_at <= now()) {
+            try {
+                $count = app(\App\Services\NotificationService::class)->noticePublished($notice);
+                $this->dispatch('toast', message: "{$count} জন অভিভাবককে জানানো হয়েছে");
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('নোটিশ বিজ্ঞপ্তি ব্যর্থ: ' . $e->getMessage());
+            }
+        }
 
         $this->showModal = false;
     }
