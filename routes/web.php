@@ -109,6 +109,7 @@ Route::middleware(['auth', 'tenant.context'])->group(function () {
 Route::middleware(['auth', 'tenant.context', 'password.change'])->group(function () {
     Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
     Route::get('/my-profile', \App\Livewire\MyProfile::class)->name('my-profile');
+    Route::get('/users', \App\Livewire\UserManager::class)->name('users.index');
 
     // ── API-style JSON রুট — নাম আলাদা রাখা হলো 'api.' prefix দিয়ে, যেন
     Route::get('/students/admission', \App\Livewire\StudentAdmissionWizard::class)->name('students.admission');
