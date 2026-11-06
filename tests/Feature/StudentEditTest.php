@@ -66,6 +66,24 @@ class StudentEditTest extends TestCase
     }
 
     #[Test]
+    public function clearing_nationality_or_admission_type_falls_back_to_the_defaults_instead_of_crashing(): void
+    {
+        $class = SchoolClass::factory()->create(['institution_id' => $this->a->id]);
+        $student = $this->student($this->a, ['class_id' => $class->id, 'nationality' => 'অন্য', 'admission_type' => 'transfer']);
+        $this->actAs('admin', $this->a);
+
+        Livewire::test(StudentEditForm::class, ['student' => $student])
+            ->set('nationality', '')
+            ->set('admission_type', '')
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $student->refresh();
+        $this->assertSame('বাংলাদেশী', $student->nationality);
+        $this->assertSame('new', $student->admission_type);
+    }
+
+    #[Test]
     public function status_can_be_changed_without_deleting_the_record(): void
     {
         $class = SchoolClass::factory()->create(['institution_id' => $this->a->id]);
