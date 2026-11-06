@@ -108,64 +108,19 @@ class SuperadminDashboard extends Component
 
     // ================= Institutions =================
 
-    public function approvePendingInstitution(string $institutionId, SmsOtpService $sms): void
+    public function approvePendingInstitution(string $institutionId, \App\Services\InstitutionApprovalService $approval): void
     {
-        // ⚠️ ৮ ক্যারেক্টার random password — শক্ত এলোমেলো, কিন্তু ফোনে
-        // পড়ে শোনানোর মতো সহজ (ambiguous ক্যারেক্টার O/0, I/l বাদ)
-        $tempPassword = Str::password(10, symbols: false);
+        // ⚠️ দুইবার "অনুমোদন" চাপলেও দ্বিতীয় অ্যাডমিন/ক্রেডেনশিয়াল যায় না — নিয়ম সার্ভিসের ভেতরে
+        $result = $approval->approve($institutionId);
 
-        // ⚠️ দুইবার "অনুমোদন" চাপলে/দুইজন একসাথে চাপলে দ্বিতীয় অ্যাডমিন ইউজার বা দ্বিতীয়
-        // ক্রেডেনশিয়াল যেন না যায় — তাই সারি লক করে অবস্থা আবার দেখা হয়; শুধু pending
-        // (বা ভুলে rejected হওয়া) প্রতিষ্ঠান অনুমোদন করা যায়।
-        $institution = DB::transaction(function () use ($institutionId, $tempPassword) {
-            $institution = Institution::query()->lockForUpdate()->findOrFail($institutionId);
-
-            if (! in_array($institution->status, ['pending', 'rejected'], true)) {
-                return null;
-            }
-
-            // আগের কোনো (আংশিক) অ্যাডমিন থাকলে নতুন তৈরি না করে সেটাই হালনাগাদ — ইউনিক-ভঙ্গ এড়াতে
-            User::updateOrCreate(
-                ['institution_id' => $institution->id, 'email' => $institution->registration_email],
-                [
-                    'name' => $institution->name . ' Admin',
-                    'password' => Hash::make($tempPassword),
-                    'role' => 'admin',
-                    'must_change_password' => true,
-                ]
-            );
-
-            $institution->update(['status' => 'active']);
-
-            return $institution;
-        });
-
-        if (! $institution) {
+        if (! $result) {
             $this->dispatch('toast', message: 'এই প্রতিষ্ঠান আগেই অনুমোদিত হয়েছে — আবার অনুমোদন করা হয়নি');
 
             return;
         }
 
-        $this->justApprovedSlug = $institution->slug;
-        $this->justApprovedPassword = $tempPassword;
-
-        // ⚠️ স্ক্রিনে দেখানো পাসওয়ার্ড রিলোড/ব্রাউজার বন্ধ হলে হারিয়ে যেতে পারে —
-        // তাই approve করার সাথে সাথেই দুই জায়গায় (ইমেইল + SMS) স্থায়ীভাবে
-        // পাঠিয়ে দেওয়া হচ্ছে। SMS ইংরেজিতে ও ৬০ ক্যারেক্টারের মধ্যে রাখা
-        // হয়েছে (single SMS part, খরচ বাড়ে না), বিস্তারিত তথ্য ইমেইলে থাকে।
-        try {
-            Mail::to($institution->registration_email)
-                ->send(new AdminCredentialsMail($institution, $institution->registration_email, $tempPassword, isReset: false));
-        } catch (\Throwable $e) {
-            Log::warning('এডমিন ক্রেডেনশিয়াল ইমেইল পাঠাতে ব্যর্থ: ' . $e->getMessage());
-        }
-
-        if ($institution->phone) {
-            $sms->sendMessage(
-                $institution->phone,
-                "EDUTION: Approved. Password: {$tempPassword}"
-            );
-        }
+        $this->justApprovedSlug = $result['institution']->slug;
+        $this->justApprovedPassword = $result['password'];
     }
 
     public function resetAdminPassword(string $institutionId, SmsOtpService $sms): void

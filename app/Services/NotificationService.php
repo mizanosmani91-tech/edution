@@ -129,7 +129,8 @@ class NotificationService
             ]);
         }
 
-        if ($institution->phone) {
+        // সুপারঅ্যাডমিন প্যানেলের "বিলিং SMS" সুইচ (ডিফল্ট চালু)
+        if ($institution->phone && \App\Models\PlatformSetting::getBool('billing_alert_sms', true)) {
             try {
                 app(SmsOtpService::class)->sendMessage($institution->phone, "EDUTION: {$title} — {$body}");
             } catch (\Throwable $e) {
