@@ -113,8 +113,10 @@ class StudentEditForm extends Component
             'birth_reg_no' => $this->birth_reg_no ?: null,
             'blood_group' => $this->blood_group ?: null,
             'religion' => $this->religion ?: null,
-            'nationality' => $this->nationality ?: null,
-            'admission_type' => $this->admission_type ?: null,
+            // এই দুটো কলাম NOT NULL (ডিফল্ট আছে) — ফাঁকা রাখলে null নয়, ডিফল্টে ফেরে।
+            // (CI ধরেছে: আগে null লেখার চেষ্টায় সেভ ক্র্যাশ করত।)
+            'nationality' => $this->nationality !== '' ? $this->nationality : 'বাংলাদেশী',
+            'admission_type' => $this->admission_type !== '' ? $this->admission_type : 'new',
             'previous_school' => $this->previous_school ?: null,
             'class_id' => $this->class_id,
             'section_id' => $this->section_id ?: null,
