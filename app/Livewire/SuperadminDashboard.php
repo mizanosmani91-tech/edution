@@ -71,6 +71,7 @@ class SuperadminDashboard extends Component
     public bool $settingAutoSuspendTrial = true;
     public bool $settingBillingSms = true;
     public bool $settingMaintenance = false;
+    public bool $settingEnforceSuspension = false;
 
     public string $inviteName = '';
     public string $inviteEmail = '';
@@ -94,6 +95,7 @@ class SuperadminDashboard extends Component
         $this->settingAutoSuspendTrial = PlatformSetting::getBool('auto_suspend_trial_end', true);
         $this->settingBillingSms = PlatformSetting::getBool('billing_alert_sms', true);
         $this->settingMaintenance = PlatformSetting::getBool('maintenance_mode', false);
+        $this->settingEnforceSuspension = PlatformSetting::getBool('enforce_suspension', false);
     }
 
     public function setSection(string $section): void
@@ -453,6 +455,7 @@ class SuperadminDashboard extends Component
         PlatformSetting::setBool('auto_suspend_trial_end', $this->settingAutoSuspendTrial);
         PlatformSetting::setBool('billing_alert_sms', $this->settingBillingSms);
         PlatformSetting::setBool('maintenance_mode', $this->settingMaintenance);
+        PlatformSetting::setBool('enforce_suspension', $this->settingEnforceSuspension);
 
         $this->dispatch('toast', message: 'সেটিংস সংরক্ষণ করা হয়েছে');
     }

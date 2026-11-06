@@ -607,6 +607,7 @@
             <div class="module-item"><span class="lbl">নতুন প্রতিষ্ঠান স্বয়ংক্রিয় অনুমোদন</span><label class="switch small"><input type="checkbox" wire:model="settingAutoApprove"><span class="switch-track"></span></label></div>
             <div class="module-item"><span class="lbl">ট্রায়াল শেষে স্বয়ংক্রিয় সাসপেন্ড</span><label class="switch small"><input type="checkbox" wire:model="settingAutoSuspendTrial"><span class="switch-track"></span></label></div>
             <div class="module-item"><span class="lbl">বকেয়া বিলিং সতর্কতা এসএমএস</span><label class="switch small"><input type="checkbox" wire:model="settingBillingSms"><span class="switch-track"></span></label></div>
+            <div class="module-item"><span class="lbl">বকেয়ায় স্থগিত প্রতিষ্ঠানের অ্যাক্সেস সত্যিই বন্ধ করা <small style="display:block;color:var(--ink-soft);font-weight:400;">চালু করলে স্থগিত স্কুলের অ্যাডমিন শুধু বিলিং পেজ পাবে; শিক্ষক/অভিভাবক/শিক্ষার্থী ঢুকতে পারবে না। চালুর আগে "প্রতিষ্ঠান" তালিকায় কারা এখন স্থগিত দেখে নিন।</small></span><label class="switch small"><input type="checkbox" wire:model="settingEnforceSuspension"><span class="switch-track"></span></label></div>
             <div class="module-item"><span class="lbl">মেইনটেন্যান্স মোড</span><label class="switch small"><input type="checkbox" wire:model="settingMaintenance"><span class="switch-track"></span></label></div>
           </div>
           <div style="margin-top:16px;"><button class="btn-primary" wire:click="saveSettings" type="button">সেটিংস সংরক্ষণ করুন</button></div>
