@@ -6,7 +6,12 @@ on:
   workflow_dispatch: {}
 
 jobs:
+  # ডিপ্লয়ের আগে সব টেস্ট পাস করতে হবে — না পাসলে সার্ভারে কিছুই যায় না।
+  tests:
+    uses: ./.github/workflows/tests.yml
+
   deploy:
+    needs: tests
     runs-on: ubuntu-latest
     steps:
       - name: Deploy over SSH
@@ -26,6 +31,21 @@ jobs:
             # এখন থেকে সবসময় origin/main-এর সাথে hard reset করা হবে
             # (untracked ফাইল যেমন .env/storage/vendor/node_modules
             # অক্ষত থাকবে, শুধু ট্র্যাক করা ফাইলের লোকাল ড্রিফট মুছে যাবে)।
+            PREV_SHA=$(git rev-parse HEAD)
+            echo "আগের কোড: $PREV_SHA"
+
+            # ডিপ্লয়ের আগে ডাটাবেসের ব্যাকআপ (সর্বোচ্চ চেষ্টা) — ব্যর্থ হলে সতর্কতা দেখায়, ডিপ্লয় থামায় না।
+            BK=~/backups/deploy/$(date +%Y%m%d-%H%M%S)
+            mkdir -p "$BK"
+            envval() { grep -E "^$1=" .env | head -1 | cut -d= -f2- | sed -e 's/^"//' -e 's/"$//'; }
+            if PGPASSWORD="$(envval DB_PASSWORD)" pg_dump -h "$(envval DB_HOST)" -p "$(envval DB_PORT)" -U "$(envval DB_USERNAME)" "$(envval DB_DATABASE)" 2>"$BK/pg_dump.err" | gzip > "$BK/db.sql.gz" && [ -s "$BK/db.sql.gz" ]; then
+              echo "✅ ডাটাবেস ব্যাকআপ: $BK/db.sql.gz"
+            else
+              echo "⚠️ ডাটাবেস ব্যাকআপ হয়নি ($BK/pg_dump.err দেখুন) — ডিপ্লয় চলছে"
+            fi
+            # পুরনো ব্যাকআপ ১৪টির বেশি রাখা হয় না
+            ls -1dt ~/backups/deploy/*/ 2>/dev/null | tail -n +15 | xargs -r rm -rf
+
             git fetch origin main
             git reset --hard origin/main
             composer install --no-dev --optimize-autoloader || composer update phpoffice/phpspreadsheet phpoffice/phpword --no-dev --with-dependencies --optimize-autoloader
@@ -49,11 +69,26 @@ jobs:
             # সাইট আসলেই সাড়া দিচ্ছে (৫xx না)। ব্যর্থ হলে ডিপ্লয় ব্যর্থ
             # দেখাবে, কিন্তু কোড ইতিমধ্যে লাইভ — তাই এই চেক ব্যর্থ হলে
             # সিস্টেম হেলথ পেজ আর সার্ভার লগ সাথে সাথে চেক করা জরুরি।
+            FAILED=""
             for url in https://edution.xyz/ https://panel.edution.xyz/login; do
               code=$(curl -s -o /dev/null -w "%{http_code}" "$url")
               echo "$url -> $code"
-              if [ "$code" -ge 500 ]; then
-                echo "❌ $url দিচ্ছে $code — ডিপ্লয়ের পর সাইট ভাঙা!"
-                exit 1
+              if [ "$code" -ge 500 ] || [ "$code" -eq 000 ]; then
+                FAILED="$url ($code)"
+                break
               fi
             done
+
+            # যাচাই ব্যর্থ হলে নিজে থেকে আগের কোডে ফিরে যায় (ডাটাবেস মাইগ্রেশন ফেরত যায় না;
+            # মাইগ্রেশন শুধু নতুন কিছু যোগ করে বলে আগের কোড তাতে চলে)।
+            if [ -n "$FAILED" ]; then
+              echo "❌ $FAILED — আগের কোডে ($PREV_SHA) ফিরে যাচ্ছে"
+              git reset --hard "$PREV_SHA"
+              composer install --no-dev --optimize-autoloader || true
+              npm ci && npm run build || true
+              php artisan config:cache || true
+              php artisan route:cache || true
+              php artisan view:cache || true
+              echo "↩️ রোলব্যাক শেষ; ডাটাবেস ব্যাকআপ: $BK"
+              exit 1
+            fi
